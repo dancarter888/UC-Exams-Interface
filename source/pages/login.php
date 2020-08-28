@@ -46,7 +46,13 @@ if (isset($_POST["password"])) {
     $hashed_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
 }
 
-checkUsernameAndPassword($conn, $username, $hashed_password);
+//addUsernameAndPassword($conn, 'username', 'password');
+$verified = checkUsernameAndPassword($conn, $username, $hashed_password);
+if ($verified) {
+    echo "Success";
+} else {
+    echo "Wrong password";
+}
 
 /**
  * Checks the given username and hashed password match an entry in the authentication table
@@ -57,7 +63,27 @@ checkUsernameAndPassword($conn, $username, $hashed_password);
  * @return bool True if the username and password match
  */
 function checkUsernameAndPassword($conn, $username, $hashed_password) {
-    $query = "SELECT password FROM authentication WHERE username = '{$username}'";
-    $password = $conn->query($query);
-    return password_verify($password, $hashed_password);
+    $query = "SELECT hashed_password FROM authentication WHERE username = '{$username}'";
+    $result = $conn->query($query);
+    if ($result->num_rows == 0) {
+        echo "Incorrect username";
+        return False;
+    } else {
+        $password = $result->fetch_array(MYSQLI_ASSOC)['hashed_password'];
+        return password_verify($password, $hashed_password);
+    }
 }
+
+/**
+ * Just to test out the logins
+ *
+ * @param $conn
+ * @param $username
+ * @param $password
+ */
+function addUsernameAndPassword($conn, $username, $password) {
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $conn->query("INSERT INTO authentication (username, hashed_password) values ('{$username}', '{$hashed_password}')");
+}
+
+$conn->close();
