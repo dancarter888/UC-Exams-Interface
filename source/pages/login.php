@@ -41,9 +41,11 @@ if ($conn->connect_error)
 //Not entirely sure if we need to check they exist as you can only submit when username and password has been filled.
 if(isset($_POST["username"])) {
     $username = $_POST["username"];
+    $username = sanitizeString($username);
 }
 if (isset($_POST["password"])) {
-    $hashed_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $password = $_POST["password"];
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 }
 
 //addUsernameAndPassword($conn, 'username', 'password');
@@ -56,15 +58,16 @@ if ($verified) {
 
 /**
  * Checks the given username and hashed password match an entry in the authentication table
- *
  * @param mysqli $conn A connection to a mysql database
  * @param string $username Username to check
  * @param string $hashed_password Hashed password to check
  * @return bool True if the username and password match
  */
 function checkUsernameAndPassword($conn, $username, $hashed_password) {
-    $query = "SELECT hashed_password FROM authentication WHERE username = '{$username}'";
-    $result = $conn->query($query);
+    $stmt = $conn->prepare("SELECT hashed_password FROM authentication WHERE username = ?");
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows == 0) {
         echo "Incorrect username";
         return False;
@@ -75,8 +78,20 @@ function checkUsernameAndPassword($conn, $username, $hashed_password) {
 }
 
 /**
+ * Sanitizes a given string and returns it.
+ * @param $var
+ * @return string
+ */
+function sanitizeString($var) {
+    if (get_magic_quotes_gpc())
+        $var = stripslashes($var);
+    $var = strip_tags($var);
+    $var = htmlentities($var);
+    return $var;
+}
+
+/**
  * Just to test out the logins
- *
  * @param $conn
  * @param $username
  * @param $password
