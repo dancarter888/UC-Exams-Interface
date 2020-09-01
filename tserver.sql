@@ -563,6 +563,15 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_password`(
+IN uname VARCHAR(127)
+)
+BEGIN
+	SELECT hashed_password FROM authentication WHERE username = uname;
+END$$
+DELIMITER ;
+
 --
 -- Final view structure for view `vw_front_event`
 --
