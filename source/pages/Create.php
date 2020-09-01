@@ -14,9 +14,10 @@
         Test Date <input type="date" name="test_date" /> <br />
         Test Name <input type="text" name="test_name" required /> <br />
         Room
-        <select id="rooms" name="test_room" required>
+        <input list="rooms">
+        <datalist id="rooms" name="test_room" required>
             <option value="" disabled selected> -- Select a room -- </option>
-        </select> <br />
+        </datalist> <br />
         Time <input type="time" name="test_time" required /> <br />
 
         <input type="submit" value="Next" />
