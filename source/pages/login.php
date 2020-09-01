@@ -49,31 +49,30 @@ if (isset($_POST["password"])) {
 }
 
 //addUsernameAndPassword($conn, 'username', 'password');
-$verified = checkUsernameAndPassword($conn, $username, $hashed_password);
-if ($verified) {
-    echo "Success";
-} else {
-    echo "Wrong password";
-}
+checkUsernameAndPassword($conn, $username, $password);
+
 
 /**
  * Checks the given username and hashed password match an entry in the authentication table
  * @param mysqli $conn A connection to a mysql database
  * @param string $username Username to check
- * @param string $hashed_password Hashed password to check
- * @return bool True if the username and password match
+ * @param string $password Inputted password
+ * @return bool
  */
-function checkUsernameAndPassword($conn, $username, $hashed_password) {
-    $stmt = $conn->prepare("SELECT hashed_password FROM authentication WHERE username = ?");
-    $stmt->bind_param('s', $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+function checkUsernameAndPassword($conn, $username, $password) {
+    $result = $conn->query("CALL user_password('{$username}')");
     if ($result->num_rows == 0) {
         echo "Incorrect username";
         return False;
     } else {
-        $password = $result->fetch_array(MYSQLI_ASSOC)['hashed_password'];
-        return password_verify($password, $hashed_password);
+        $hashed_password = $result->fetch_array(MYSQLI_ASSOC)['hashed_password'];
+        if (password_verify($password, $hashed_password)) {
+            echo "Success";
+            setcookie('loggedin', 'yes', time() + 60 * 5); // Sets cookie timeout to 5 minutes
+            //TODO redirect to main page.
+        } else {
+            echo "Incorrect password";
+        }
     }
 }
 
