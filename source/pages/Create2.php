@@ -31,7 +31,7 @@ echo $_SESSION['test_date'];
                 </tr>
             </table>
 
-            <input type="submit" value="Next" />
+            <input type="submit" value="Next" required />
         </form>
 
         <script>

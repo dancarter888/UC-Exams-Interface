@@ -11,10 +11,10 @@
     <br > <br > <br >
 
     <form name="Details" action="Create2.php" method="post">
-        Test Date <input type="date" name="test_date" /> <br />
+        Test Date <input type="date" name="test_date" required /> <br />
         Test Name <input type="text" name="test_name" required /> <br />
         Room
-        <input list="rooms" name="test_room" multiple>
+        <input list="rooms" name="test_room" multiple required>
         <datalist id="rooms" required>
             <option value="" disabled selected> -- Select a room -- </option>
         </datalist> <br />
