@@ -1,6 +1,11 @@
 <?php
-    session_start();
-    $_SESSION['test_type'] = $_POST['test_type'];
+    if (isset($_POST['test_type'])) {
+        session_start();
+        $_SESSION['test_type'] = $_POST['test_type'];
+    } else {
+        header("Location: http://localhost/info263-project/source/pages/Create2.php");
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>
