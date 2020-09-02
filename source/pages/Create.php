@@ -14,11 +14,12 @@
         Test Date <input type="date" name="test_date" /> <br />
         Test Name <input type="text" name="test_name" required /> <br />
         Room
-        <input list="rooms">
-        <datalist id="rooms" name="test_room" required>
+        <input list="rooms" name="test_room" multiple>
+        <datalist id="rooms" required>
             <option value="" disabled selected> -- Select a room -- </option>
         </datalist> <br />
-        Time <input type="time" name="test_time" required /> <br />
+        Start Time <input type="time" name="test_stime" required /> <br />
+        End Time <input type="time" name="test_etime" required /> <br />
 
         <input type="submit" value="Next" />
     </form>
@@ -28,7 +29,7 @@
     <script>
         nocache = "&nocache=1";
         request = new asyncRequest()
-        request.open("GET", "show_rooms.php?url=news.com" + nocache, true)
+        request.open("GET", "Create_Helper.php?item=Rooms" + nocache, true)
         request.onreadystatechange = function()
         {
             if (this.readyState == 4)
@@ -38,6 +39,7 @@
                     if (this.responseText != null)
                     {
                         let selectElement = document.getElementById('rooms');
+                        console.log(this.responseText);
                         let rooms = JSON.parse(this.responseText);
                         for (let i=0; i<rooms.length; i++) {
                             let option = document.createElement('option');

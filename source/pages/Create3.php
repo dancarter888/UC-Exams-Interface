@@ -19,7 +19,9 @@
             <h4>Test Date:</h4> <?php echo $_SESSION['test_date'] ?> <br />
             <h4>Test Name:</h4> <?php echo $_SESSION['test_name'] ?> <br />
             <h4>Test Room:</h4> <?php echo $_SESSION['test_room'] ?> <br />
-            <h4>Test Name:</h4> <?php echo $_SESSION['test_time'] ?> <br />
+            <h4>Test Start Time:</h4> <?php echo $_SESSION['test_stime'] ?> <br />
+            <h4>Test End Time:</h4> <?php echo $_SESSION['test_etime'] ?> <br />
+            <h4>Test Duration:</h4> <?php echo (strtotime($_SESSION['test_etime']) - strtotime($_SESSION['test_stime'])) / 3600; ?> hours
             <h4>Test Type:</h4> <?php echo $_SESSION['test_type'] ?> <br />
             <input type="submit" />
         </form>
