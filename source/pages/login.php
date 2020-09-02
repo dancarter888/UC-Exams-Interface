@@ -7,24 +7,50 @@
     <title>Login</title>
 </head>
 <body>
-<form action="login.php" method="post">
-    <div class="container">
-        <label for="username"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" id="username" required>
+    <form action="login.php" method="post">
+        <div class="container">
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" id="username" required>
 
-        <label for="password"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" id="password" required>
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" id="password" required>
 
-        <button type="submit">Login</button>
+            <button type="submit">Login</button>
+            <label>
+                <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>
+        </div>
+
+        <div class="container" style="background-color:#f1f1f1">
+            <span class="psw">Forgot <a href="#">password?</a></span>
+        </div>
+    </form>
+
+    <form action="login.php" method="post" enctype='multipart/form-data'>
+        <div class="container">
+            <b>TEST</b> Add user<br/>
+            <input type='hidden' name='add' value='1' />
+            <label>
+                Username:
+                <input type='text' placeholder='Enter Username' name='new_username' size='15' required/>
+            </label>
+            <label>
+                Password:
+                <input type='password' placeholder='Enter Password' name='new_password' size='15' required/>
+            </label>
+            <button type="submit">Add User</button>
+        </div>
+    </form>
+
+    <form method="post" action="login.php" enctype="multipart/form-data">
+        <div class="container">
         <label>
-            <input type="checkbox" checked="checked" name="remember"> Remember me
+            <b>TEST</b> Remove user by id
+            <input type="text" placeholder='Enter User ID' name="remove" size=10/>
         </label>
-    </div>
-
-    <div class="container" style="background-color:#f1f1f1">
-        <span class="psw">Forgot <a href="#">password?</a></span>
-    </div>
-</form>
+            <button type="submit">Remove user by id</button>
+        </div>
+    </form>
 </body>
 </html>
 
@@ -48,9 +74,62 @@ if (isset($_POST["password"])) {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 }
 
-//addUsernameAndPassword($conn, 'username', 'password');
-checkUsernameAndPassword($conn, $username, $password);
+if(isset($_POST['add']))
+{
+    $user = createUser($_POST);
 
+    if (!is_null($user))
+    {
+        addUser($conn, $user);
+    }
+}
+
+if(isset($_POST['remove']))
+{
+    removeUser($conn, $_POST['remove']);
+}
+
+function createUser($user) {
+    if ($user['new_username'] !== '' && $user['new_username'] !== NULL && $user['new_password'] !== '' && $user['new_password'] !== NULL) {
+        return array($user['new_username'], $user['new_password']);
+    }
+    return NULL;
+}
+
+/**
+ * Just to test out the logins
+ * @param $conn
+ * @param $user
+ */
+function addUser($conn, $user) {
+    $username = $user[0];
+    $password = $user[1];
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = $conn->prepare("CALL add_user(?, ?);");
+    $stmt->bind_param('ss', $username, $hashed_password);
+    $stmt->execute();
+
+    if ($stmt->errno) {
+        fatalError($stmt->error);
+    } else {
+        echo "User " . $username . " added!";
+    }
+}
+
+function removeUser($conn, $user_id) {
+    $stmt = $conn->prepare("CALL remove_user(?);");
+    $stmt->bind_param('s', $user_id);
+    $stmt->execute();
+
+    if ($stmt->errno) {
+        fatalError($stmt->error);
+    } else {
+        echo "User removed!";
+    }
+}
+
+checkUsernameAndPassword($conn, $username, $password);
 
 /**
  * Checks the given username and hashed password match an entry in the authentication table
@@ -87,17 +166,6 @@ function sanitizeString($var) {
     $var = strip_tags($var);
     $var = htmlentities($var);
     return $var;
-}
-
-/**
- * Just to test out the logins
- * @param $conn
- * @param $username
- * @param $password
- */
-function addUsernameAndPassword($conn, $username, $password) {
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $conn->query("INSERT INTO authentication (username, hashed_password) values ('{$username}', '{$hashed_password}')");
 }
 
 $conn->close();
