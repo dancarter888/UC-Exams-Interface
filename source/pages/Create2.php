@@ -1,14 +1,17 @@
 <?php
     if (isset($_POST['test_date'])) {
         session_start();
-
         $_SESSION['test_date'] = $_POST['test_date'];
         $_SESSION['test_name'] = $_POST['test_name'];
-        $_SESSION['test_room'] = $_POST['test_room'];
         $_SESSION['test_stime'] = $_POST['test_stime'];
         $_SESSION['test_etime'] = $_POST['test_etime'];
 
-        echo $_SESSION['test_date'];
+        $rooms = array();
+        $count = 0;
+        while (isset($_POST['room' . $count])) {
+            array_push($rooms, $_POST['room' . $count++]);
+        }
+        $_SESSION['test_rooms'] = $rooms;
     } else {
         header("Location: http://localhost/info263-project/source/pages/Create.php");
         exit();
