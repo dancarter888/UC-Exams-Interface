@@ -1,6 +1,11 @@
 <?php
-    session_start();
-    $_SESSION['test_type'] = $_POST['test_type'];
+    if (isset($_POST['test_type'])) {
+        session_start();
+        $_SESSION['test_type'] = $_POST['test_type'];
+    } else {
+        header("Location: http://localhost/info263-project/source/pages/Create2.php");
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +23,7 @@
         <form name="Type" action="Create.php" method="POST">
             <h4>Test Date:</h4> <?php echo $_SESSION['test_date'] ?> <br />
             <h4>Test Name:</h4> <?php echo $_SESSION['test_name'] ?> <br />
-            <h4>Test Room:</h4> <?php echo $_SESSION['test_room'] ?> <br />
+            <h4>Test Rooms:</h4> <?php foreach ($_SESSION['test_rooms'] as $key => $val) { echo $val . '<br />'; } ?>
             <h4>Test Start Time:</h4> <?php echo $_SESSION['test_stime'] ?> <br />
             <h4>Test End Time:</h4> <?php echo $_SESSION['test_etime'] ?> <br />
             <h4>Test Duration:</h4> <?php echo (strtotime($_SESSION['test_etime']) - strtotime($_SESSION['test_stime'])) / 3600; ?> hours

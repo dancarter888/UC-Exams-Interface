@@ -6,12 +6,12 @@
     if (isset($_GET['item']))
     {
         if ($_GET['item'] === $ITEMS[0]) {
-            //$rooms = getRooms();
-            $rooms = array('Erskine', 'Library');
+            $rooms = getRooms();
+            //$rooms = array('Erskine', 'Library');
             echo json_encode($rooms);
         } else if ($_GET['item'] === $ITEMS[1]) {
-            //$clusters = getClusters();
-            $clusters = array(array(2, "UC-Learn", "Skills testing autologin"), array(3, "Labs", "Math Dept student undergrad labs"));
+            $clusters = getClusters();
+            //$clusters = array(array(2, "UC-Learn", "Skills testing autologin"), array(3, "Labs", "Math Dept student undergrad labs"));
             echo json_encode($clusters);
         }
     }
@@ -47,6 +47,10 @@
     }
 
     function queryDB($query) {
+        $hostname = "127.0.0.1";
+        $database = "tserver";
+        $username = "root";
+        $password = "mysql";
         $conn = new mysqli($hostname, $username, $password, $database);
         if ($conn->connect_error)
         {
