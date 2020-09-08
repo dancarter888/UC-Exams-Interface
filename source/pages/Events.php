@@ -1,4 +1,3 @@
-<!--Code obtained from https://www.w3schools.com/howto/howto_css_login_form.asp-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
