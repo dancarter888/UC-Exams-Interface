@@ -3,7 +3,7 @@
 -- Host: ucmysqlacis01p.linux.canterbury.ac.nz    Database: tserver
 -- ------------------------------------------------------
 -- Server version	8.0.17
-
+-- CREATE DATABASE IF NOT EXISTS tserver;
 USE tserver;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -645,6 +645,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_front_clusters`()
 BEGIN
 	SELECT cluster_id, cluster_name, cluster_description FROM front_cluster;
 END  ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `show_room_clients` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_one_event_details`(
+IN id INT(11)
+)
+BEGIN
+	SELECT e.event_name, a.time_offset, a.cluster_id, a.activate, c.cluster_name, c.cluster_description 
+		FROM front_event e 
+		JOIN front_action a 
+		ON e.event_id = a.event_id 
+		JOIN front_cluster c
+		ON a.cluster_id = c.cluster_id
+		WHERE e.event_id = id;
+END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
