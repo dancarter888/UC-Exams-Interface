@@ -372,7 +372,7 @@ SET character_set_client = @saved_cs_client;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`localhost` PROCEDURE `add_client`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_client`(
 IN p_room_name VARCHAR(127),
 IN p_group_name VARCHAR(127),
 IN p_mac VARCHAR(127),
@@ -402,7 +402,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`localhost` PROCEDURE `disable_cluster`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `disable_cluster`(
         IN in_cluster_name CHAR(128),
         IN in_machine_group CHAR(100)
 )
@@ -429,7 +429,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`localhost` PROCEDURE `enable_cluster`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `enable_cluster`(
 	IN in_cluster_name CHAR(128),
 	IN in_machine_group CHAR(100)
 )
@@ -456,7 +456,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`cluster_admin`@`localhost` PROCEDURE `get_front`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_front`(
         IN mac_address CHAR(17)
 )
 BEGIN
