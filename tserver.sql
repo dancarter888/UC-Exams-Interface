@@ -691,8 +691,8 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `show_events`()
 BEGIN
-	SELECT event_id, event_name, status
-    FROM front_event ORDER BY event_id;
+	SELECT *
+    FROM vw_front_event;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

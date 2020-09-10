@@ -4,8 +4,10 @@ require_once("../config/config.php");
 if (isset($_GET['count']))
 {
     if ($_GET['count'] === "All") {
-        $events = getEvents();
-        echo json_encode($events);
+        $get_events = getEvents();
+        $field_names = $get_events[0];
+        $events = $get_events[1];
+        echo json_encode([$field_names, $events]);
     }
 }
 
@@ -15,11 +17,18 @@ if (isset($_GET['count']))
  */
 function getEvents() {
     $result = queryDB("CALL show_events;");
+    $field_names = [];
+    while ($field = $result->fetch_field()) {
+        $field_names[] = $field->name;
+    }
+
     $events = array();
     foreach ($result as $row) {
-        array_push($events, $row["event_id"], $row["event_name"], $row["status"]);
+        for ($i = 0; $i < sizeof($field_names); $i++) {
+            array_push($events, $row[$field_names[$i]]);
+        }
     }
-    return $events;
+    return [$field_names, $events];
 }
 
 function queryDB($query) {

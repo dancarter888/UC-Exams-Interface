@@ -30,11 +30,6 @@
 <br > <br > <br >
 
 <table id="events-table">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Status</th>
-    </tr>
 </table>
 
 <script>
@@ -49,20 +44,26 @@
      **/
     function eventCallback(responseText) {
         let eventsTable = document.getElementById('events-table');
-        console.log(responseText);
-        let events = JSON.parse(responseText);
+        let parsedResponse = JSON.parse(responseText);
+        let fieldNames = parsedResponse[0];
+        let events = parsedResponse[1];
         EVENTS = events;
-        for (let i=0; i<events.length; i += 3) {
+
+        let headerRow = document.createElement('tr');
+        for (let i=0; i< fieldNames.length; i++) {
+            let tableHeader = document.createElement('th');
+            tableHeader.innerHTML = fieldNames[i];
+            headerRow.appendChild(tableHeader);
+        }
+        eventsTable.appendChild(headerRow);
+
+        for (let i=0; i<events.length; i += fieldNames.length) {
             let tableRow = document.createElement('tr');
-            let eventId = document.createElement('td');
-            let eventName = document.createElement('td');
-            let status = document.createElement('td');
-            eventId.innerHTML = events[i];
-            eventName.innerHTML = events[i+1];
-            status.innerHTML = events[i+2];
-            tableRow.appendChild(eventId);
-            tableRow.appendChild(eventName);
-            tableRow.appendChild(status);
+            for (let j = 0; j < fieldNames.length; j++){
+                let tableData = document.createElement('td');
+                tableData.innerHTML = events[i+j];
+                tableRow.appendChild(tableData);
+            }
             eventsTable.appendChild(tableRow);
         }
     }
