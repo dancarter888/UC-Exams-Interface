@@ -700,6 +700,72 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
+/*!50003 DROP PROCEDURE IF EXISTS `add_event` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_event`(
+IN test_name VARCHAR(127),
+IN roomArray VARCHAR(255),
+IN clusterIn VARCHAR(128),
+IN day_event int(11),
+IN week_event int(11),
+IN year_event int(4),
+IN begin_time TIME
+)
+BEGIN
+	-- Vars
+    DECLARE front_ID int;
+    DECLARE cluster_ID int;
+    
+    /* Declare a temporary table to store the groups in */
+    drop table if exists group_IDs;
+    CREATE TEMPORARY TABLE group_IDs (event_ID int, groupID INT(10), day_week int(11), start_time TIME);
+    -- DECLARE group_IDs VARCHAR(255);
+
+	-- Do something about status?
+    /* Add a entry for the test to the front event table and store its ID for later use */
+	insert into front_event (event_name, status) values (test_name, 1); -- 173
+    select event_id into front_ID from front_event where event_name = test_name;
+	
+    /* Adds the group IDs of the rooms in the given array to the group_IDs table */
+    insert into group_IDs (groupID) select group_ID from front_group where find_in_set(machine_group, roomArray);
+    
+    /* Update the temporary table with some values */
+    SET SQL_SAFE_UPDATES = 0;
+    UPDATE group_IDs SET event_ID = front_ID, day_week = day_event, start_time = begin_time where event_ID is null;
+    SET SQL_SAFE_UPDATES = 1;
+    
+    /* Get the ID for the cluster */
+    select cluster_id into cluster_ID from front_cluster where cluster_name = clusterIn;
+    
+    insert into front_weekly (event_id, week_of_year, event_year) values (front_ID, week_event, year_event);
+    insert into front_daily (event_id, group_id, day_of_week, start_time) select * from group_IDs;
+    select * from front_daily where day_of_week = 2;
+    
+    /* Insert all of the actions (turning cluster on and off). Not sure what we're meant to do with the times */
+    insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '-00:05:00', 3, 0);
+	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '-00:05:00', cluster_ID, 1);
+	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '01:00:00', cluster_ID, 0);
+	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '01:00:00', 3, 1);
+
+	drop table group_IDs;
+	-- All done!
+
+	-- select * from vw_front_event where date = '2020-08-18' order by time, cluster_id, group_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
 --
 -- Final view structure for view `vw_front_event`
 --
