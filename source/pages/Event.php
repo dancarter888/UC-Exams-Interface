@@ -1,53 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Event</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/NavBar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- JavaScript -->
+    <script src="../js/AJAX.js"></script>
+    <script src="../js/NavBar.js"></script>
+
+    <title>Create</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <a href="Create.php">Create Event</a>
+    <br> <br> <br>
+    <a href="login.php">Logout</a>
+</div>
 
-</body>
-<?php
+<div id="main">
+    <button class="openbtn" onclick="openNav()"> ☰ </button>
+</div>
 
-require_once("../config/config.php");
+<h1> Event </h1>
 
-$conn = new mysqli($hostname, $username, $password, $database);
-if ($conn->connect_error)
-{
-    fatalError($conn->connect_error);
-    return;
-}
+<br > <br > <br >
 
-#TODO get event_id from Events.php
+<table id="event-table">
+    <tr>
+        <th>Event Name</th>
+        <th>Time Offset</th>
+        <th>Cluster ID</th>
+        <th>Activation</th>
+        <th>Cluster Name</th>
+        <th>Cluster Description</th>
+</table>
 
-$event_id = 1;
+<script>
+    let ACTIONS = [];
+    let eventsAdded = 0;
 
-$stmt = $conn->prepare("CALL get_one_event_details(?);");
-$stmt->bind_param('i', $event_id);
-$stmt->execute();
+    // Make a get request to the URL
+    makeRequest("GET", "Event_Helper.php?id=1", eventCallback);
 
-if ($stmt->errno) {
-    fatalError($stmt->error);
-} else {
-    echo "<table style='width:100%'><tr><th>Event Name</th><th>Time Offset</th><th>Cluster Name</th><th>Activation</th></tr>";
+    /**
+     * Function to add the event in response text to the datalist in the webpage.
+     **/
+    function eventCallback(responseText) {
+        let eventTable = document.getElementById('event-table');
+        let actions = JSON.parse(responseText);
+        ACTIONS = actions;
 
-    $result = $stmt->get_result();
-    for($i = 0; $i < $result->num_rows; $i++) {
-        $action = $result->fetch_assoc();
-        #TODO need to add dates of event
-        echo "<tr>";
-        echo "<th>" . $action['event_name'] . "</th>";
-        echo "<th>" . $action['time_offset'] . "</th>";
-        echo "<th>" . $action['cluster_name'] . "</th>";
-        echo "<th>" . $action['activate'] . "</th>";
-        echo "</tr>";
+        for (let i=0; i<actions.length; i += 1) {
+            let action = actions[i];
+            let tableRow = document.createElement('tr');
+            for (let key in action) {
+                let tableData = document.createElement('td');
+                tableData.innerHTML = action[key];
+                tableRow.appendChild(tableData);
+                eventTable.appendChild(tableRow);
+            }
+        }
     }
-    echo "</table>";
-
-
-}
-
-$conn->close();
-
-
-
+</script>
+</body>
+</html>
