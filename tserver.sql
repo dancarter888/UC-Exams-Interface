@@ -730,7 +730,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`cza19`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `vw_front_group_client` AS select `r`.`room_name` AS `room_name`,`c`.`mac` AS `mac`,`c`.`serial_no` AS `serial_no`,`c`.`position` AS `position` from ((`front_client` `c` join `front_room` `r` on((`c`.`room_id` = `r`.`room_id`))) join `front_group` `g` on((`c`.`group_id` = `g`.`group_id`))) order by `r`.`room_name`,`c`.`position` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
