@@ -51,7 +51,6 @@ page: <span id="page"></span>
      * Function to add the events in response text to the datalist in the webpage.
      **/
     function eventCallback(responseText) {
-        console.log(responseText);
         let eventsTable = document.getElementById('events-table');
         let parsedResponse = JSON.parse(responseText);
         fieldNames = parsedResponse[0];
@@ -99,7 +98,7 @@ page: <span id="page"></span>
                 eventsTable.appendChild(tableRow);
             }
         }
-    };
+    }
 
     function prevPage() {
         // Delete all events in the table
