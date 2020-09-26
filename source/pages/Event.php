@@ -44,7 +44,7 @@
     let eventsAdded = 0;
 
     // Make a get request to the URL
-    makeRequest("GET", "Event_Helper.php?id=1", eventCallback);
+    makeRequest("GET", "Event_Helper.php?id=10", eventCallback);
 
     /**
      * Function to add the event in response text to the datalist in the webpage.
