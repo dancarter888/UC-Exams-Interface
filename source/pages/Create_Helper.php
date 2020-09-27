@@ -15,6 +15,22 @@
             echo json_encode($clusters);
         }
     }
+    else
+    {
+        createEvent();
+    }
+
+    function createEvent() {
+        $event = $_POST["user"];
+        // Associative array of the JSON
+        $decoded = json_decode($event, true);
+        echo json_encode(array_keys($decoded));
+
+        //Create Query
+
+        //Call stored procedure
+
+    }
 
     /**
      * Queries the database for a list of the rooms that test can happen in.

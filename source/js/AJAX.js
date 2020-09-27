@@ -31,6 +31,30 @@ function makeRequest(reqType, url, callback) {
 }
 
 
+function makePostRequest(url, body, callback) {
+    let params = "url=" + JSON.stringify(body);
+    console.log(params);
+    let request = new asyncRequest()
+    request.open("POST", url, true)
+    request.onreadystatechange = function()
+    {
+        if (this.readyState == 4)
+        {
+            if (this.status == 200)
+            {
+                if (this.responseText != null)
+                {
+                    callback(this.responseText);
+                }
+                else alert("Communication error: No data received")
+            }
+            else alert( "Communication error: " + this.statusText)
+        }
+    }
+    request.send(params)
+}
+
+
 function asyncRequest()
 {
     let request;

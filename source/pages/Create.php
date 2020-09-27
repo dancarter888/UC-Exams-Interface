@@ -76,13 +76,12 @@
                 <h4 id="r_rooms">Test Rooms:</h4>  <br />
                 <h4 id="r_stime">Test Start Time:</h4>  <br />
                 <h4 id="r_etime">Test End Time:</h4>  <br />
-                <h4>Test Duration:</h4> X hours
                 <h4 id="r_type">Test Type:</h4>  <br />
-                <input type="button" />
+                <input type="button" onclick="createEvent()" value="Next" />
             </form>
         </div>
 
-        <button onclick="test()"></button>
+        <!--<input type="button" onclick="createEvent()">Create</input>-->
 
         <script>
             const ON = "block";
@@ -95,7 +94,7 @@
             let currentForm = 0
             let formIds = ["F1", "F2", "F3"]
 
-            let eventObj = {Date: "", Name:"", Rooms:[], StartTime: "", EndTime: "", TestType: ""};
+            let eventObj = {Date: "", Name:"", Rooms:[], StartTime: "", EndTime: "", Duration: "", TestType: ""};
 
             // Make a get request to the URL
             makeRequest("GET", "Create_Helper.php?item=Rooms", roomCallback);
@@ -138,9 +137,22 @@
                 $("#r_rooms").append("\t" + eventObj["Rooms"]);
                 $("#r_stime").append("\t" + eventObj["StartTime"]);
                 $("#r_etime").append("\t" + eventObj["EndTime"]);
-
                 $("#r_type").append("\t" + eventObj["TestType"]);
 
+            }
+
+            function createEvent() {
+                let jsonStr = JSON.stringify(eventObj);
+                $.ajax({
+                    url: "Create_Helper.php",
+                    type: "post",
+                    data: {user: jsonStr},
+                    success: created
+                });
+            }
+
+            function created(responseText) {
+                console.log(responseText);
             }
 
             /**
