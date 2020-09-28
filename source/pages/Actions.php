@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <!-- CSS -->
-    <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="../css/NavBar.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/pagination.css">
 
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
@@ -12,12 +11,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    <title>Create</title>
     <script src="../js/pagination.js"></script>
 
+    <title>Actions</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         <a href="Create.php">Create Event</a>
+        <a href="Events.php"> Events </a>
+        <a href="Actions.php"> Actions </a>
         <br> <br> <br>
         <a href="login.php">Logout</a>
     </div>
@@ -36,7 +38,7 @@
     </form>
     <table id="actions-table">
     </table>
-    <div id="pagination-container"></div>
+    <nav id="pagination-container" class="pagination"></nav>
 
 <script>
     let ACTIONS = [];
@@ -60,9 +62,10 @@
         $('#pagination-container').pagination({
             dataSource: actions,
             pageSize: 20,
-            className: 'paginationjs-theme-blue paginationjs-small',
+            className: 'paginationjs-theme-blue',
             callback: function(data, pagination) {
                 structureDataTable(data);
+                console.log(pagination);
             }
         })
     }

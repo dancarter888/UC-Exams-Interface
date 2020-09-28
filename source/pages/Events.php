@@ -2,42 +2,43 @@
 <html lang="en">
 <head>
     <!-- CSS -->
-    <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="../css/NavBar.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/pagination.css">
 
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../js/pagination.js"></script>
 
-    <title>Create</title>
+    <title>Events</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
-<div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-    <a href="Create.php">Create Event</a>
-    <a href="Events.php"> Events </a>
-    <br> <br> <br>
-    <a href="login.php">Logout</a>
-</div>
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="Create.php">Create Event</a>
+        <a href="Events.php"> Events </a>
+        <a href="Actions.php"> Actions </a>
+        <br> <br> <br>
+        <a href="login.php">Logout</a>
+    </div>
 
-<div id="main">
-    <button class="openbtn" onclick="openNav()"> ☰ </button>
-</div>
+    <div id="main">
+        <button class="openbtn" onclick="openNav()"> ☰ </button>
+    </div>
 
-<h1> Events </h1>
+    <h1> Events </h1>
 
-<br > <br > <br >
+    <br > <br > <br >
 
-<table id="events-table">
-</table>
+    <table id="events-table">
+    </table>
 
-<div id="listingTable"></div>
-<a href="javascript:prevPage()" id="btn_prev">Prev</a>
-<a href="javascript:nextPage()" id="btn_next">Next</a>
-page: <span id="page"></span>
+    <div id="listingTable"></div>
+    <a href="javascript:prevPage()" id="btn_prev">Prev</a>
+    <a href="javascript:nextPage()" id="btn_next">Next</a>
+    page: <span id="page"></span>
 
 <script>
     let EVENTS = [];
