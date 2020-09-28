@@ -18,17 +18,14 @@ if (isset($_GET['count']))
 function getEvents() {
     $result = queryDB("CALL show_events;");
     $field_names = [];
+    $rows = [];
     while ($field = $result->fetch_field()) {
         $field_names[] = $field->name;
     }
-
-    $events = array();
-    foreach ($result as $row) {
-        for ($i = 0; $i < sizeof($field_names); $i++) {
-            array_push($events, $row[$field_names[$i]]);
-        }
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
     }
-    return [$field_names, $events];
+    return [$field_names, $rows];
 }
 
 function queryDB($query) {

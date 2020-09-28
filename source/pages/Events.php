@@ -32,8 +32,8 @@
 
     <br > <br > <br >
 
-    <table id="events-table">
-    </table>
+    <table id="events-table"></table>
+    <nav id="pagination-container" class="pagination"></nav>
 
     <div id="listingTable"></div>
     <a href="javascript:prevPage()" id="btn_prev">Prev</a>
@@ -42,13 +42,52 @@
 
 <script>
     let EVENTS = [];
-    let eventsAdded = 0;
 
     var currentPage = 1;
     var eventsPerPage = 20;
 
     // Make a get request to the URL
-    makeRequest("GET", "Events_Helper.php?count=All", eventCallback);
+    makeRequest("GET", "Events_Helper.php?count=All", pagination);
+
+    function pagination(responseText) {
+        let eventsTable = document.getElementById('events-table');
+        let parsedResponse = JSON.parse(responseText);
+        let fieldNames = parsedResponse[0];
+        let actions = parsedResponse[1];
+        let headerRow = document.createElement('tr');
+        for (let i=0; i< fieldNames.length; i++) {
+            let tableHeader = document.createElement('th');
+            tableHeader.innerHTML = fieldNames[i];
+            headerRow.appendChild(tableHeader);
+        }
+        eventsTable.appendChild(headerRow);
+        $('#pagination-container').pagination({
+            dataSource: actions,
+            pageSize: 20,
+            callback: function(data, pagination) {
+                structureDataTable(data);
+                console.log(pagination);
+            }
+        })
+    }
+
+    function structureDataTable(data) {
+        let actionsTable = document.getElementById('events-table');
+        let actions = document.getElementsByClassName('event');
+        for (let i = actions.length - 1; i >= 0; i--) {
+            actions[i].remove();
+        }
+        for (let i = 0; i < data.length; i++) {
+            let tableRow = document.createElement('tr');
+            tableRow.className = 'event';
+            for (let j = 0; j < data[i].length; j++) {
+                let tableData = document.createElement('td');
+                tableData.innerHTML = data[i][j];
+                tableRow.appendChild(tableData);
+            }
+            actionsTable.appendChild(tableRow);
+        }
+    }
 
     /**
      * Function to add the events in response text to the datalist in the webpage.

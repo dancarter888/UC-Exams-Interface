@@ -42,7 +42,6 @@
 
 <script>
     let ACTIONS = [];
-    let actionsAdded = 0;
 
     // Make a get request to the URL
     makeRequest("GET", "Actions_Helper.php?count=All", pagination);
@@ -62,7 +61,6 @@
         $('#pagination-container').pagination({
             dataSource: actions,
             pageSize: 20,
-            className: 'paginationjs-theme-blue',
             callback: function(data, pagination) {
                 structureDataTable(data);
                 console.log(pagination);
