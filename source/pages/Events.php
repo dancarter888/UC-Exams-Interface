@@ -9,6 +9,7 @@
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Create</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
@@ -33,9 +34,17 @@
 <table id="events-table">
 </table>
 
+<div id="listingTable"></div>
+<a href="javascript:prevPage()" id="btn_prev">Prev</a>
+<a href="javascript:nextPage()" id="btn_next">Next</a>
+page: <span id="page"></span>
+
 <script>
     let EVENTS = [];
     let eventsAdded = 0;
+
+    var currentPage = 1;
+    var eventsPerPage = 20;
 
     // Make a get request to the URL
     makeRequest("GET", "Events_Helper.php?count=All", eventCallback);
@@ -46,7 +55,7 @@
     function eventCallback(responseText) {
         let eventsTable = document.getElementById('events-table');
         let parsedResponse = JSON.parse(responseText);
-        let fieldNames = parsedResponse[0];
+        fieldNames = parsedResponse[0];
         let events = parsedResponse[1];
         EVENTS = events;
 
@@ -57,9 +66,9 @@
             headerRow.appendChild(tableHeader);
         }
         eventsTable.appendChild(headerRow);
-
-        for (let i=0; i<events.length; i += fieldNames.length) {
+        for (let i=0; i<eventsPerPage * fieldNames.length; i += fieldNames.length) {
             let tableRow = document.createElement('tr');
+            tableRow.className = "event";
             for (let j = 0; j < fieldNames.length; j++){
                 let tableData = document.createElement('td');
                 tableData.innerHTML = events[i+j];
@@ -68,6 +77,54 @@
             eventsTable.appendChild(tableRow);
         }
     }
+
+    function nextPage() {
+        // Delete all events in the table
+        var totalPages = Math.ceil((EVENTS.length / fieldNames.length) / eventsPerPage);
+        if (currentPage + 1 <= totalPages) {
+            currentPage++;
+            var events = document.getElementsByClassName('event');
+            for (var i = events.length - 1; i >= 0; i--) {
+                events[i].remove();
+            }
+
+            let eventsTable = document.getElementById('events-table');
+            for (let i = (currentPage - 1) * eventsPerPage * fieldNames.length; i < currentPage * eventsPerPage * fieldNames.length; i += fieldNames.length) {
+                let tableRow = document.createElement('tr');
+                tableRow.className = "event";
+                for (let j = 0; j < fieldNames.length; j++) {
+                    let tableData = document.createElement('td');
+                    tableData.innerHTML = EVENTS[i + j];
+                    tableRow.appendChild(tableData);
+                }
+                eventsTable.appendChild(tableRow);
+            }
+        }
+    }
+
+    function prevPage() {
+        // Delete all events in the table
+        if (currentPage - 1 > 0) {
+            currentPage--;
+            var events = document.getElementsByClassName('event');
+            for (var i = events.length - 1; i >= 0; i--) {
+                events[i].remove();
+            }
+
+            let eventsTable = document.getElementById('events-table');
+            for (let i = (currentPage - 1) * eventsPerPage * fieldNames.length; i < currentPage * eventsPerPage * fieldNames.length; i += fieldNames.length) {
+                let tableRow = document.createElement('tr');
+                tableRow.className = "event";
+                for (let j = 0; j < fieldNames.length; j++) {
+                    let tableData = document.createElement('td');
+                    tableData.innerHTML = EVENTS[i + j];
+                    tableRow.appendChild(tableData);
+                }
+                eventsTable.appendChild(tableRow);
+            }
+        }
+    }
+
 </script>
 </body>
 </html>
