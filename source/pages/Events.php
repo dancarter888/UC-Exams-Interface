@@ -9,6 +9,7 @@
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Create</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">

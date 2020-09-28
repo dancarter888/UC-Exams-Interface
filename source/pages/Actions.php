@@ -9,8 +9,9 @@
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    <title>Create</title>
+    <script src="../js/pagination.js"></script>
 
-    <title>Create</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
@@ -31,13 +32,14 @@
 
 <table id="actions-table">
 </table>
+<div id="pagination-container"></div>
 
 <script>
     let ACTIONS = [];
     let actionsAdded = 0;
 
     // Make a get request to the URL
-    makeRequest("GET", "Actions_Helper.php?count=All", eventCallback);
+    makeRequest("GET", "Actions_Helper.php?count=All", pagination);
 
     /**
      * Function to add the events in response text to the datalist in the webpage.
@@ -45,7 +47,7 @@
     function eventCallback(responseText) {
         let eventsTable = document.getElementById('actions-table');
         let parsedResponse = JSON.parse(responseText);
-        fieldNames = parsedResponse[0];
+        let fieldNames = parsedResponse[0];
         let actions = parsedResponse[1];
         ACTIONS = actions;
 
@@ -58,13 +60,53 @@
         eventsTable.appendChild(headerRow);
         for (let i=0; i<actions.length; i += fieldNames.length) {
             let tableRow = document.createElement('tr');
-            tableRow.className = "event";
+            tableRow.className = "action";
             for (let j = 0; j < fieldNames.length; j++){
                 let tableData = document.createElement('td');
                 tableData.innerHTML = actions[i+j];
                 tableRow.appendChild(tableData);
             }
             eventsTable.appendChild(tableRow);
+        }
+    }
+
+    function pagination(responseText) {
+        let eventsTable = document.getElementById('actions-table');
+        let parsedResponse = JSON.parse(responseText);
+        let fieldNames = parsedResponse[0];
+        let actions = parsedResponse[1];
+        let headerRow = document.createElement('tr');
+        for (let i=0; i< fieldNames.length; i++) {
+            let tableHeader = document.createElement('th');
+            tableHeader.innerHTML = fieldNames[i];
+            headerRow.appendChild(tableHeader);
+        }
+        eventsTable.appendChild(headerRow);
+        $('#pagination-container').pagination({
+            dataSource: actions,
+            pageSize: 20,
+            className: 'paginationjs-theme-blue paginationjs-small',
+            callback: function(data, pagination) {
+                structureDataTable(data);
+            }
+        })
+    }
+
+    function structureDataTable(data) {
+        let actionsTable = document.getElementById('actions-table');
+        let actions = document.getElementsByClassName('action');
+        for (let i = actions.length - 1; i >= 0; i--) {
+            actions[i].remove();
+        }
+        for (let i = 0; i < data.length; i++) {
+            let tableRow = document.createElement('tr');
+            tableRow.className = 'action';
+            for (let j = 0; j < data[i].length; j++) {
+                let tableData = document.createElement('td');
+                tableData.innerHTML = data[i][j];
+                tableRow.appendChild(tableData);
+            }
+            actionsTable.appendChild(tableRow);
         }
     }
 

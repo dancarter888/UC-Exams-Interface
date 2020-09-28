@@ -18,17 +18,14 @@ if (isset($_GET['count']))
 function getActions() {
     $result = queryDB("CALL show_actions;");
     $field_names = [];
+    $rows = [];
     while ($field = $result->fetch_field()) {
         $field_names[] = $field->name;
     }
-
-    $actions = array();
-    foreach ($result as $row) {
-        for ($i = 0; $i < sizeof($field_names); $i++) {
-            array_push($actions, $row[$field_names[$i]]);
-        }
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
     }
-    return [$field_names, $actions];
+    return [$field_names, $rows];
 }
 
 function queryDB($query) {
