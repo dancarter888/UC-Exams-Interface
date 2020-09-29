@@ -777,16 +777,18 @@ BEGIN
     insert into front_daily (event_id, group_id, day_of_week, start_time) select event_ID, groupID, day_week, start_time from group_IDs;
 	-- select * from front_daily where day_of_week = 5 and start_time = '18:00:00';
     
+    select front_ID, cluster_ID;
+    
     /* 
     Insert all of the actions (turning cluster on and off). The cluster_id of the first and last query is the default lab machine cluster.
 	Not sure what we're meant to do with the times 
     */
-    insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '-00:05:00', 3, 0); -- Turn off default cluster 5 minutes before test
+    /*insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '-00:05:00', 3, 0); -- Turn off default cluster 5 minutes before test
 	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '-00:05:00', cluster_ID, 1); -- Turn on test cluster 5 minutes before test
 	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, duration, cluster_ID, 0); -- Turn off test cluster after test duration
 	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, duration, 3, 1); -- Turn on default cluster after test duration
 
-	drop table group_IDs;
+	drop table group_IDs;*/
 	-- All done!
 
 	-- select * from vw_front_event where date = '2020-09-18' order by time, cluster_id, group_id;
