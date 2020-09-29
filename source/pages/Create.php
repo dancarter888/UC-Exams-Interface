@@ -77,11 +77,9 @@
                 <h4 id="r_stime">Test Start Time:</h4>  <br />
                 <h4 id="r_etime">Test End Time:</h4>  <br />
                 <h4 id="r_type">Test Type:</h4>  <br />
-                <input type="button" onclick="createEvent()" value="Next" />
+                <input type="button" onclick="nextStep()" value="Next" />
             </form>
         </div>
-
-        <!--<input type="button" onclick="createEvent()">Create</input>-->
 
         <script>
             const ON = "block";
@@ -94,6 +92,7 @@
             let currentForm = 0
             let formIds = ["F1", "F2", "F3"]
 
+            // JSON object for storing the event
             let eventObj = {Date: "", Name:"", Rooms:[], StartTime: "", EndTime: "", Duration: "", TestType: ""};
 
             // Make a get request to the URL
@@ -101,6 +100,9 @@
             makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
             setForms();
 
+            /**
+             * Function that takes the information from the form and stores it in eventObj
+             */
             function nextStep() {
                 console.log("Working");
                 if (currentForm == 0) {
@@ -112,6 +114,9 @@
                     eventObj["EndTime"] = $("#test_etime").val();
                 } else if (currentForm == 1) {
                     eventObj["TestType"] = $("#test_type").val();
+                } else {
+                    createEvent();
+                    return;
                 }
                 console.log(eventObj);
 
@@ -119,6 +124,9 @@
                 setForms();
             }
 
+            /**
+             * Toggle between the forms.
+             */
             function setForms() {
                 for (let i=0; i<formIds.length; i++) {
                     let ele = document.getElementById(formIds[i]);
@@ -131,6 +139,9 @@
                 }
             }
 
+            /**
+             * Updates the final form with the data the user has inputted.
+             */
             function updateFinalForm() {
                 $("#r_date").append("\t" + eventObj["Date"]);
                 $("#r_name").append("\t" + eventObj["Name"]);
@@ -153,6 +164,7 @@
 
             function created(responseText) {
                 console.log(responseText);
+                // Goto event page
             }
 
             /**
@@ -196,6 +208,10 @@
                 }
             }
 
+            /**
+             * Function to add the clusters to the cluster selection form
+             * @param responseText responsew from the server
+             */
             function clusterCallback(responseText) {
                 let table = document.getElementById('clusters');
                 console.log(responseText);
