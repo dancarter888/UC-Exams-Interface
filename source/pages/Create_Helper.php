@@ -41,14 +41,15 @@
         $duration = "01:00:00";
 
         $qDate = $decoded["Date"];
-        $qDay = 1;
-        $qWeek = 34;
-        $qYear = 2020;
+        $qDay = idate('w', strtotime($qDate));
+        $qWeek = idate('W', strtotime($qDate));
+        $qYear = idate('Y', strtotime($qDate));
+        //echo "{$qDay} - {$qWeek} - {$qYear}";
 
-        //Call stored procedure
+        // Call stored procedure
         //$result = queryDB("CALL add_event('{$qName}','{$qRooms}','{$cluster}',{$qDay},{$qWeek},{$qYear},'{$startTime}','{$duration}')");
-        $result = queryDB('call add_event("EMTH119-20S2 Tuesday", "Erskine-033,Erskine-035,Erskine-036,Erskine-038", "MapleTA", 2, 34, 2020, "18:00:00", "01:00:00");');
-        echo json_encode($result);
+        //$result = queryDB('call add_event("EMTH119-20S2 Tuesday", "Erskine-033,Erskine-035,Erskine-036,Erskine-038", "MapleTA", 2, 34, 2020, "18:00:00", "01:00:00");');
+        //echo json_encode($result[0]);
     }
 
     /**
