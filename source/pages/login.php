@@ -147,8 +147,8 @@ function checkUsernameAndPassword($conn, $username, $password) {
         $hashed_password = $result->fetch_array(MYSQLI_ASSOC)['hashed_password'];
         if (password_verify($password, $hashed_password)) {
             echo "Success";
-            setcookie('loggedin', 'yes', time() + 60 * 5); // Sets cookie timeout to 5 minutes
-            //TODO redirect to main page.
+            setcookie('loggedin', 'yes', ['samesite' => 'Lax'], time() + 60 * 5); // Sets cookie timeout to 5 minutes
+            header('Location: Events.php');
         } else {
             echo "Incorrect password";
         }

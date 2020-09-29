@@ -1,0 +1,11 @@
+ul, li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+#pagination-container a.active {
+    background-color: #55A555;
+    color: white;
+    border-radius: 5px;
+}

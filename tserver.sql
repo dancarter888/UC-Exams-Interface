@@ -372,7 +372,7 @@ SET character_set_client = @saved_cs_client;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`localhost` PROCEDURE `add_client`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_client`(
 IN p_room_name VARCHAR(127),
 IN p_group_name VARCHAR(127),
 IN p_mac VARCHAR(127),
@@ -402,7 +402,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`localhost` PROCEDURE `disable_cluster`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `disable_cluster`(
         IN in_cluster_name CHAR(128),
         IN in_machine_group CHAR(100)
 )
@@ -429,7 +429,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`localhost` PROCEDURE `enable_cluster`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `enable_cluster`(
 	IN in_cluster_name CHAR(128),
 	IN in_machine_group CHAR(100)
 )
@@ -456,7 +456,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`cluster_admin`@`localhost` PROCEDURE `get_front`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_front`(
         IN mac_address CHAR(17)
 )
 BEGIN
@@ -691,8 +691,30 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `show_events`()
 BEGIN
-	SELECT event_id, event_name, status
-    FROM front_event ORDER BY event_id;
+	SELECT *
+    FROM vw_front_event;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+/*!50003 DROP PROCEDURE IF EXISTS `show_actions` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `show_actions`()
+BEGIN
+	SELECT date, time, event_name, cluster_name, machine_group, activate 
+    FROM tserver.vw_front_event
+	ORDER BY date desc, time, activate;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -805,7 +827,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`cza19`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `vw_front_group_client` AS select `r`.`room_name` AS `room_name`,`c`.`mac` AS `mac`,`c`.`serial_no` AS `serial_no`,`c`.`position` AS `position` from ((`front_client` `c` join `front_room` `r` on((`c`.`room_id` = `r`.`room_id`))) join `front_group` `g` on((`c`.`group_id` = `g`.`group_id`))) order by `r`.`room_name`,`c`.`position` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;

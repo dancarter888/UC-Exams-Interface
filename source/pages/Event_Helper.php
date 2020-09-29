@@ -1,13 +1,11 @@
 <?php
 require_once("../config/config.php");
 
-if (isset($_GET['count']))
+if (isset($_GET['id']))
 {
-    if ($_GET['count'] === "All") {
-        $get_events = getEvents();
-        $field_names = $get_events[0];
-        $events = $get_events[1];
-        echo json_encode([$field_names, $events]);
+    if ($_GET['id'] != "") {
+        $event = getEvent($_GET['id']);
+        echo json_encode($event);
     }
 }
 
@@ -15,20 +13,12 @@ if (isset($_GET['count']))
  * Queries the database for a list of the events.
  * @return array an array of the event_id, event_name and status
  */
-function getEvents() {
-    $result = queryDB("CALL show_events;");
-    $field_names = [];
-    $rows = [];
-    while ($field = $result->fetch_field()) {
-        $field_names[] = $field->name;
-    }
-    while ($row = $result->fetch_row()) {
-        $rows[] = $row;
-    }
-    return [$field_names, $rows];
+function getEvent($id) {
+    $result = queryDB("CALL get_one_event_details(?);", $id);
+    return $result;
 }
 
-function queryDB($query) {
+function queryDB($query, $event_id) {
     $hostname = "127.0.0.1";
     $database = "tserver";
     $username = "root";
@@ -39,8 +29,18 @@ function queryDB($query) {
         fatalError($conn->connect_error);
         return;
     }
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $event_id);
+    $stmt->execute();
 
-    return $conn->query($query);
+    $result = $stmt->get_result();
+    $actions = [];
+
+    for($i = 0; $i < $result->num_rows; $i++) {
+        $action = $result->fetch_assoc();
+        array_push($actions, $action);
+    }
+    return $actions;
 }
 
 /**

@@ -4,21 +4,42 @@ require_once("../config/config.php");
 if (isset($_GET['count']))
 {
     if ($_GET['count'] === "All") {
-        $get_events = getEvents();
-        $field_names = $get_events[0];
-        $events = $get_events[1];
-        echo json_encode([$field_names, $events]);
+        $get_actions = getActions();
+        $field_names = $get_actions[0];
+        $actions = $get_actions[1];
+        echo json_encode([$field_names, $actions]);
     }
+}
+
+if (isset($_GET['q'])) {
+    $get_actions = getSearchedActions($_GET['q']);
+    $field_names = $get_actions[0];
+    $actions = $get_actions[1];
+    echo json_encode([$field_names, $actions]);
 }
 
 /**
  * Queries the database for a list of the events.
  * @return array an array of the event_id, event_name and status
  */
-function getEvents() {
-    $result = queryDB("CALL show_events;");
+function getActions() {
+    $result = queryDB("CALL show_actions;");
     $field_names = [];
     $rows = [];
+    while ($field = $result->fetch_field()) {
+        $field_names[] = $field->name;
+    }
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
+    }
+    return [$field_names, $rows];
+}
+
+function getSearchedActions($search) {
+    $result = queryDB("CALL search_actions(?);");
+    $field_names = [];
+    $rows = [];
+    echo $result;
     while ($field = $result->fetch_field()) {
         $field_names[] = $field->name;
     }
