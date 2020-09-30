@@ -12,10 +12,11 @@
     <link rel="stylesheet" href="../css/NavBar.css">
     <link rel="stylesheet" href="../css/pagination.css">
 
+
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    <title>Create</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/pagination.js"></script>
 
     <title>Actions</title>
@@ -38,6 +39,8 @@
     <h1> Actions </h1>
 
     <br > <br > <br >
+
+
 
     <form>
         <input type="text" size="30" onkeyup="showResult(this.value)">
