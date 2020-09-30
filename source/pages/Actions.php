@@ -15,7 +15,7 @@
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    <title>Create</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/pagination.js"></script>
 
     <title>Actions</title>
@@ -37,7 +37,21 @@
 
     <h1> Actions </h1>
 
-    <br > <br > <br >
+    <h3>Start Date:</h3>
+    <input list="start-dates" id="start-date-selected">
+    <datalist id="start-dates" required>
+        <option value="" disabled selected> -- Start Date -- </option>
+    </datalist>
+
+    <h3>End Date:</h3>
+    <input list="end-dates" id="end-date-selected">
+    <datalist id="end-dates" required>
+        <option value="" disabled selected> -- End Date -- </option>
+    </datalist>
+
+    <button onclick="dateFilter()">Filter</button><br />
+
+    <br> <br> <br>
 
     <form>
         <input type="text" size="30" onkeyup="showResult(this.value)">
@@ -49,22 +63,49 @@
 
 <script>
     let ACTIONS = [];
+    let STARTDATE = "1999-01-01";
+    let ENDDATE = "9999-12-31";
+    let HEADER = false;
 
     // Make a get request to the URL
-    makeRequest("GET", "Actions_Helper.php?count=All", pagination);
+    makeRequest("GET", "Actions_Helper.php?dates=all", listDates);
+    makeRequest("GET", "Actions_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE, pagination);
+
+    function listDates(responseText) {
+        let parsedResponse = JSON.parse(responseText);
+        let dates = parsedResponse;
+        let startDates = document.getElementById('start-dates');
+        let endDates = document.getElementById('end-dates');
+        for (let i=0; i<dates.length; i++) {
+            console.log(dates[i][0]);
+            let startOption = document.createElement('option');
+            startOption.value = dates[i][0];
+            startOption.innerHTML = dates[i][0];
+            startDates.appendChild(startOption);
+            let endOption = document.createElement('option');
+            endOption.value = dates[i][0];
+            endOption.innerHTML = dates[i][0];
+            endDates.appendChild(endOption);
+        }
+    }
 
     function pagination(responseText) {
+        console.log(responseText);
         let eventsTable = document.getElementById('actions-table');
         let parsedResponse = JSON.parse(responseText);
         let fieldNames = parsedResponse[0];
         let actions = parsedResponse[1];
-        let headerRow = document.createElement('tr');
-        for (let i=0; i< fieldNames.length; i++) {
-            let tableHeader = document.createElement('th');
-            tableHeader.innerHTML = fieldNames[i];
-            headerRow.appendChild(tableHeader);
+        if (HEADER === false) {
+            let headerRow = document.createElement('tr');
+            for (let i=0; i< fieldNames.length; i++) {
+                let tableHeader = document.createElement('th');
+                tableHeader.innerHTML = fieldNames[i];
+                headerRow.appendChild(tableHeader);
+            }
+            eventsTable.appendChild(headerRow);
+            HEADER = true;
         }
-        eventsTable.appendChild(headerRow);
+
         $('#pagination-container').pagination({
             dataSource: actions,
             pageSize: 20,
@@ -110,6 +151,14 @@
                 document.getElementById("livesearch").style.border = "1px solid #A5ACB2";
             }
         });
+    }
+
+    function dateFilter()
+    {
+        let startDate = document.getElementById("start-date-selected").value;
+        let endDate = document.getElementById("end-date-selected").value;
+
+        makeRequest("GET", "Actions_Helper.php?start=" + startDate + "&end=" + endDate, pagination);
     }
 
 

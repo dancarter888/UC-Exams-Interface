@@ -47,8 +47,9 @@
                 <ul id="room_select"></ul>
                 <input list="rooms" id="test_room" name="test_room">
                 <datalist id="rooms" required>
-                    <option value="" disabled selected> -- Select a room -- </option>
-                </datalist> <button onclick="addRoom()">Add</button><br />
+                    <option value="" disabled selected> -- Select A Room -- </option>
+                </datalist>
+                <button onclick="addRoom()">+ Add</button><br />
                 Start Time <input type="time" name="test_stime" id="test_stime" required /> <br />
                 End Time <input type="time" name="test_etime" id="test_etime" required /> <br />
 

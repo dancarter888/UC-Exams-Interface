@@ -1,29 +1,26 @@
 <?php
 require_once("../config/config.php");
 
-if (isset($_GET['count']))
+if (isset($_GET['start']) && isset($_GET['end']))
 {
-    if ($_GET['count'] === "All") {
-        $get_actions = getActions();
+    $start_date = $_GET['start'];
+    $end_date = $_GET['end'];
+    if (strtotime($start_date) !== false && strtotime($end_date) !== false) {
+        $get_actions = getActions($start_date, $end_date);
         $field_names = $get_actions[0];
         $actions = $get_actions[1];
         echo json_encode([$field_names, $actions]);
     }
 }
 
-if (isset($_GET['q'])) {
-    $get_actions = getSearchedActions($_GET['q']);
-    $field_names = $get_actions[0];
-    $actions = $get_actions[1];
-    echo json_encode([$field_names, $actions]);
+if (isset($_GET['dates']))
+{
+    $dates = getDates();
+    echo json_encode($dates);
 }
 
-/**
- * Queries the database for a list of the events.
- * @return array an array of the event_id, event_name and status
- */
-function getActions() {
-    $result = queryDB("CALL show_actions;");
+function getActions($start_date, $end_date) {
+    $result = queryDB($start_date, $end_date);
     $field_names = [];
     $rows = [];
     while ($field = $result->fetch_field()) {
@@ -33,6 +30,23 @@ function getActions() {
         $rows[] = $row;
     }
     return [$field_names, $rows];
+}
+
+function getDates() {
+    $hostname = "127.0.0.1";
+    $database = "tserver";
+    $username = "root";
+    $password = "mysql";
+    $conn = new mysqli($hostname, $username, $password, $database);
+
+    $query = "CALL show_dates()";
+    $result = $conn->query($query);
+
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
+    }
+
+    return $rows;
 }
 
 function getSearchedActions($search) {
@@ -49,19 +63,18 @@ function getSearchedActions($search) {
     return [$field_names, $rows];
 }
 
-function queryDB($query) {
+function queryDB($start_date, $end_date) {
     $hostname = "127.0.0.1";
     $database = "tserver";
     $username = "root";
     $password = "mysql";
     $conn = new mysqli($hostname, $username, $password, $database);
-    if ($conn->connect_error)
-    {
-        fatalError($conn->connect_error);
-        return;
-    }
 
-    return $conn->query($query);
+    $query = "CALL show_actions(?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ss', $start_date, $end_date);
+    $stmt->execute();
+    return $stmt->get_result();
 }
 
 /**
