@@ -39,16 +39,11 @@
     <h1> Actions </h1>
 
     <h3>Start Date:</h3>
-    <input list="start-dates" id="start-date-selected">
-    <datalist id="start-dates" required>
-        <option value="" disabled selected> -- Start Date -- </option>
-    </datalist>
+    <input type="date" id="start-dates">
 
     <h3>End Date:</h3>
-    <input list="end-dates" id="end-date-selected">
-    <datalist id="end-dates" required>
-        <option value="" disabled selected> -- End Date -- </option>
-    </datalist>
+    <input type="date" id="end-dates">
+
 
     <button onclick="dateFilter()">Filter</button><br />
 
@@ -71,29 +66,9 @@
     let HEADER = false;
 
     // Make a get request to the URL
-    makeRequest("GET", "Actions_Helper.php?dates=all", listDates);
     makeRequest("GET", "Actions_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE, pagination);
 
-    function listDates(responseText) {
-        let parsedResponse = JSON.parse(responseText);
-        let dates = parsedResponse;
-        let startDates = document.getElementById('start-dates');
-        let endDates = document.getElementById('end-dates');
-        for (let i=0; i<dates.length; i++) {
-            console.log(dates[i][0]);
-            let startOption = document.createElement('option');
-            startOption.value = dates[i][0];
-            startOption.innerHTML = dates[i][0];
-            startDates.appendChild(startOption);
-            let endOption = document.createElement('option');
-            endOption.value = dates[i][0];
-            endOption.innerHTML = dates[i][0];
-            endDates.appendChild(endOption);
-        }
-    }
-
     function pagination(responseText) {
-        console.log(responseText);
         let eventsTable = document.getElementById('actions-table');
         let parsedResponse = JSON.parse(responseText);
         let fieldNames = parsedResponse[0];
@@ -158,9 +133,8 @@
 
     function dateFilter()
     {
-        let startDate = document.getElementById("start-date-selected").value;
-        let endDate = document.getElementById("end-date-selected").value;
-
+        let startDate = document.getElementById("start-dates").value;
+        let endDate = document.getElementById("end-dates").value;
         makeRequest("GET", "Actions_Helper.php?start=" + startDate + "&end=" + endDate, pagination);
     }
 
