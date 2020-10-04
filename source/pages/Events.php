@@ -42,11 +42,6 @@
     <table id="events-table"></table>
     <nav id="pagination-container" class="pagination"></nav>
 
-    <div id="listingTable"></div>
-    <a href="javascript:prevPage()" id="btn_prev">Prev</a>
-    <a href="javascript:nextPage()" id="btn_next">Next</a>
-    page: <span id="page"></span>
-
 <script>
     let EVENTS = [];
 
@@ -122,53 +117,6 @@
                 tableRow.appendChild(tableData);
             }
             eventsTable.appendChild(tableRow);
-        }
-    }
-
-    function nextPage() {
-        // Delete all events in the table
-        var totalPages = Math.ceil((EVENTS.length / fieldNames.length) / eventsPerPage);
-        if (currentPage + 1 <= totalPages) {
-            currentPage++;
-            var events = document.getElementsByClassName('event');
-            for (var i = events.length - 1; i >= 0; i--) {
-                events[i].remove();
-            }
-
-            let eventsTable = document.getElementById('events-table');
-            for (let i = (currentPage - 1) * eventsPerPage * fieldNames.length; i < currentPage * eventsPerPage * fieldNames.length; i += fieldNames.length) {
-                let tableRow = document.createElement('tr');
-                tableRow.className = "event";
-                for (let j = 0; j < fieldNames.length; j++) {
-                    let tableData = document.createElement('td');
-                    tableData.innerHTML = EVENTS[i + j];
-                    tableRow.appendChild(tableData);
-                }
-                eventsTable.appendChild(tableRow);
-            }
-        }
-    }
-
-    function prevPage() {
-        // Delete all events in the table
-        if (currentPage - 1 > 0) {
-            currentPage--;
-            var events = document.getElementsByClassName('event');
-            for (var i = events.length - 1; i >= 0; i--) {
-                events[i].remove();
-            }
-
-            let eventsTable = document.getElementById('events-table');
-            for (let i = (currentPage - 1) * eventsPerPage * fieldNames.length; i < currentPage * eventsPerPage * fieldNames.length; i += fieldNames.length) {
-                let tableRow = document.createElement('tr');
-                tableRow.className = "event";
-                for (let j = 0; j < fieldNames.length; j++) {
-                    let tableData = document.createElement('td');
-                    tableData.innerHTML = EVENTS[i + j];
-                    tableRow.appendChild(tableData);
-                }
-                eventsTable.appendChild(tableRow);
-            }
         }
     }
 
