@@ -1,6 +1,8 @@
 <?php
 require_once("../config/config.php");
 
+$conn = new mysqli($hostname, $username, $password, $database);
+
 if (isset($_GET['start']) && isset($_GET['end']))
 {
     $start_date = $_GET['start'];
@@ -9,15 +11,15 @@ if (isset($_GET['start']) && isset($_GET['end']))
     }
     $end_date = $_GET['end'];
     if (strtotime($start_date) !== false && strtotime($end_date) !== false) {
-        $get_actions = getEvents($start_date, $end_date);
+        $get_actions = getEvents($conn, $start_date, $end_date);
         $field_names = $get_actions[0];
         $events = $get_actions[1];
         echo json_encode([$field_names, $events]);
     }
 }
 
-function getEvents($start_date, $end_date) {
-    $result = queryDB($start_date, $end_date);
+function getEvents($conn, $start_date, $end_date) {
+    $result = queryDB($conn, $start_date, $end_date);
     $field_names = [];
     $rows = [];
     while ($field = $result->fetch_field()) {
@@ -30,13 +32,7 @@ function getEvents($start_date, $end_date) {
 }
 
 
-function queryDB($start_date, $end_date) {
-    $hostname = "127.0.0.1";
-    $database = "tserver";
-    $username = "root";
-    $password = "mysql";
-    $conn = new mysqli($hostname, $username, $password, $database);
-    // TODO close $conn
+function queryDB($conn, $start_date, $end_date) {
     $query = "CALL show_events(?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('ss', $start_date, $end_date);
@@ -56,4 +52,6 @@ function sanitizeString($var) {
     $var = htmlentities($var);
     return $var;
 }
+
+$conn->close();
 ?>
