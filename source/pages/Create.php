@@ -76,6 +76,31 @@
         </div>
 
         <div id="F3">
+            <h1> Add Actions </h1>
+
+            <br > <br > <br >
+
+            <div id="ActionsForm">
+                <ul id="ActionsList"></ul>
+
+                Action time:    <input id="OffsetInput" type="time"> <br /><br />
+
+                Activation:
+                <select id="Activate">
+                    <option value="1">Turn on</option>
+                    <option value="0">Turn off</option>
+                </select> <br />
+
+                <button id="AddAction" onclick="addAction()">Add Action</button>
+
+                <input type="button" onclick="nextStep()" value="Next" />
+            </div>
+
+
+
+        </div>
+
+        <div id="F4">
             <h1> Create Test Review </h1>
 
             <br > <br > <br >
@@ -96,11 +121,13 @@
             const OFF = "none";
 
             let ROOMS = [];
-            let roomsAdded = 0
+            let roomsAdded = 0;
             let roomsSelected = [];
 
-            let currentForm = 0
-            let formIds = ["F1", "F2", "F3"]
+            let ACTIONS = [];
+
+            let currentForm = 0;
+            let formIds = ["F1", "F2", "F3", "F4"];
 
             // JSON object for storing the event
             let eventObj = {Date: "", Name:"", Rooms:[], StartTime: "", EndTime: "", Duration: "", TestType: ""};
@@ -124,7 +151,7 @@
                     eventObj["EndTime"] = $("#test_etime").val();
                 } else if (currentForm == 1) {
                     eventObj["TestType"] = $("#test_type").val();
-                } else {
+                } else if (currentForm == 3) {
                     createEvent();
                     return;
                 }
@@ -144,7 +171,7 @@
                         x.style.display = (i == currentForm) ? ON : OFF;
                     }
                 }
-                if (currentForm == 2) {
+                if (currentForm == 3) {
                     updateFinalForm();
                 }
             }
@@ -164,15 +191,37 @@
 
             function createEvent() {
                 let jsonStr = JSON.stringify(eventObj);
-                $.ajax({
-                    url: "Create_Helper.php",
-                    type: "post",
-                    data: {user: jsonStr},
-                    success: created
-                });
+                // $.ajax({
+                //     url: "Create_Helper.php",
+                //     type: "post",
+                //     data: {user: jsonStr},
+                //     success: created
+                // });
+                created("Test");
             }
 
             function created(responseText) {
+                console.log(responseText);
+
+                // Get these from responseText
+                let eventID = 48;
+                let clusterID = 8;
+                for (let action of ACTIONS) {
+                    action["EventID"] = eventID;
+                    action["ClusterID"] = clusterID;
+                    action["StartTime"] = eventObj["StartTime"]
+                    jsonStr = JSON.stringify(action);
+                    $.ajax({
+                        url: "Create_Helper.php",
+                        type: "post",
+                        data: {"action": jsonStr},
+                        success: final
+                    });
+                }
+
+            }
+
+            function final(responseText) {
                 console.log(responseText);
                 // Goto event page
             }
@@ -216,6 +265,24 @@
                     ROOMS.splice(ROOMS.indexOf(input.value), 1);
                     input.value = "";
                 }
+            }
+
+            function addAction() {
+                let time = $("#OffsetInput").val();
+                console.log(time);
+
+                let activation = ($("#Activate").val() == "0") ? 0 : 1;
+                console.log(activation);
+
+                if (ACTIONS.length == 0) {
+                    $("#ActionsForm").prepend("<h2> Actions: </h2>");
+                }
+                $("#ActionsList").append("<li> Time: " + time + " Activation: " + activation);
+                let actionsObj = {
+                    "Time": time,
+                    "Activation": activation
+                }
+                ACTIONS.push(actionsObj);
             }
 
             /**

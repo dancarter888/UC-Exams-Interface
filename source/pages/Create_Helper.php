@@ -15,7 +15,12 @@
     }
     else
     {
-        createEvent();
+        if (isset($_POST["user"])) {
+            createEvent();
+        } else {
+            add_action();
+        }
+
     }
 
     function createEvent() {
@@ -50,6 +55,28 @@
         //$result = queryDB("CALL add_event('{$qName}','{$qRooms}','{$cluster}',{$qDay},{$qWeek},{$qYear},'{$startTime}','{$duration}')");
         //$result = queryDB('call add_event("EMTH119-20S2 Tuesday", "Erskine-033,Erskine-035,Erskine-036,Erskine-038", "MapleTA", 2, 34, 2020, "18:00:00", "01:00:00");');
         //echo json_encode($result[0]);
+    }
+
+    function add_action() {
+        $encoded_action = $_POST["action"];
+        $action = json_decode($encoded_action, true);
+        $time = strtotime($action["Time"]) - strtotime($action["StartTime"]);
+        if ($time < 0) {
+            $time_diff = date('-H:i:s', -1 * $time);
+        } else {
+            $time_diff = date('H:i:s', $time);
+        }
+
+        $query = "CALL add_action({$action["EventId"]}, '{$time_diff}', {$action["ClusterId"]}, {$action["Activate"]});";
+        $result = queryDB($query);
+
+        // Not sure about this
+        $action_ids = array();
+        foreach ($result as $row) {
+            array_push($rooms, $row["action_id"]);
+        }
+
+        echo $action_ids;
     }
 
     /**

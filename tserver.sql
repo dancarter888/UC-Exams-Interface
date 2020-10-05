@@ -845,6 +845,7 @@ IN activate int(11)
 BEGIN
 
 insert into front_action (event_id, time_offset, cluster_id, activate) values (event_id, time_offset, cluster_id, activate);
+select action_id from front_action where event_id=event_id and time_offset=time_offset;
 
 END ;; 
 DELIMITER ;
