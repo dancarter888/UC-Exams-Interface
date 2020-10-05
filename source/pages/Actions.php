@@ -38,14 +38,15 @@
 
     <h1> Actions </h1>
 
-    <h3>Start Date:</h3>
-    <input type="date" id="start-dates">
+    <form id="date-filter">
+        <h3>Start Date:</h3>
+        <input type="date" id="start-dates" required>
 
-    <h3>End Date:</h3>
-    <input type="date" id="end-dates">
+        <h3>End Date:</h3>
+        <input type="date" id="end-dates" required>
 
-
-    <button onclick="dateFilter()">Filter</button><br />
+        <input type="submit" value="Filter"/><br />
+    </form>
 
     <br> <br> <br>
 
@@ -61,9 +62,12 @@
 
 <script>
     let ACTIONS = [];
-    let STARTDATE = "1999-01-01";
+    let STARTDATE = "today";
     let ENDDATE = "9999-12-31";
     let HEADER = false;
+
+    // Set the start date field to today's date
+    document.getElementById('start-dates').value = new Date().toISOString().slice(0,10);
 
     // Make a get request to the URL
     makeRequest("GET", "Actions_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE, pagination);
@@ -131,15 +135,12 @@
         });
     }
 
-    function dateFilter()
-    {
+    $('#date-filter').submit(function () {
         let startDate = document.getElementById("start-dates").value;
         let endDate = document.getElementById("end-dates").value;
         makeRequest("GET", "Actions_Helper.php?start=" + startDate + "&end=" + endDate, pagination);
-    }
-
-
-
+        return false;
+    });
 </script>
 </body>
 </html>

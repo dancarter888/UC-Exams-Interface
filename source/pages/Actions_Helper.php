@@ -4,6 +4,9 @@ require_once("../config/config.php");
 if (isset($_GET['start']) && isset($_GET['end']))
 {
     $start_date = $_GET['start'];
+    if ($start_date === "today") {
+        $start_date = date("Y-m-d");
+    }
     $end_date = $_GET['end'];
     if (strtotime($start_date) !== false && strtotime($end_date) !== false) {
         $get_actions = getActions($start_date, $end_date);
@@ -11,12 +14,6 @@ if (isset($_GET['start']) && isset($_GET['end']))
         $actions = $get_actions[1];
         echo json_encode([$field_names, $actions]);
     }
-}
-
-if (isset($_GET['dates']))
-{
-    $dates = getDates();
-    echo json_encode($dates);
 }
 
 function getActions($start_date, $end_date) {
@@ -30,23 +27,6 @@ function getActions($start_date, $end_date) {
         $rows[] = $row;
     }
     return [$field_names, $rows];
-}
-
-function getDates() {
-    $hostname = "127.0.0.1";
-    $database = "tserver";
-    $username = "root";
-    $password = "mysql";
-    $conn = new mysqli($hostname, $username, $password, $database);
-
-    $query = "CALL show_dates()";
-    $result = $conn->query($query);
-
-    while ($row = $result->fetch_row()) {
-        $rows[] = $row;
-    }
-
-    return $rows;
 }
 
 function getSearchedActions($search) {
