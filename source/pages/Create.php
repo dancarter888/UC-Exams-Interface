@@ -40,7 +40,7 @@
 
             <br > <br > <br >
 
-            <form name="Details">
+            <form id="DetailsForm">
                 Test Date <input type="date" name="test_date" id="test_date" /> <br />
                 Test Name <input type="text" name="test_name" id="test_name" required /> <br />
                 Room
@@ -53,7 +53,7 @@
                 Start Time <input type="time" name="test_stime" id="test_stime" required /> <br />
                 End Time <input type="time" name="test_etime" id="test_etime" required /> <br />
 
-                <input type="button" onclick="nextStep()" value="Next" />
+                <input type="submit" value="Next" />
             </form>
         </div>
 
@@ -62,7 +62,7 @@
 
             <br > <br > <br >
 
-            <form name="Type">
+            <form id="TypeForm">
                 <table id="clusters">
                     <tr>
                         <th> Select </th>
@@ -71,7 +71,8 @@
                     </tr>
                 </table>
 
-                <input type="button" onclick="nextStep()" value="Next" />
+                <input type="button" onclick="prevStep()" value="Prev" />
+                <input type="submit" value="Next" />
             </form>
         </div>
 
@@ -80,7 +81,7 @@
 
             <br > <br > <br >
 
-            <div id="ActionsForm">
+            <form id="ActionsForm">
                 <ul id="ActionsList"></ul>
 
                 Action time:    <input id="OffsetInput" type="time"> <br /><br />
@@ -93,8 +94,9 @@
 
                 <button id="AddAction" onclick="addAction()">Add Action</button>
 
-                <input type="button" onclick="nextStep()" value="Next" />
-            </div>
+                <input type="button" onclick="prevStep()" value="Prev" />
+                <input type="submit" value="Next" />
+            </form>
 
 
 
@@ -105,14 +107,15 @@
 
             <br > <br > <br >
 
-            <form name="Type">
+            <form id="ReviewForm">
                 <h4 id="r_date">Test Date:</h4>  <br />
                 <h4 id="r_name">Test Name:</h4>  <br />
                 <h4 id="r_rooms">Test Rooms:</h4>  <br />
                 <h4 id="r_stime">Test Start Time:</h4>  <br />
                 <h4 id="r_etime">Test End Time:</h4>  <br />
                 <h4 id="r_type">Test Type:</h4>  <br />
-                <input type="button" onclick="nextStep()" value="Next" />
+                <input type="button" onclick="prevStep()" value="Prev" />
+                <input type="submit" value="Next" />
             </form>
         </div>
 
@@ -137,9 +140,42 @@
             makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
             setForms();
 
-            /**
+            $('#DetailsForm').submit(function () {
+                eventObj["Date"] = $("#test_date").val();
+                console.log($("#test_name").val());
+                eventObj["Name"] = $("#test_name").val();
+                eventObj["Rooms"] = roomsSelected;
+                eventObj["StartTime"] = $("#test_stime").val();
+                eventObj["EndTime"] = $("#test_etime").val();
+                currentForm++;
+                setForms();
+                return false;
+            });
+
+            $('#TypeForm').submit(function () {
+                eventObj["TestType"] = $("#test_type").val();
+                currentForm++;
+                setForms();
+                return false;
+            });
+
+            $('#ActionsForm').submit(function () {
+                //STUFF
+                currentForm++;
+                setForms();
+                return false;
+            });
+
+            $('#ReviewForm').submit(function () {
+                createEvent();
+                currentForm++;
+                setForms();
+                return false;
+            });
+
+/*            /!**
              * Function that takes the information from the form and stores it in eventObj
-             */
+             *!/
             function nextStep() {
                 console.log("Working");
                 if (currentForm == 0) {
@@ -159,7 +195,21 @@
 
                 currentForm++;
                 setForms();
+            }*/
+
+            /**
+             * Function for the back button to go back a step
+             */
+            function prevStep() {
+                if (currentForm == 1) {
+                    eventObj["TestType"] = $("#test_type").val();
+                }
+                console.log(eventObj);
+
+                currentForm--;
+                setForms();
             }
+
 
             /**
              * Toggle between the forms.
@@ -305,6 +355,7 @@
                     radioBut.name = "test_type";
                     radioBut.id = "test_type";
                     radioBut.value = clusters[i][1];
+                    radioBut.required = true;
                     idCell.appendChild(radioBut);
 
                     nameCell.innerHTML = clusters[i][1];
