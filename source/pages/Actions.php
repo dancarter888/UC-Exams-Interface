@@ -61,16 +61,14 @@
     <nav id="pagination-container" class="pagination"></nav>
 
 <script>
-    let ACTIONS = [];
-    let STARTDATE = "today";
-    let ENDDATE = "9999-12-31";
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    let event_id = urlParams.get('event_id');
+    let cluster_id = urlParams.get('cluster_id');
     let HEADER = false;
 
-    // Set the start date field to today's date
-    document.getElementById('start-dates').value = new Date().toISOString().slice(0,10);
-
     // Make a get request to the URL
-    makeRequest("GET", "Actions_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE, pagination);
+    makeRequest("GET", "Actions_Helper.php?event_id=" + event_id + "&cluster_id=" + cluster_id, pagination);
 
     function pagination(responseText) {
         let eventsTable = document.getElementById('actions-table');
@@ -93,7 +91,6 @@
             pageSize: 20,
             callback: function(data, pagination) {
                 structureDataTable(data);
-                console.log(pagination);
             }
         })
     }

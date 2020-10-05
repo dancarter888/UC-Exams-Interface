@@ -75,8 +75,8 @@
         let parsedResponse = JSON.parse(responseText);
         let fieldNames = parsedResponse[0];
         let actions = parsedResponse[1];
-        let headerRow = document.createElement('tr');
         if (HEADER === false) {
+            let headerRow = document.createElement('tr');
             for (let i = 0; i < fieldNames.length; i++) {
                 let tableHeader = document.createElement('th');
                 tableHeader.innerHTML = fieldNames[i];
@@ -90,23 +90,27 @@
             pageSize: eventsPerPage,
             callback: function(data, pagination) {
                 structureDataTable(data);
-                console.log(pagination);
             }
         })
     }
 
     function structureDataTable(data) {
         let actionsTable = document.getElementById('events-table');
-        let actions = document.getElementsByClassName('event');
-        for (let i = actions.length - 1; i >= 0; i--) {
-            actions[i].remove();
+        let events = document.getElementsByClassName('event');
+        for (let i = events.length - 1; i >= 0; i--) {
+            events[i].remove();
         }
         for (let i = 0; i < data.length; i++) {
             let tableRow = document.createElement('tr');
             tableRow.className = 'event';
             for (let j = 0; j < data[i].length; j++) {
                 let tableData = document.createElement('td');
-                tableData.innerHTML = data[i][j];
+                if (j === 0) { // If the data is the event name
+                    let url = "Actions.php?event_id=" + data[i][8] + "&cluster_id=" + data[i][2];
+                    tableData.innerHTML = "<a href=" + url + ">" + data[i][j] + "</a>";
+                } else {
+                    tableData.innerHTML = data[i][j];
+                }
                 tableRow.appendChild(tableData);
             }
             actionsTable.appendChild(tableRow);
