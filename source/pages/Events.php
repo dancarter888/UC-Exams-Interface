@@ -37,6 +37,16 @@
 
     <h1> Events </h1>
 
+    <form id="date-filter">
+        <h3>Start Date:</h3>
+        <input type="date" id="start-dates" required>
+
+        <h3>End Date:</h3>
+        <input type="date" id="end-dates" required>
+
+        <input type="submit" value="Filter"/><br />
+    </form>
+
     <br > <br > <br >
 
     <table id="events-table"></table>
@@ -45,11 +55,20 @@
 <script>
     let EVENTS = [];
 
+    let STARTDATE = 'today';
+    let ENDDATE = "9999-12-31";
+    let HEADER = false;
+
     var currentPage = 1;
     var eventsPerPage = 20;
 
+    // Set the start date field to today's date
+    document.getElementById('start-dates').value = new Date().toISOString().slice(0,10);
+
     // Make a get request to the URL
-    makeRequest("GET", "Events_Helper.php?count=All", pagination);
+    // makeRequest("GET", "Events_Helper.php?count=All", pagination);
+    makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE, pagination);
+
 
     function pagination(responseText) {
         let eventsTable = document.getElementById('events-table');
@@ -57,15 +76,18 @@
         let fieldNames = parsedResponse[0];
         let actions = parsedResponse[1];
         let headerRow = document.createElement('tr');
-        for (let i=0; i< fieldNames.length; i++) {
-            let tableHeader = document.createElement('th');
-            tableHeader.innerHTML = fieldNames[i];
-            headerRow.appendChild(tableHeader);
+        if (HEADER === false) {
+            for (let i = 0; i < fieldNames.length; i++) {
+                let tableHeader = document.createElement('th');
+                tableHeader.innerHTML = fieldNames[i];
+                headerRow.appendChild(tableHeader);
+            }
+            eventsTable.appendChild(headerRow);
+            HEADER = true;
         }
-        eventsTable.appendChild(headerRow);
         $('#pagination-container').pagination({
             dataSource: actions,
-            pageSize: 20,
+            pageSize: eventsPerPage,
             callback: function(data, pagination) {
                 structureDataTable(data);
                 console.log(pagination);
@@ -91,34 +113,13 @@
         }
     }
 
-    /**
-     * Function to add the events in response text to the datalist in the webpage.
-     **/
-    function eventCallback(responseText) {
-        let eventsTable = document.getElementById('events-table');
-        let parsedResponse = JSON.parse(responseText);
-        fieldNames = parsedResponse[0];
-        let events = parsedResponse[1];
-        EVENTS = events;
 
-        let headerRow = document.createElement('tr');
-        for (let i=0; i< fieldNames.length; i++) {
-            let tableHeader = document.createElement('th');
-            tableHeader.innerHTML = fieldNames[i];
-            headerRow.appendChild(tableHeader);
-        }
-        eventsTable.appendChild(headerRow);
-        for (let i=0; i<eventsPerPage * fieldNames.length; i += fieldNames.length) {
-            let tableRow = document.createElement('tr');
-            tableRow.className = "event";
-            for (let j = 0; j < fieldNames.length; j++){
-                let tableData = document.createElement('td');
-                tableData.innerHTML = events[i+j];
-                tableRow.appendChild(tableData);
-            }
-            eventsTable.appendChild(tableRow);
-        }
-    }
+    $('#date-filter').submit(function () {
+        let startDate = document.getElementById("start-dates").value;
+        let endDate = document.getElementById("end-dates").value;
+        makeRequest("GET", "Events_helper.php?start=" + startDate + "&end=" + endDate, pagination);
+        return false;
+    });
 
 </script>
 </body>

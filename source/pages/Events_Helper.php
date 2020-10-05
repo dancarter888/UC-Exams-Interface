@@ -1,22 +1,23 @@
 <?php
 require_once("../config/config.php");
 
-if (isset($_GET['count']))
+if (isset($_GET['start']) && isset($_GET['end']))
 {
-    if ($_GET['count'] === "All") {
-        $get_events = getEvents();
-        $field_names = $get_events[0];
-        $events = $get_events[1];
+    $start_date = $_GET['start'];
+    if ($start_date === "today") {
+        $start_date = date("Y-m-d");
+    }
+    $end_date = $_GET['end'];
+    if (strtotime($start_date) !== false && strtotime($end_date) !== false) {
+        $get_actions = getEvents($start_date, $end_date);
+        $field_names = $get_actions[0];
+        $events = $get_actions[1];
         echo json_encode([$field_names, $events]);
     }
 }
 
-/**
- * Queries the database for a list of the events.
- * @return array an array of the event_id, event_name and status
- */
-function getEvents() {
-    $result = queryDB("CALL show_events;");
+function getEvents($start_date, $end_date) {
+    $result = queryDB($start_date, $end_date);
     $field_names = [];
     $rows = [];
     while ($field = $result->fetch_field()) {
@@ -28,19 +29,19 @@ function getEvents() {
     return [$field_names, $rows];
 }
 
-function queryDB($query) {
+
+function queryDB($start_date, $end_date) {
     $hostname = "127.0.0.1";
     $database = "tserver";
     $username = "root";
     $password = "mysql";
     $conn = new mysqli($hostname, $username, $password, $database);
-    if ($conn->connect_error)
-    {
-        fatalError($conn->connect_error);
-        return;
-    }
-
-    return $conn->query($query);
+    // TODO close $conn
+    $query = "CALL show_events(?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ss', $start_date, $end_date);
+    $stmt->execute();
+    return $stmt->get_result();
 }
 
 /**
