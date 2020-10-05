@@ -47,6 +47,12 @@
         <input type="submit" value="Filter"/><br />
     </form>
 
+    <form>
+        <h3>Search</h3>
+        <input type="text" size="30" onkeyup="showResult(this.value)">
+        <div id="livesearch"></div>
+    </form>
+
     <br > <br > <br >
 
     <table id="events-table"></table>
@@ -115,6 +121,23 @@
             }
             actionsTable.appendChild(tableRow);
         }
+    }
+
+    function showResult(str) {
+        if (str.length == 0) {
+            document.getElementById("livesearch").innerHTML="";
+            document.getElementById("livesearch").style.border="0px";
+            return;
+        }
+        let url = "Events_Helper.php?q=" + str;
+        console.log(url);
+        $.ajax({
+            url: url,
+            success: function(result) {
+                document.getElementById("livesearch").innerHTML = this.responseText;
+                document.getElementById("livesearch").style.border = "1px solid #A5ACB2";
+            }
+        });
     }
 
 
