@@ -41,7 +41,7 @@
             <br > <br > <br >
 
             <form id="DetailsForm">
-                Test Date <input type="date" name="test_date" id="test_date" /> <br />
+                Test Date <input type="date" name="test_date" id="test_date" required /> <br />
                 Test Name <input type="text" name="test_name" id="test_name" required /> <br />
                 Room
                 <ul id="room_select"></ul>
@@ -140,6 +140,9 @@
             makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
             setForms();
 
+            /**
+             * Next step function for the 1st page (Details)
+             */
             $('#DetailsForm').submit(function () {
                 eventObj["Date"] = $("#test_date").val();
                 console.log($("#test_name").val());
@@ -152,6 +155,9 @@
                 return false;
             });
 
+            /**
+             * Next step function for the 2nd page (Type)
+            */
             $('#TypeForm').submit(function () {
                 eventObj["TestType"] = $("#test_type").val();
                 currentForm++;
@@ -159,6 +165,9 @@
                 return false;
             });
 
+            /**
+             * Next step function for the 3rd page (Actions)
+             */
             $('#ActionsForm').submit(function () {
                 //STUFF
                 currentForm++;
@@ -166,10 +175,11 @@
                 return false;
             });
 
+            /**
+             * Next step function for the 4th page (Review)
+             */
             $('#ReviewForm').submit(function () {
                 createEvent();
-                currentForm++;
-                setForms();
                 return false;
             });
 
