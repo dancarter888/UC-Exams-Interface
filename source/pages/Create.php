@@ -26,7 +26,6 @@
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
             <a href="Create.php">Create Event</a>
             <a href="Events.php"> Events </a>
-            <a href="Actions.php"> Actions </a>
             <br> <br> <br>
             <a href="login.php">Logout</a>
         </div>

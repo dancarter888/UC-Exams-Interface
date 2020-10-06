@@ -1,47 +1,53 @@
 <?php
 require_once("../config/config.php");
+$conn = new mysqli($hostname, $username, $password, $database);
 
-if (isset($_GET['id']))
+if (isset($_GET['event_id']) && isset($_GET['date']))
 {
-    if ($_GET['id'] != "") {
-        $event = getEvent($_GET['id']);
-        echo json_encode($event);
-    }
+    $event_id = $_GET['event_id'];
+    $date = $_GET['date'];
+    $get_actions = getActions($conn, $event_id, $date);
+    $field_names = $get_actions[0];
+    $actions = $get_actions[1];
+    echo json_encode([$field_names, $actions]);
 }
 
-/**
- * Queries the database for a list of the events.
- * @return array an array of the event_id, event_name and status
- */
-function getEvent($id) {
-    $result = queryDB("CALL get_one_event_details(?);", $id);
-    return $result;
+
+function getActions($conn, $event_id, $date) {
+    $result = queryDB($conn, $event_id, $date);
+    $field_names = [];
+    $rows = [];
+    while ($field = $result->fetch_field()) {
+        $field_names[] = $field->name;
+    }
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
+    }
+    return [$field_names, $rows];
 }
 
-function queryDB($query, $event_id) {
-    $hostname = "127.0.0.1";
-    $database = "tserver";
-    $username = "root";
-    $password = "mysql";
-    $conn = new mysqli($hostname, $username, $password, $database);
-    if ($conn->connect_error)
-    {
-        fatalError($conn->connect_error);
-        return;
+function getSearchedActions($search) {
+    $result = queryDB("CALL show_event(?);");
+    $field_names = [];
+    $rows = [];
+    echo $result;
+    while ($field = $result->fetch_field()) {
+        $field_names[] = $field->name;
     }
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
+    }
+    return [$field_names, $rows];
+}
+
+function queryDB($conn, $event_id, $date) {
+    $query = "CALL show_event(?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $event_id);
+    $stmt->bind_param('is', $event_id, $date);
     $stmt->execute();
-
-    $result = $stmt->get_result();
-    $actions = [];
-
-    for($i = 0; $i < $result->num_rows; $i++) {
-        $action = $result->fetch_assoc();
-        array_push($actions, $action);
-    }
-    return $actions;
+    return $stmt->get_result();
 }
+
 
 /**
  * Sanitizes a given string and returns it.

@@ -686,13 +686,19 @@ DELIMITER ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET @saved_sql_modeshow_actions       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `show_events`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `show_events`(
+	IN start_date DATE,
+    IN end_date DATE
+)
 BEGIN
-	SELECT *
-    FROM vw_front_event;
+	SELECT event_name, time, date, event_id
+    FROM tserver.vw_front_event
+    WHERE date BETWEEN start_date AND end_date
+    GROUP BY event_name, date, time
+	ORDER BY date desc, event_name, time;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -700,7 +706,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
-/*!50003 DROP PROCEDURE IF EXISTS `show_actions` */;
+/*!50003 DROP PROCEDURE IF EXISTS `show_event` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -710,15 +716,15 @@ DELIMITER ;
 /*!50003 SET @saved_sql_modeshow_actions       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `show_actions`(
-	IN start_date DATE,
-    IN end_date DATE
+CREATE DEFINER=`root`@`localhost` PROCEDURE `show_event`(
+	IN event_ID INT(11),
+    IN event_date DATE
 )
 BEGIN
-	SELECT date, time, event_name, cluster_name, machine_group, activate 
-    FROM tserver.vw_front_event
-    WHERE date BETWEEN start_date AND end_date
-	ORDER BY date desc, time, activate;
+	SELECT event_name, date, cluster_name, machine_group, time, activate
+	FROM tserver.vw_front_event
+	WHERE event_id = event_ID and date = event_date 
+	ORDER BY time, activate, cluster_name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
