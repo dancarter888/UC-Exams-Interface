@@ -11,52 +11,62 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../css/NavBar.css">
     <link rel="stylesheet" href="../css/pagination.css">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/pagination.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <title>Events</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <a href="Create.php">Create Event</a>
-        <a href="Events.php"> Events </a>
-        <br> <br> <br>
-        <a href="login.php">Logout</a>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a href="Create.php">Create Event</a></li>
+                <li class="active"><a href="Events.php"> Events </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="login.php">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1> Events </h1>
     </div>
 
-    <div id="main">
-        <button class="openbtn" onclick="openNav()"> ☰ </button>
+    <div class="container">
+        <form id="date-filter">
+            <h3>Start Date:</h3>
+            <input type="date" id="start-dates" required>
+
+            <h3>End Date:</h3>
+            <input type="date" id="end-dates" required>
+
+            <input type="submit" value="Filter"/><br />
+        </form>
+        <form>
+            <input type="text" size="30" onkeyup="showResult(this.value)">
+            <div id="livesearch"></div>
+        </form>
     </div>
 
-    <h1> Events </h1>
-
-    <form id="date-filter">
-        <h3>Start Date:</h3>
-        <input type="date" id="start-dates" required>
-
-        <h3>End Date:</h3>
-        <input type="date" id="end-dates" required>
-
-        <input type="submit" value="Filter"/><br />
-    </form>
-
-    <br> <br> <br>
-
-    <form>
-        <input type="text" size="30" onkeyup="showResult(this.value)">
-        <div id="livesearch"></div>
-    </form>
-
-    <table id="events-table">
-    </table>
-    <nav id="pagination-container" class="pagination"></nav>
+    <div class="container">
+        <table id="events-table" class="table table-hover"></table>
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <nav id="pagination-container" class="pagination"></nav>
+        </div>
+    </div>
+    </div>
 
 <script>
     let STARTDATE = "1995-01-01";
