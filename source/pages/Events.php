@@ -150,7 +150,7 @@
         for (let i = 0; i < data.length; i++) {
             let tableRow = document.createElement('tr');
             tableRow.className = 'event';
-            for (let j = 0; j < data[i].length; j++) {
+            for (let j = 0; j < data[i].length - 1; j++) {
                 let tableData = document.createElement('td');
                 if (j === 0) { // If the data is the event name
                     let url = "Event.php?event_id=" + data[i][3] + "&date=" + data[i][2];
