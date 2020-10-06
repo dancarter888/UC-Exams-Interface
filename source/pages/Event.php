@@ -19,7 +19,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/pagination.js"></script>
 
-    <title>Event</title>
+    <title id="title">Event</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
@@ -68,6 +68,7 @@
 
         document.getElementById('event-name').innerHTML = eventName;
         document.getElementById('event-date').innerHTML = eventDate;
+        document.getElementById('title').innerHTML = eventName + " " + eventDate;
 
 
         if (HEADER === false) {
