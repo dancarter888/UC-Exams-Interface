@@ -47,15 +47,15 @@
 
         // Call stored procedure
         $query = "CALL add_event('{$qName}','{$qRooms}',{$qDay},{$qWeek},{$qYear},'{$startTime}')";
-        $result = queryDB($query);
+        //$result = queryDB($query);
         //$result = queryDB('call add_event("EMTH119-20S2 Tuesday", "Erskine-033,Erskine-035,Erskine-036,Erskine-038", "MapleTA", 2, 34, 2020, "18:00:00", "01:00:00");');
         //echo count($result);
-        $eventId = 0;
-        foreach ($result as $row) {
-            $eventId = $row["front_ID"];
-        }
-        echo $eventId;
-        //echo $query;
+//        $eventId = 0;
+//        foreach ($result as $row) {
+//            $eventId = $row["front_ID"];
+//        }
+//        echo $eventId;
+        echo $query;
     }
 
     function add_action() {
@@ -69,19 +69,20 @@
         }
 
         $query = "CALL add_action({$action["EventID"]}, '{$time_diff}', '{$action["ClusterName"]}', {$action["Activation"]});";
-        $result = queryDB($query);
-
-        // Not sure about this
-        $action_ids = array();
-        foreach ($result as $row) {
-            array_push($action_ids, $row["action_id"]);
-        }
-
-        if ($action_ids[0] == null) {
-            echo "Success";
-        } else {
-            echo "Fail";
-        }
+        echo $query;
+//        $result = queryDB($query);
+//
+//        // Not sure about this
+//        $action_ids = array();
+//        foreach ($result as $row) {
+//            array_push($action_ids, $row["action_id"]);
+//        }
+//
+//        if ($action_ids[0] == null) {
+//            echo "Success";
+//        } else {
+//            echo "Fail";
+//        }
     }
 
     /**

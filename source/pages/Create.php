@@ -221,7 +221,7 @@
                 // Get these from responseText
                 let eventID = 48;
                 for (let action of ACTIONS) {
-                    action["EventID"] = responseText;
+                    action["EventID"] = eventID;
                     action["StartTime"] = eventObj["StartTime"]
                     let jsonStr = JSON.stringify(action);
                     $.ajax({
