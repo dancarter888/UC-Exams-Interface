@@ -691,12 +691,13 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `show_events`(
 	IN start_date DATE,
-    IN end_date DATE
+    IN end_date DATE,
+    IN query_string VARCHAR(127)
 )
 BEGIN
 	SELECT event_name, time, date, event_id
     FROM tserver.vw_front_event
-    WHERE date BETWEEN start_date AND end_date
+    WHERE date BETWEEN start_date AND end_date AND event_name LIKE concat('%', query_string, '%')
     GROUP BY event_name, date, time
 	ORDER BY date desc, event_name, time;
 END ;;

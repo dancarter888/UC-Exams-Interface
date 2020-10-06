@@ -61,6 +61,7 @@
 <script>
     let STARTDATE = "1995-01-01";
     let ENDDATE = "9999-12-31";
+    let QUERYSTRING = "";
     let HEADER = false;
 
     var eventsPerPage = 20;
@@ -69,7 +70,7 @@
     //document.getElementById('start-dates').value = new Date().toISOString().slice(0,10);
 
     // Make a get request to the URL
-    makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE, pagination);
+    makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
 
     function reformatEvents(events) {
         let prevEventName = null;
@@ -166,29 +167,21 @@
 
 
 
-    // Basic structure but is not implemented in Actions_helper.php and tserver.sql dump
+    //Search functionality
     function showResult(str) {
-        if (str.length == 0) {
-            document.getElementById("livesearch").innerHTML="";
-            document.getElementById("livesearch").style.border="0px";
-            return;
-        }
-        let url = "Actions_Helper.php?q=" + str;
+        QUERYSTRING = str;
+        let url = "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING;
         console.log(url);
-        $.ajax({
-            url: url,
-            success: function(result) {
-                console.log(result);
-                document.getElementById("livesearch").innerHTML = this.responseText;
-                document.getElementById("livesearch").style.border = "1px solid #A5ACB2";
-            }
-        });
+
+        makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
     }
 
     $('#date-filter').submit(function () {
         let startDate = document.getElementById("start-dates").value;
+        STARTDATE = startDate;
         let endDate = document.getElementById("end-dates").value;
-        makeRequest("GET", "Events_Helper.php?start=" + startDate + "&end=" + endDate, pagination);
+        ENDDATE = endDate;
+        makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
         return false;
     });
 </script>
