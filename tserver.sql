@@ -769,12 +769,10 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_event`(
 IN test_name VARCHAR(127),
 IN roomArray VARCHAR(255),
-IN clusterIn VARCHAR(128),
 IN day_event int(11),
 IN week_event int(11),
 IN year_event int(4),
-IN begin_time TIME,
-In duration TIME
+IN begin_time TIME
 )
 BEGIN
 	/*
@@ -784,7 +782,6 @@ BEGIN
 
 	-- Vars
     DECLARE front_ID int;
-    DECLARE cluster_ID int;
     
     /* Declare a temporary table to store the groups in */
     drop table if exists group_IDs;
@@ -803,30 +800,12 @@ BEGIN
     UPDATE group_IDs SET event_ID = front_ID, day_week = day_event, start_time = begin_time where event_ID is null;
     SET SQL_SAFE_UPDATES = 1;
     
-    /* Get the ID for the cluster */
-    select cluster_id into cluster_ID from front_cluster where cluster_name = clusterIn;
-    -- select cluster_ID;
-    
     insert into front_weekly (event_id, week_of_year, event_year) values (front_ID, week_event, year_event);
     insert into front_daily (event_id, group_id, day_of_week, start_time) select event_ID, groupID, day_week, start_time from group_IDs;
 	-- select * from front_daily where day_of_week = 5 and start_time = '18:00:00';
     
-    select front_ID, cluster_ID;
-    
-    /* 
-    Insert all of the actions (turning cluster on and off). The cluster_id of the first and last query is the default lab machine cluster.
-	Not sure what we're meant to do with the times 
-    */
-    /*insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '-00:05:00', 3, 0); -- Turn off default cluster 5 minutes before test
-	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, '-00:05:00', cluster_ID, 1); -- Turn on test cluster 5 minutes before test
-	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, duration, cluster_ID, 0); -- Turn off test cluster after test duration
-	insert into front_action (event_id, time_offset, cluster_id, activate) values (front_ID, duration, 3, 1); -- Turn on default cluster after test duration
-
-	drop table group_IDs;*/
-	-- All done!
-
-	-- select * from vw_front_event where date = '2020-09-18' order by time, cluster_id, group_id;
-END ;;
+    select front_ID;
+END;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -843,16 +822,22 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE PROCEDURE `add_action`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_action`(
 IN event_id int(11),
 IN time_offset time,
-IN cluster_id int(11),
+IN cluster_in VARCHAR(128),
 IN activate int(11)
 )
 BEGIN
+	DECLARE cluster_ID int;
 
-insert into front_action (event_id, time_offset, cluster_id, activate) values (event_id, time_offset, cluster_id, activate);
-select action_id from front_action where event_id=event_id and time_offset=time_offset;
+	/* Get the ID for the cluster */
+    select cluster_id into cluster_ID from front_cluster where cluster_name = cluster_in;
+
+	/* Insert the action using the cluster id from above */
+	insert into front_action (event_id, time_offset, cluster_id, activate) values (event_id, time_offset, cluster_ID, activate);
+	-- select action_id from front_action where event_id=event_id and time_offset=time_offset and cluster_id=;
+	select cluster_ID;
 
 END ;; 
 DELIMITER ;
