@@ -133,27 +133,6 @@
         }
     }
 
-
-
-    // Basic structure but is not implemented in Actions_helper.php and tserver.sql dump
-    function showResult(str) {
-        if (str.length == 0) {
-            document.getElementById("livesearch").innerHTML="";
-            document.getElementById("livesearch").style.border="0px";
-            return;
-        }
-        let url = "Actions_Helper.php?q=" + str;
-        console.log(url);
-        $.ajax({
-            url: url,
-            success: function(result) {
-                console.log(result);
-                document.getElementById("livesearch").innerHTML = this.responseText;
-                document.getElementById("livesearch").style.border = "1px solid #A5ACB2";
-            }
-        });
-    }
-
     $('#date-filter').submit(function () {
         let startDate = document.getElementById("start-dates").value;
         let endDate = document.getElementById("end-dates").value;

@@ -784,16 +784,21 @@ BEGIN
     DECLARE front_ID int;
     
     /* Declare a temporary table to store the groups in */
+    drop table if exists room_IDs;
     drop table if exists group_IDs;
-    CREATE TEMPORARY TABLE group_IDs (event_ID int, groupID INT(10), day_week int(11), start_time TIME);
+    CREATE TABLE room_IDs (room_ID int);
+    CREATE TABLE group_IDs (event_ID int, groupID INT(10), day_week int(11), start_time TIME);
 
 	-- Do something about status?
     /* Add a entry for the test to the front event table and store its ID for later use */
 	insert into front_event (event_name, status) values (test_name, 1); -- 173
     select event_id into front_ID from front_event where event_name = test_name;
 	
+    /* Adds the room IDs of the rooms in the given array to the room_IDs table */
+    insert into room_IDs (room_ID) select room_id from front_room where find_in_set(room_name, roomArray);
+    
     /* Adds the group IDs of the rooms in the given array to the group_IDs table */
-    insert into group_IDs (groupID) select group_ID from front_group where find_in_set(machine_group, roomArray);
+    insert into group_IDs (groupID) select group_id from room_IDS join front_client on room_IDS.room_ID = front_client.room_id group by group_id;
     
     /* Update the temporary table with some values */
     SET SQL_SAFE_UPDATES = 0;
@@ -823,22 +828,20 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_action`(
-IN event_id int(11),
-IN time_offset time,
+IN event_id_in int(11),
+IN time_offset_in time,
 IN cluster_in VARCHAR(128),
-IN activate int(11)
+IN activate_in int(11)
 )
 BEGIN
-	DECLARE cluster_ID int;
+	DECLARE target_cluster_ID int;
 
 	/* Get the ID for the cluster */
-    select cluster_id into cluster_ID from front_cluster where cluster_name = cluster_in;
+    select cluster_id into target_cluster_ID from front_cluster where cluster_name = cluster_in;
 
 	/* Insert the action using the cluster id from above */
-	insert into front_action (event_id, time_offset, cluster_id, activate) values (event_id, time_offset, cluster_ID, activate);
-	-- select action_id from front_action where event_id=event_id and time_offset=time_offset and cluster_id=;
-	select cluster_ID;
-
+	insert into front_action (event_id, time_offset, cluster_id, activate) values (event_id_in, time_offset_in, target_cluster_ID, activate_in);
+	select action_id from front_action where event_id = event_id_in and time_offset = time_offset_in and cluster_id = target_cluster_ID;
 END ;; 
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

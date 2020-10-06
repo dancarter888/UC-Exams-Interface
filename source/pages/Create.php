@@ -207,6 +207,7 @@
 
             function createEvent() {
                 let jsonStr = JSON.stringify(eventObj);
+                console.log(jsonStr);
                 $.ajax({
                     url: "Create_Helper.php",
                     type: "post",
@@ -219,7 +220,7 @@
                 console.log(responseText);
 
                 // Get these from responseText
-                let eventID = 48;
+                let eventID = responseText;
                 for (let action of ACTIONS) {
                     action["EventID"] = eventID;
                     action["StartTime"] = eventObj["StartTime"]
