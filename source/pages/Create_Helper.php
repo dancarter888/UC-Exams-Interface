@@ -15,7 +15,7 @@
     }
     else
     {
-        if (isset($_POST["user"])) {
+        if (isset($_POST["event"])) {
             createEvent();
         } else {
             add_action();
@@ -24,26 +24,20 @@
     }
 
     function createEvent() {
-        $event = $_POST["user"];
+        $event = $_POST["event"];
         // Associative array of the JSON
         $decoded = json_decode($event, true);
-        //echo json_encode($decoded["Name"]);
 
         //Create Query
         $qName = $decoded["Name"];
         $qRooms = "";
         foreach ($decoded["Rooms"] as $room) {
-            //array_push($qRooms, $room);
             $qRooms = $qRooms . "{$room}";
             if ($room != end($decoded["Rooms"])) {
                 $qRooms = $qRooms . ",";
             }
         }
-        $cluster = $decoded["TestType"];
         $startTime = $decoded["StartTime"];
-        $endTime = $decoded["EndTime"];
-        $duration = strtotime(strtotime($endTime) - strtotime($startTime));
-        $duration = "01:00:00";
 
         $qDate = $decoded["Date"];
         $qDay = idate('w', strtotime($qDate));
@@ -52,9 +46,16 @@
         //echo "{$qDay} - {$qWeek} - {$qYear}";
 
         // Call stored procedure
-        //$result = queryDB("CALL add_event('{$qName}','{$qRooms}','{$cluster}',{$qDay},{$qWeek},{$qYear},'{$startTime}','{$duration}')");
+        $query = "CALL add_event('{$qName}','{$qRooms}',{$qDay},{$qWeek},{$qYear},'{$startTime}')";
+        $result = queryDB($query);
         //$result = queryDB('call add_event("EMTH119-20S2 Tuesday", "Erskine-033,Erskine-035,Erskine-036,Erskine-038", "MapleTA", 2, 34, 2020, "18:00:00", "01:00:00");');
-        //echo json_encode($result[0]);
+        //echo count($result);
+        $eventId = 0;
+        foreach ($result as $row) {
+            $eventId = $row["front_ID"];
+        }
+        echo $eventId;
+        //echo $query;
     }
 
     function add_action() {
@@ -67,16 +68,20 @@
             $time_diff = date('H:i:s', $time);
         }
 
-        $query = "CALL add_action({$action["EventId"]}, '{$time_diff}', {$action["ClusterId"]}, {$action["Activate"]});";
+        $query = "CALL add_action({$action["EventID"]}, '{$time_diff}', '{$action["ClusterName"]}', {$action["Activation"]});";
         $result = queryDB($query);
 
         // Not sure about this
         $action_ids = array();
         foreach ($result as $row) {
-            array_push($rooms, $row["action_id"]);
+            array_push($action_ids, $row["action_id"]);
         }
 
-        echo $action_ids;
+        if ($action_ids[0] == null) {
+            echo "Success";
+        } else {
+            echo "Fail";
+        }
     }
 
     /**

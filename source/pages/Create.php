@@ -50,38 +50,24 @@
                 </datalist>
                 <button onclick="addRoom()">+ Add</button><br />
                 Start Time <input type="time" name="test_stime" id="test_stime" required /> <br />
-                End Time <input type="time" name="test_etime" id="test_etime" required /> <br />
+                <!--End Time <input type="time" name="test_etime" id="test_etime" required /> <br />-->
 
                 <input type="submit" value="Next" />
             </form>
         </div>
 
         <div id="F2">
-            <h1> Create Test Step 2 </h1>
-
-            <br > <br > <br >
-
-            <form id="TypeForm">
-                <table id="clusters">
-                    <tr>
-                        <th> Select </th>
-                        <th> Type </th>
-                        <th> Description </th>
-                    </tr>
-                </table>
-
-                <input type="button" onclick="prevStep()" value="Prev" />
-                <input type="submit" value="Next" />
-            </form>
-        </div>
-
-        <div id="F3">
             <h1> Add Actions </h1>
 
             <br > <br > <br >
 
             <form id="ActionsForm">
                 <ul id="ActionsList"></ul>
+
+                Cluster: <input list="clusters_list" id="action_cluster"> <!--name="test_room">-->
+                <datalist id="clusters_list" required>
+                    <!--<option value="" disabled selected> -- Select A Cluster -- </option>-->
+                </datalist> <br /><br />
 
                 Action time:    <input id="OffsetInput" type="time"> <br /><br />
 
@@ -101,7 +87,7 @@
 
         </div>
 
-        <div id="F4">
+        <div id="F3">
             <h1> Create Test Review </h1>
 
             <br > <br > <br >
@@ -111,8 +97,6 @@
                 <h4 id="r_name">Test Name:</h4>  <br />
                 <h4 id="r_rooms">Test Rooms:</h4>  <br />
                 <h4 id="r_stime">Test Start Time:</h4>  <br />
-                <h4 id="r_etime">Test End Time:</h4>  <br />
-                <h4 id="r_type">Test Type:</h4>  <br />
                 <input type="button" onclick="prevStep()" value="Prev" />
                 <input type="submit" value="Next" />
             </form>
@@ -129,10 +113,10 @@
             let ACTIONS = [];
 
             let currentForm = 0;
-            let formIds = ["F1", "F2", "F3", "F4"];
+            let formIds = ["F1", "F2", "F3"]; //, "F4"];
 
             // JSON object for storing the event
-            let eventObj = {Date: "", Name:"", Rooms:[], StartTime: "", EndTime: "", Duration: "", TestType: ""};
+            let eventObj = {Date: "", Name:"", Rooms:[], StartTime: ""};
 
             // Make a get request to the URL
             makeRequest("GET", "Create_Helper.php?item=Rooms", roomCallback);
@@ -148,7 +132,7 @@
                 eventObj["Name"] = $("#test_name").val();
                 eventObj["Rooms"] = roomsSelected;
                 eventObj["StartTime"] = $("#test_stime").val();
-                eventObj["EndTime"] = $("#test_etime").val();
+                //eventObj["EndTime"] = $("#test_etime").val();
                 currentForm++;
                 setForms();
                 return false;
@@ -158,7 +142,7 @@
              * Next step function for the 2nd page (Type)
             */
             $('#TypeForm').submit(function () {
-                eventObj["TestType"] = $("#test_type").val();
+                //eventObj["TestType"] = $("#test_type").val();
                 currentForm++;
                 setForms();
                 return false;
@@ -181,30 +165,6 @@
                 createEvent();
                 return false;
             });
-
-/*            /!**
-             * Function that takes the information from the form and stores it in eventObj
-             *!/
-            function nextStep() {
-                console.log("Working");
-                if (currentForm == 0) {
-                    eventObj["Date"] = $("#test_date").val();
-                    console.log($("#test_name").val());
-                    eventObj["Name"] = $("#test_name").val();
-                    eventObj["Rooms"] = roomsSelected;
-                    eventObj["StartTime"] = $("#test_stime").val();
-                    eventObj["EndTime"] = $("#test_etime").val();
-                } else if (currentForm == 1) {
-                    eventObj["TestType"] = $("#test_type").val();
-                } else if (currentForm == 3) {
-                    createEvent();
-                    return;
-                }
-                console.log(eventObj);
-
-                currentForm++;
-                setForms();
-            }*/
 
             /**
              * Function for the back button to go back a step
@@ -230,7 +190,7 @@
                         x.style.display = (i == currentForm) ? ON : OFF;
                     }
                 }
-                if (currentForm == 3) {
+                if (currentForm == 2) {
                     updateFinalForm();
                 }
             }
@@ -243,20 +203,16 @@
                 $("#r_name").append("\t" + eventObj["Name"]);
                 $("#r_rooms").append("\t" + eventObj["Rooms"]);
                 $("#r_stime").append("\t" + eventObj["StartTime"]);
-                $("#r_etime").append("\t" + eventObj["EndTime"]);
-                $("#r_type").append("\t" + eventObj["TestType"]);
-
             }
 
             function createEvent() {
                 let jsonStr = JSON.stringify(eventObj);
-                // $.ajax({
-                //     url: "Create_Helper.php",
-                //     type: "post",
-                //     data: {user: jsonStr},
-                //     success: created
-                // });
-                created("Test");
+                $.ajax({
+                    url: "Create_Helper.php",
+                    type: "post",
+                    data: {"event": jsonStr},
+                    success: created
+                });
             }
 
             function created(responseText) {
@@ -264,12 +220,10 @@
 
                 // Get these from responseText
                 let eventID = 48;
-                let clusterID = 8;
                 for (let action of ACTIONS) {
-                    action["EventID"] = eventID;
-                    action["ClusterID"] = clusterID;
+                    action["EventID"] = responseText;
                     action["StartTime"] = eventObj["StartTime"]
-                    jsonStr = JSON.stringify(action);
+                    let jsonStr = JSON.stringify(action);
                     $.ajax({
                         url: "Create_Helper.php",
                         type: "post",
@@ -327,48 +281,38 @@
             }
 
             function addAction() {
+                let clusterName = $("#action_cluster").val();
                 let time = $("#OffsetInput").val();
-                console.log(time);
-
                 let activation = ($("#Activate").val() == "0") ? 0 : 1;
-                console.log(activation);
-
                 if (ACTIONS.length == 0) {
                     $("#ActionsForm").prepend("<h2> Actions: </h2>");
                 }
-                $("#ActionsList").append("<li> Time: " + time + " Activation: " + activation);
+
+                $("#ActionsList").append("<li> Cluster: " + clusterName + " Time: " + time + " Activation: " + activation);
                 let actionsObj = {
+                    "ClusterName": clusterName,
                     "Time": time,
                     "Activation": activation
                 }
                 ACTIONS.push(actionsObj);
+                console.log(actionsObj);
             }
 
             /**
-             * Function to add the clusters to the cluster selection form
-             * @param responseText responsew from the server
+             * Function to add the clusters to the cluster dropdown in actions form
+             * @param responseText response from the server
              */
             function clusterCallback(responseText) {
-                let table = document.getElementById('clusters');
                 console.log(responseText);
+                let selectElement = document.getElementById('clusters_list');
                 // NEED TO CATCH ERROR IF PARSE FAILS
                 let clusters = JSON.parse(responseText);
                 for (let i = 0; i < clusters.length; i++) {
-                    let row = table.insertRow(i + 1);
-                    let idCell = row.insertCell(0);
-                    let nameCell = row.insertCell(1);
-                    let descripCell = row.insertCell(2);
-
-                    let radioBut = document.createElement('input');
-                    radioBut.type = "radio";
-                    radioBut.name = "test_type";
-                    radioBut.id = "test_type";
-                    radioBut.value = clusters[i][1];
-                    radioBut.required = true;
-                    idCell.appendChild(radioBut);
-
-                    nameCell.innerHTML = clusters[i][1];
-                    descripCell.innerHTML = clusters[i][2];
+                    let option = document.createElement('option');
+                    console.log(clusters[i][1]);
+                    option.value = clusters[i][1];
+                    option.innerHTML = clusters[i][1];
+                    selectElement.appendChild(option);
                 }
             }
         </script>
