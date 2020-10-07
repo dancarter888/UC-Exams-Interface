@@ -1,0 +1,20 @@
+/*#DetailsForm {*/
+/*    text-align: center;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*#ActionsForm {*/
+/*    text-align: center;*/
+/*}*/
+
+#room_select {
+    list-style-type: none;
+}
+
+li {
+    font-weight: lighter;
+}
+
+input::placeholder {
+    text-align: center;
+}

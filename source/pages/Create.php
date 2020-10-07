@@ -9,9 +9,11 @@
 <html lang="en">
     <head>
         <!-- CSS -->
-        <link rel="stylesheet" href="../css/login.css">
+        <!--<link rel="stylesheet" href="../css/login.css">-->
         <link rel="stylesheet" href="../css/NavBar.css">
+        <link rel="stylesheet" href="../css/Create.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
         <!-- JavaScript -->
         <script src="../js/AJAX.js"></script>
@@ -22,73 +24,128 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     </head>
     <body>
-        <div id="mySidebar" class="sidebar">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-            <a href="Create.php">Create Event</a>
-            <a href="Events.php"> Events </a>
-            <br> <br> <br>
-            <a href="login.php">Logout</a>
-        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div id="main">
-            <button class="openbtn" onclick="openNav()"> ☰ </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="Create.php">Create Event </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Events.php">Events <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <a class="btn btn-outline-danger" href="login.php" role="button">Logout</a>
+                </form>
+            </div>
+        </nav>
+
+        <div class="container">
+            <br />
+            <h1> Create Event </h1>
         </div>
 
         <div id="F1">
-            <h1> Create Test Step 1 </h1>
+            <div class="container">
+            <br />
+            <h2> Event Details </h2>
+            </div>
 
             <br > <br > <br >
 
+            <div class="container">
             <form id="DetailsForm">
-                Test Date <input type="date" name="test_date" id="test_date" required /> <br />
-                Test Name <input type="text" name="test_name" id="test_name" required /> <br />
-                Room
-                <ul id="room_select"></ul>
-                <input list="rooms" id="test_room" name="test_room">
-                <datalist id="rooms" required>
-                    <option value="" disabled selected> -- Select A Room -- </option>
-                </datalist>
-                <button onclick="addRoom()">+ Add</button><br />
-                Start Time <input type="time" name="test_stime" id="test_stime" required /> <br />
-                <!--End Time <input type="time" name="test_etime" id="test_etime" required /> <br />-->
+                <div class="form-group">
+                    Test Date: <br />
+                    <input type="date" name="test_date" id="test_date" required /> <br />
+                </div>
 
-                <input type="submit" value="Next" />
+                <div class="form-group">
+                    Test Name: <br />
+                    <input type="text" placeholder="Enter Name" name="test_name" id="test_name" required /> <br />
+                </div>
+
+                <div class="form-group">
+                    Room
+                    <ul id="room_select"></ul>
+                    <input list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
+                    <datalist id="rooms" required>
+                        <option value="" disabled selected> -- Select A Room -- </option>
+                    </datalist>
+                    <button onclick="addRoom()" class="btn btn-secondary">+ Add</button>
+                    <br />
+                </div>
+
+                <div class="form-group">
+                    Start Time <br />
+                    <input type="time" name="test_stime" id="test_stime" required /> <br />
+                </div>
+
+                <input type="submit" value="Add Actions" class="btn btn-primary" />
             </form>
+            </div>
         </div>
 
         <div id="F2">
-            <h1> Add Actions </h1>
+            <div class="container">
+            <br />
+            <h2> Event Actions </h2>
+            </div>
 
             <br > <br > <br >
 
+            <div class="container">
             <form id="ActionsForm">
                 <ul id="ActionsList"></ul>
 
-                Cluster: <input list="clusters_list" id="action_cluster"> <!--name="test_room">-->
+                <div class="form-group">
+                Cluster: <br />
+                <input list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster"> <!--name="test_room">-->
                 <datalist id="clusters_list" required>
-                    <!--<option value="" disabled selected> -- Select A Cluster -- </option>-->
-                </datalist> <br /><br />
+                </datalist>
+                </div>
 
-                Action time:    <input id="OffsetInput" type="time"> <br /><br />
+                <br /><br />
 
-                Activation:
+                <div class="form-group">
+                Action time: <br />
+                <input id="OffsetInput" type="time">
+                </div>
+
+                <br /><br />
+
+                <div class="form-class">
+                Activation: <br />
                 <select id="Activate">
                     <option value="1">Turn on</option>
                     <option value="0">Turn off</option>
-                </select> <br />
+                </select>
+                </div>
 
-                <button id="AddAction" onclick="addAction()">Add Action</button>
+                <br /><br />
 
-                <input type="button" onclick="prevStep()" value="Prev" />
-                <input type="submit" value="Next" />
+                <button id="AddAction" onclick="addAction()" class="btn btn-secondary">Add Action</button>
+
+                <br /><br />
+
+                <input type="button" onclick="prevStep()" value="Event Details" class="btn btn-primary" />
+                <input type="submit" value="Review Event" class="btn btn-primary"/>
             </form>
+            </div>
 
 
 
         </div>
 
         <div id="F3">
-            <h1> Create Test Review </h1>
+            <div class="container text-center">
+            <br />
+            <h2> Event Review </h2>
+            </div>
 
             <br > <br > <br >
 
@@ -286,7 +343,7 @@
                 let time = $("#OffsetInput").val();
                 let activation = ($("#Activate").val() == "0") ? 0 : 1;
                 if (ACTIONS.length == 0) {
-                    $("#ActionsForm").prepend("<h2> Actions: </h2>");
+                    $("#ActionsForm").prepend("<h3> Actions: </h3>");
                 }
 
                 $("#ActionsList").append("<li> Cluster: " + clusterName + " Time: " + time + " Activation: " + activation);
