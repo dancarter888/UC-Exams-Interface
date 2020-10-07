@@ -11,29 +11,34 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../css/NavBar.css">
     <link rel="stylesheet" href="../css/pagination.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/pagination.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <title>Events</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <ul class="nav navbar-nav">
-                <li><a href="Create.php">Create Event</a></li>
-                <li class="active"><a href="Events.php"> Events </a></li>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="Create.php">Create Event </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="Events.php">Events <span class="sr-only">(current)</span></a>
+                </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="login.php">Logout</a></li>
-            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <a class="btn btn-outline-danger" href="login.php" role="button">Logout</a>
+            </form>
         </div>
     </nav>
 
@@ -58,7 +63,10 @@
     </div>
 
     <div class="container">
-        <table id="events-table" class="table table-hover"></table>
+        <table id="events-table" class="table table-hover">
+            <thead id="events-headings" class="thead-dark"></thead>
+            <tbody id="events-body"></tbody>
+        </table>
     </div>
     <div class="container">
     <div class="row">
@@ -114,7 +122,7 @@
     }
 
     function pagination(responseText) {
-        let eventsTable = document.getElementById('events-table');
+        let eventsTable = document.getElementById('events-headings');
         let parsedResponse = JSON.parse(responseText);
         let fieldNames = parsedResponse[0];
         let events = reformatEvents(parsedResponse[1]);
@@ -136,6 +144,7 @@
                     default:
                         break;
                 }
+                tableHeader.scope = "col";
                 headerRow.appendChild(tableHeader);
             }
             eventsTable.appendChild(headerRow);
@@ -153,7 +162,7 @@
     }
 
     function structureDataTable(data) {
-        let eventsTable = document.getElementById('events-table');
+        let eventsTable = document.getElementById('events-body');
         let events = document.getElementsByClassName('event');
         for (let i = events.length - 1; i >= 0; i--) {
             events[i].remove();
