@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="../css/NavBar.css">
     <link rel="stylesheet" href="../css/pagination.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
     <!-- JavaScript -->
     <script src="../js/AJAX.js"></script>
     <script src="../js/NavBar.js"></script>
@@ -43,24 +45,37 @@
     </nav>
 
     <div class="container">
-        <h1> Events </h1>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <h1> Events </h1>
+            </div>
+        </div>
     </div>
 
     <div class="container">
         <form id="date-filter">
-            <h3>Start Date:</h3>
-            <input type="date" id="start-dates" required>
-
-            <h3>End Date:</h3>
-            <input type="date" id="end-dates" required>
-
-            <input type="submit" value="Filter"/><br />
-        </form>
-        <form>
-            <input type="text" size="30" onkeyup="showResult(this.value)">
-            <div id="livesearch"></div>
+            <div class="row align-items-end justify-content-between">
+                <div class="col-2">
+                    <h5>Start Date:</h5>
+                    <input type="date" id="start-dates" required>
+                </div>
+                <div class="col-7">
+                    <h5>End Date:</h5>
+                    <input type="date" id="end-dates" required>
+                    <input type="submit" value="Filter"/><br />
+                </div>
+                <div class="col">
+                    <form>
+                        <h5>Search:</h5>
+                        <input type="text" size="30" onkeyup="showResult(this.value)">
+                        <div id="livesearch"></div>
+                    </form>
+                </div>
+            </div>
         </form>
     </div>
+
+    <br/>
 
     <div class="container">
         <table id="events-table" class="table table-hover">
@@ -83,6 +98,7 @@
     let HEADER = false;
 
     var eventsPerPage = 20;
+
 
     // Set the start date field to today's date
     //document.getElementById('start-dates').value = new Date().toISOString().slice(0,10);
