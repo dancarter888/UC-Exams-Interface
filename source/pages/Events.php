@@ -56,21 +56,35 @@
         <form id="date-filter">
             <div class="row align-items-end justify-content-between">
                 <div class="col-2">
-                    <h5>Start Date:</h5>
-                    <input type="date" id="start-dates" required>
-                </div>
-                <div class="col-7">
-                    <h5>End Date:</h5>
-                    <input type="date" id="end-dates" required>
-                    <input type="submit" value="Filter"/><br />
+                    <h5>Start Date</h5>
                 </div>
                 <div class="col">
-                    <form>
-                        <h5>Search:</h5>
-                        <input type="text" size="30" onkeyup="showResult(this.value)">
-                        <div id="livesearch"></div>
-                    </form>
+                    <h5>End Date</h5>
+
                 </div>
+                <div class="w-100"></div>
+                <div class="col-2">
+                    <input type="date" id="start-dates" required>
+
+                </div>
+                <div class="col-2">
+                    <input type="date" id="end-dates" required>
+                </div>
+                <div class="col">
+                    <input type="submit" value="Filter"/><br />
+                </div>
+                <div class="w-100"></div>
+                <form>
+                    <div class="col-1">
+                        <h5>Search</h5>
+                    </div>
+                    <div class="w-100"></div>
+
+                    <div class="col">
+                        <input type="text" size="30" onkeyup="showResult(this.value)">
+                    </div>
+                    <div id="livesearch"></div>
+                    </form>
             </div>
         </form>
     </div>
