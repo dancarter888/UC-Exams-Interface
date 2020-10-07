@@ -31,20 +31,6 @@ function getEvents($conn, $start_date, $end_date, $query_string) {
     return [$field_names, $rows];
 }
 
-function getSearchedActions($search) {
-    $result = queryDB("CALL search_actions(?);");
-    $field_names = [];
-    $rows = [];
-    echo $result;
-    while ($field = $result->fetch_field()) {
-        $field_names[] = $field->name;
-    }
-    while ($row = $result->fetch_row()) {
-        $rows[] = $row;
-    }
-    return [$field_names, $rows];
-}
-
 function queryDB($conn, $start_date, $end_date, $query_string)
 {
     $query = "CALL show_events(?, ?, ?)";

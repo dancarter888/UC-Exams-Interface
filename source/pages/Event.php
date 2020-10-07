@@ -24,27 +24,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
-<div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-    <a href="Create.php">Create Event</a>
-    <a href="Events.php"> Events </a>
-    <br> <br> <br>
-    <a href="login.php">Logout</a>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-<div id="main">
-    <button class="openbtn" onclick="openNav()"> ☰ </button>
-</div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="Create.php">Create Event </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="Events.php">Events <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <a class="btn btn-outline-danger" href="login.php" role="button">Logout</a>
+        </form>
+    </div>
+</nav>
 
-<h1 id="event-name"></h1>
-<h2 id="event-date"></h2>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <h1 id="event-name"></h1>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-md-auto">
+            <h2 id="event-date"></h2>
+        </div>
+    </div>
+</div>
 
 <br> <br> <br>
 
+<div class="container">
+    <table id="actions-table" class="table table-hover">
+        <thead id="action-headings" class="thead-dark"></thead>
+        <tbody id="action-body"></tbody>
+    </table>
+</div>
 
-<table id="actions-table">
-</table>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
 <nav id="pagination-container" class="pagination"></nav>
+        </div>
+    </div>
+</div>
 
 <script>
     const queryString = window.location.search;
@@ -60,9 +87,8 @@
 
 
     function pagination(responseText) {
-        let eventsTable = document.getElementById('actions-table');
+        let actionsTable = document.getElementById('action-headings');
         let parsedResponse = JSON.parse(responseText);
-        let fieldNames = parsedResponse[0];
         let actions = parsedResponse[1];
         let eventName = actions[0][0];
         let eventDate = actions[0][1];
@@ -94,7 +120,7 @@
                 }
                 headerRow.appendChild(tableHeader);
             }
-            eventsTable.appendChild(headerRow);
+            actionsTable.appendChild(headerRow);
             HEADER = true;
         }
 
@@ -103,13 +129,12 @@
             pageSize: actionsPerPage,
             callback: function(data, pagination) {
                 structureDataTable(data);
-                console.log(pagination);
             }
         })
     }
 
     function structureDataTable(data) {
-        let eventsTable = document.getElementById('actions-table');
+        let actionsTable = document.getElementById('action-body');
         let actions = document.getElementsByClassName('action');
         for (let i = actions.length - 1; i >= 0; i--) {
             actions[i].remove();
@@ -130,16 +155,10 @@
                 }
                 tableRow.appendChild(tableData);
             }
-            eventsTable.appendChild(tableRow);
+            actionsTable.appendChild(tableRow);
         }
     }
 
-    $('#date-filter').submit(function () {
-        let startDate = document.getElementById("start-dates").value;
-        let endDate = document.getElementById("end-dates").value;
-        makeRequest("GET", "Events_Helper.php?start=" + startDate + "&end=" + endDate, pagination);
-        return false;
-    });
 </script>
 </body>
 </html>

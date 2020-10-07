@@ -24,7 +24,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -84,11 +84,11 @@
         </table>
     </div>
     <div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <nav id="pagination-container" class="pagination"></nav>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <nav id="pagination-container" class="pagination"></nav>
+            </div>
         </div>
-    </div>
     </div>
 
 <script>
@@ -101,7 +101,6 @@
 
 
     // Set the start date field to today's date
-    //document.getElementById('start-dates').value = new Date().toISOString().slice(0,10);
 
     // Make a get request to the URL
     makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
@@ -140,7 +139,6 @@
     function pagination(responseText) {
         let eventsTable = document.getElementById('events-headings');
         let parsedResponse = JSON.parse(responseText);
-        let fieldNames = parsedResponse[0];
         let events = reformatEvents(parsedResponse[1]);
 
         if (HEADER === false) {
@@ -172,7 +170,6 @@
             pageSize: eventsPerPage,
             callback: function(data, pagination) {
                 structureDataTable(data);
-                console.log(pagination);
             }
         })
     }
