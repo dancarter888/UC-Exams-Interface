@@ -1,8 +1,8 @@
 <?php
-//if (!isset($_COOKIE['loggedin'])) {
-//    header("Location: login.php");
-//    exit();
-//}
+if (!isset($_COOKIE['loggedin'])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -60,12 +60,10 @@
                 </div>
                 <div class="col">
                     <h5>End Date</h5>
-
                 </div>
                 <div class="w-100"></div>
                 <div class="col-2">
                     <input type="date" id="start-dates" required>
-
                 </div>
                 <div class="col-2">
                     <input type="date" id="end-dates" required>
@@ -79,12 +77,10 @@
                         <h5>Search</h5>
                     </div>
                     <div class="w-100"></div>
-
                     <div class="col">
                         <input type="text" size="30" onkeyup="showResult(this.value)">
                     </div>
-                    <div id="livesearch"></div>
-                    </form>
+                </form>
             </div>
         </form>
     </div>

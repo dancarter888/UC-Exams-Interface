@@ -1,8 +1,7 @@
 <?php
-//if (!isset($_COOKIE['loggedin'])) {
-//    header("Location: login.php");
-//    exit();
-//}
+if (!isset($_COOKIE['loggedin'])) {
+    header("Location: login.php");
+}
 ?>
 
 <!DOCTYPE html>

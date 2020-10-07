@@ -1,3 +1,10 @@
+<?php
+// Deletes cookie if it is set
+if (isset($_COOKIE['loggedin'])) {
+    unset($_COOKIE['loggedin']);
+}
+?>
+
 <!--Code obtained from https://www.w3schools.com/howto/howto_css_login_form.asp-->
 <!DOCTYPE html>
 <html lang="en">
@@ -141,15 +148,20 @@ checkUsernameAndPassword($conn, $username, $password);
  * @return bool
  */
 function checkUsernameAndPassword($conn, $username, $password) {
-    $result = $conn->query("CALL user_password('{$username}')");
+    $query = "CALL user_password(?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows == 0) {
         echo "Incorrect username";
         return False;
     } else {
         $hashed_password = $result->fetch_array(MYSQLI_ASSOC)['hashed_password'];
+        echo $password, $hashed_password;
         if (password_verify($password, $hashed_password)) {
             echo "Success";
-            setcookie('loggedin', 'yes', ['samesite' => 'Lax'], time() + 60 * 5); // Sets cookie timeout to 5 minutes
+            setcookie('loggedin', 'yes', time() + 60 * 5); // Sets cookie timeout to 5 minutes
             header('Location: Events.php');
         } else {
             echo "Incorrect password";
