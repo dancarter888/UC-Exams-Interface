@@ -1,7 +1,7 @@
 <?php
 // Deletes cookie if it is set
 if (isset($_COOKIE['loggedin'])) {
-    unset($_COOKIE['loggedin']);
+    setcookie('loggedin', 'yes', time() - 3600); // Deletes cookie
 }
 ?>
 
@@ -32,32 +32,6 @@ if (isset($_COOKIE['loggedin'])) {
 
         <div class="container" style="background-color:#f1f1f1">
             <span class="psw">Forgot <a href="#">password?</a></span>
-        </div>
-    </form>
-
-    <form action="login.php" method="post" enctype='multipart/form-data'>
-        <div class="container">
-            <b>TEST</b> Add user<br/>
-            <input type='hidden' name='add' value='1' />
-            <label>
-                Username:
-                <input type='text' placeholder='Enter Username' name='new_username' size='15' required/>
-            </label>
-            <label>
-                Password:
-                <input type='password' placeholder='Enter Password' name='new_password' size='15' required/>
-            </label>
-            <button type="submit">Add User</button>
-        </div>
-    </form>
-
-    <form method="post" action="login.php" enctype="multipart/form-data">
-        <div class="container">
-        <label>
-            <b>TEST</b> Remove user by id
-            <input type="text" placeholder='Enter User ID' name="remove" size=10/>
-        </label>
-            <button type="submit">Remove user by id</button>
         </div>
     </form>
 </body>
