@@ -1,4 +1,9 @@
 <?php
+/*
+Deletes cookie if it is set.
+Used for logout, when logout is clicked on another page it
+redirects to this page and then deletes the cookie.
+*/
 if (!isset($_COOKIE['loggedin'])) {
     header("Location: Login.php");
 }
@@ -11,16 +16,16 @@ if (!isset($_COOKIE['loggedin'])) {
         <link rel="stylesheet" href="../css/Pagination.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-
         <!-- JavaScript -->
         <script src="../js/AJAX.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="../js/Pagination.js"></script>
 
-        <title>Events</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+        <title>Events</title>
     </head>
     <body>
+        <!-- Navigation bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -41,6 +46,7 @@ if (!isset($_COOKIE['loggedin'])) {
             </div>
         </nav>
 
+        <!-- Title -->
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-md-auto">
@@ -49,6 +55,7 @@ if (!isset($_COOKIE['loggedin'])) {
             </div>
         </div>
 
+        <!-- Date Filter and Search -->
         <div class="container">
             <form id="date-filter">
                 <div class="row align-items-end justify-content-between">
@@ -74,12 +81,15 @@ if (!isset($_COOKIE['loggedin'])) {
 
         <br/>
 
+        <!-- Events table -->
         <div class="container">
             <table id="events-table" class="table table-hover">
                 <thead id="events-headings" class="thead-dark"></thead>
                 <tbody id="events-body"></tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-md-auto">
@@ -89,6 +99,7 @@ if (!isset($_COOKIE['loggedin'])) {
         </div>
 
         <script>
+            // Initialised to include all events
             let STARTDATE = "1995-01-01";
             let ENDDATE = "9999-12-31";
             let QUERYSTRING = "";
@@ -96,13 +107,14 @@ if (!isset($_COOKIE['loggedin'])) {
 
             var eventsPerPage = 20;
 
-
-            // Set the start date field to today's date
-
-            // Make a get request to the URL
+            // Make a get request to the URL to get events and add them to the html table
             makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
 
             function reformatEvents(events) {
+                /**
+                 * Formats events so they can be added to the table and used for pagination
+                 * @return {list} of events
+                 */
                 let prevEventName = null;
                 let prevEventStartTime = null;
                 let prevEventEndTime = null;
@@ -134,6 +146,11 @@ if (!isset($_COOKIE['loggedin'])) {
             }
 
             function pagination(responseText) {
+                /**
+                 * Creates the events table header and then uses jquery pagination to
+                 * call structureDataTable() which then adds the event data to the table
+                 * @param responseText is the response from the query to get all events
+                 */
                 let eventsTable = document.getElementById('events-headings');
                 let parsedResponse = JSON.parse(responseText);
                 let events = reformatEvents(parsedResponse[1]);
@@ -172,6 +189,10 @@ if (!isset($_COOKIE['loggedin'])) {
             }
 
             function structureDataTable(data) {
+                /**
+                 * Adds all the events data to the events table
+                 * @param data
+                 */
                 let eventsTable = document.getElementById('events-body');
                 let events = document.getElementsByClassName('event');
                 for (let i = events.length - 1; i >= 0; i--) {
@@ -194,10 +215,11 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
             }
 
-
-
-            //Search functionality
             function showResult(str) {
+                /**
+                 * Called when the user types into the search box and updates the events in the
+                 * events table based on the searched string
+                 */
                 QUERYSTRING = str;
                 let url = "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING;
                 console.log(url);
@@ -205,6 +227,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
             }
 
+            // Updates the event data when the filter button pressed to filter events based on datas
             $('#date-filter').submit(function () {
                 let startDate = document.getElementById("start-dates").value;
                 STARTDATE = startDate;
