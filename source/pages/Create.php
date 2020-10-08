@@ -1,6 +1,6 @@
 <?php
 if (!isset($_COOKIE['loggedin'])) {
-    header("Location: login.php");
+    header("Location: Login.php");
 }
 ?>
 
@@ -9,7 +9,7 @@ if (!isset($_COOKIE['loggedin'])) {
     <head>
         <!-- CSS -->
         <link rel="stylesheet" href="../css/Create.css">
-        <link rel="stylesheet" href="../css/pagination.css">
+        <link rel="stylesheet" href="../css/Pagination.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
         <!-- JavaScript -->
@@ -35,7 +35,7 @@ if (!isset($_COOKIE['loggedin'])) {
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
-                    <a class="btn btn-outline-danger" href="login.php" role="button">Logout</a>
+                    <a class="btn btn-outline-danger" href="Login.php" role="button">Logout</a>
                 </form>
             </div>
         </nav>
