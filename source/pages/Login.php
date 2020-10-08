@@ -68,6 +68,7 @@ if (isset($_COOKIE['loggedin'])) {
             });
         }
 
+        // Calls requestLogin when the loggin button pressed
         $('#login-form').submit(function () {
             requestLogin();
             return false;

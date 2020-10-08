@@ -1,78 +1,25 @@
 <?php
 require_once("../config/config.php");
 
+// Creates a connection to the databse using variables form the config file
 $conn = new mysqli($hostname, $username, $password, $database);
+
+// Catches any error connecting to the database
 if ($conn->connect_error)
 {
     fatalError($conn->connect_error);
     return;
 }
 
-//Not entirely sure if we need to check they exist as you can only submit when username and password has been filled.
-if(isset($_POST["username"])) {
-    $username = $_POST["username"];
-    $username = sanitizeString($username);
-}
-if (isset($_POST["password"])) {
-    $password = $_POST["password"];
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-}
+// Sanitizes the username and password given.
+$username = $_POST["username"];
+$password = $_POST["password"];
+$username = sanitizeString($username);
 
-if(isset($_POST['add']))
-{
-    $user = createUser($_POST);
+// Creates a hash for the password
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    if (!is_null($user))
-    {
-        addUser($conn, $user);
-    }
-}
-
-if(isset($_POST['remove']))
-{
-    removeUser($conn, $_POST['remove']);
-}
-
-function createUser($user) {
-    if ($user['new_username'] !== '' && $user['new_username'] !== NULL && $user['new_password'] !== '' && $user['new_password'] !== NULL) {
-        return array($user['new_username'], $user['new_password']);
-    }
-    return NULL;
-}
-
-/**
- * Just to test out the logins
- * @param $conn
- * @param $user
- */
-function addUser($conn, $user) {
-    $username = $user[0];
-    $password = $user[1];
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    $stmt = $conn->prepare("CALL add_user(?, ?);");
-    $stmt->bind_param('ss', $username, $hashed_password);
-    $stmt->execute();
-
-    if ($stmt->errno) {
-        fatalError($stmt->error);
-    } else {
-        echo "User " . $username . " added!";
-    }
-}
-
-function removeUser($conn, $user_id) {
-    $stmt = $conn->prepare("CALL remove_user(?);");
-    $stmt->bind_param('s', $user_id);
-    $stmt->execute();
-
-    if ($stmt->errno) {
-        fatalError($stmt->error);
-    } else {
-        echo "User removed!";
-    }
-}
-
+// Checks username and password are correct
 checkUsernameAndPassword($conn, $username, $password);
 
 /**
@@ -93,7 +40,6 @@ function checkUsernameAndPassword($conn, $username, $password) {
         return False;
     } else {
         $hashed_password = $result->fetch_array(MYSQLI_ASSOC)['hashed_password'];
-        //echo $password, $hashed_password;
         if (password_verify($password, $hashed_password)) {
             echo "Success";
             setcookie('loggedin', 'yes', time() + 60 * 20); // Sets cookie timeout to 20 minutes
@@ -116,5 +62,6 @@ function sanitizeString($var) {
     return $var;
 }
 
+// Closes database connection
 $conn->close();
 ?>
