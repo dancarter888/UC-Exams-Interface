@@ -73,7 +73,7 @@ if (!isset($_COOKIE['loggedin'])) {
                                 <datalist id="rooms" required>
                                     <option value="" disabled selected> -- Select A Room -- </option>
                                 </datalist>
-                                <button onclick="addRoom()" class="btn btn-secondary">+ Add</button>
+                                <input type="button" onclick="addRoom()" value="+ Add" class="btn btn-secondary"/>
                                 <br />
                             </div>
 
@@ -126,21 +126,20 @@ if (!isset($_COOKIE['loggedin'])) {
                     </div>
 
                     <div id="F3">
-                        <div class="container text-center">
-                        <br />
-                        <h2> Event Review </h2>
+                        <div class="container">
+                            <h2> Event Review </h2>
+
+                            <br > <br >
+
+                            <form id="ReviewForm">
+                                <h4 id="r_date">Test Date:</h4>  <br />
+                                <h4 id="r_name">Test Name:</h4>  <br />
+                                <h4 id="r_rooms">Test Rooms:</h4>  <br />
+                                <h4 id="r_stime">Test Start Time:</h4>  <br />
+                                <input type="button" onclick="prevStep()" value="< Add Actions" class="btn btn-primary" />
+                                <input type="submit" value="Create Event" class="btn btn-success"/>
+                            </form>
                         </div>
-
-                        <br > <br > <br >
-
-                        <form id="ReviewForm">
-                            <h4 id="r_date">Test Date:</h4>  <br />
-                            <h4 id="r_name">Test Name:</h4>  <br />
-                            <h4 id="r_rooms">Test Rooms:</h4>  <br />
-                            <h4 id="r_stime">Test Start Time:</h4>  <br />
-                            <input type="button" onclick="prevStep()" value="Prev" />
-                            <input type="submit" value="Next" />
-                        </form>
                     </div>
                 </div>
             </div>
@@ -248,10 +247,10 @@ if (!isset($_COOKIE['loggedin'])) {
              * Updates the final form with the data the user has inputted.
              */
             function updateFinalForm() {
-                $("#r_date").append("\t" + eventObj["Date"]);
-                $("#r_name").append("\t" + eventObj["Name"]);
-                $("#r_rooms").append("\t" + eventObj["Rooms"]);
-                $("#r_stime").append("\t" + eventObj["StartTime"]);
+                $("#r_name").html("<b>Event Name:</b>" +" \t" + eventObj["Name"]);
+                $("#r_date").html("<b>Event Date:</b>" + "\t" + eventObj["Date"]);
+                $("#r_rooms").html("<b>Event Rooms:</b>" + "\t" + eventObj["Rooms"]);
+                $("#r_stime").html("<b>Event Start Time:</b>" + "\t" + eventObj["StartTime"]);
             }
 
             function createEvent() {
