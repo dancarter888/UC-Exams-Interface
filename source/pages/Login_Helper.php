@@ -1,7 +1,7 @@
 <?php
 require_once("../config/config.php");
 
-// Creates a connection to the databse using variables form the config file
+// Creates a connection to the database using variables form the config file
 $conn = new mysqli($hostname, $username, $password, $database);
 
 // Catches any error connecting to the database

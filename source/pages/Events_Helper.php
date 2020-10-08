@@ -1,15 +1,25 @@
 <?php
 require_once("../config/config.php");
+
+// Creates a connection to the database using variables form the config file
 $conn = new mysqli($hostname, $username, $password, $database);
 
+// Catches any error connecting to the database
+if ($conn->connect_error)
+{
+    fatalError($conn->connect_error);
+    return;
+}
+
+// Checks variables have been set, sanitizes the search string and then calls getEvents()
 if (isset($_GET['start']) && isset($_GET['end']) || isset($_GET['q']))
 {
     $start_date = $_GET['start'];
     if ($start_date === "today") {
-        $start_date = date("Y-m-d");
+        $start_date = date("Y-m-d"); // Updates start_date to todays date
     }
     $end_date = $_GET['end'];
-    $query_string = $_GET['q'];
+    $query_string = sanitizeString($_GET['q']);
     if (strtotime($start_date) !== false && strtotime($end_date) !== false) {
         $get_events = getEvents($conn, $start_date, $end_date, $query_string);
         $field_names = $get_events[0];
@@ -18,6 +28,14 @@ if (isset($_GET['start']) && isset($_GET['end']) || isset($_GET['q']))
     }
 }
 
+/**
+ * Queries the database to retrieve events and returns the events
+ * @param $conn connection to the database
+ * @param $start_date string start date inputted by the user
+ * @param $end_date string end date inputted by the user
+ * @param $query_string string search string inputted by the user
+ * @return array[] array of the field names and rows of event data
+ */
 function getEvents($conn, $start_date, $end_date, $query_string) {
     $result = queryDB($conn, $start_date, $end_date, $query_string);
     $field_names = [];
@@ -31,6 +49,14 @@ function getEvents($conn, $start_date, $end_date, $query_string) {
     return [$field_names, $rows];
 }
 
+/**
+ * Calls the stored procedure show_event with the given parameters using a prepared statement
+ * @param $conn connection to the database
+ * @param $start_date string start date inputted by the user
+ * @param $end_date string end date inputted by the user
+ * @param $query_string string search string inputted by the user
+ * @return mixed results from the query
+ */
 function queryDB($conn, $start_date, $end_date, $query_string)
 {
     $query = "CALL show_events(?, ?, ?)";
