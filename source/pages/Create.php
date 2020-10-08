@@ -282,7 +282,7 @@ if (!isset($_COOKIE['loggedin'])) {
 
             function final(responseText) {
                 console.log(responseText);
-                // Goto event page
+                document.location.href = "Events.php";
             }
 
             /**
