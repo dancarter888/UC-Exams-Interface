@@ -18,3 +18,7 @@ li {
 input::placeholder {
     text-align: center;
 }
+
+#test_name::placeholder {
+    text-align: left;
+}

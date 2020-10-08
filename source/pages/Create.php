@@ -30,11 +30,11 @@ if (!isset($_COOKIE['loggedin'])) {
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="Create.php">Create Event </a>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Events.php">Events <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="Create.php">Create Event <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="Events.php">Events </a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
@@ -44,118 +44,106 @@ if (!isset($_COOKIE['loggedin'])) {
         </nav>
 
         <div class="container">
-            <br />
-            <h1> Create Event </h1>
-        </div>
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <h1> Create Event </h1>
 
-        <div id="F1">
-            <div class="container">
-            <br />
-            <h2> Event Details </h2>
+                    <div id="F1">
+                        <div class="container">
+                            <h2> Event Details </h2>
+                        </div>
+
+                        <br >
+
+                        <form id="DetailsForm">
+                            <div class="form-group">
+                                Test Date: <br />
+                                <input type="date" name="test_date" id="test_date" required /> <br />
+                            </div>
+
+                            <div class="form-group">
+                                Test Name: <br />
+                                <input type="text" placeholder="Enter Name" name="test_name" id="test_name" required /> <br />
+                            </div>
+
+                            <div class="form-group">
+                                Room
+                                <ul id="room_select"></ul>
+                                <input list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
+                                <datalist id="rooms" required>
+                                    <option value="" disabled selected> -- Select A Room -- </option>
+                                </datalist>
+                                <button onclick="addRoom()" class="btn btn-secondary">+ Add</button>
+                                <br />
+                            </div>
+
+                            <div class="form-group">
+                                Start Time <br />
+                                <input type="time" name="test_stime" id="test_stime" required /> <br />
+                            </div>
+
+                            <input type="submit" value="Add Actions >" class="btn btn-primary" />
+                        </form>
+                    </div>
+
+                    <div id="F2">
+                        <div class="container">
+                            <h2> Event Actions </h2>
+
+                            <form id="ActionsForm">
+                                <ul id="ActionsList"></ul>
+
+                                <div class="form-group">
+                                Cluster: <br />
+                                <input list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster"> <!--name="test_room">-->
+                                <datalist id="clusters_list" required>
+                                </datalist>
+                                </div>
+
+                                <div class="form-group">
+                                Action time: <br />
+                                <input id="OffsetInput" type="time">
+                                </div>
+
+                                <div class="form-class">
+                                Activation: <br />
+                                <select id="Activate">
+                                    <option value="1">Turn on</option>
+                                    <option value="0">Turn off</option>
+                                </select>
+                                </div>
+
+                                <br />
+
+                                <button id="AddAction" onclick="addAction()" class="btn btn-secondary">+ Add Action</button>
+
+                                <br /><br />
+
+                                <input type="button" onclick="prevStep()" value="< Event Details" class="btn btn-primary" />
+                                <input type="submit" value="Review Event >" class="btn btn-primary"/>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id="F3">
+                        <div class="container text-center">
+                        <br />
+                        <h2> Event Review </h2>
+                        </div>
+
+                        <br > <br > <br >
+
+                        <form id="ReviewForm">
+                            <h4 id="r_date">Test Date:</h4>  <br />
+                            <h4 id="r_name">Test Name:</h4>  <br />
+                            <h4 id="r_rooms">Test Rooms:</h4>  <br />
+                            <h4 id="r_stime">Test Start Time:</h4>  <br />
+                            <input type="button" onclick="prevStep()" value="Prev" />
+                            <input type="submit" value="Next" />
+                        </form>
+                    </div>
+                </div>
             </div>
-
-            <br > <br > <br >
-
-            <div class="container">
-            <form id="DetailsForm">
-                <div class="form-group">
-                    Test Date: <br />
-                    <input type="date" name="test_date" id="test_date" required /> <br />
-                </div>
-
-                <div class="form-group">
-                    Test Name: <br />
-                    <input type="text" placeholder="Enter Name" name="test_name" id="test_name" required /> <br />
-                </div>
-
-                <div class="form-group">
-                    Room
-                    <ul id="room_select"></ul>
-                    <input list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
-                    <datalist id="rooms" required>
-                        <option value="" disabled selected> -- Select A Room -- </option>
-                    </datalist>
-                    <button onclick="addRoom()" class="btn btn-secondary">+ Add</button>
-                    <br />
-                </div>
-
-                <div class="form-group">
-                    Start Time <br />
-                    <input type="time" name="test_stime" id="test_stime" required /> <br />
-                </div>
-
-                <input type="submit" value="Add Actions" class="btn btn-primary" />
-            </form>
-            </div>
-        </div>
-
-        <div id="F2">
-            <div class="container">
-            <br />
-            <h2> Event Actions </h2>
-            </div>
-
-            <br > <br > <br >
-
-            <div class="container">
-            <form id="ActionsForm">
-                <ul id="ActionsList"></ul>
-
-                <div class="form-group">
-                Cluster: <br />
-                <input list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster"> <!--name="test_room">-->
-                <datalist id="clusters_list" required>
-                </datalist>
-                </div>
-
-                <br /><br />
-
-                <div class="form-group">
-                Action time: <br />
-                <input id="OffsetInput" type="time">
-                </div>
-
-                <br /><br />
-
-                <div class="form-class">
-                Activation: <br />
-                <select id="Activate">
-                    <option value="1">Turn on</option>
-                    <option value="0">Turn off</option>
-                </select>
-                </div>
-
-                <br /><br />
-
-                <button id="AddAction" onclick="addAction()" class="btn btn-secondary">Add Action</button>
-
-                <br /><br />
-
-                <input type="button" onclick="prevStep()" value="Event Details" class="btn btn-primary" />
-                <input type="submit" value="Review Event" class="btn btn-primary"/>
-            </form>
-            </div>
-
-
-
-        </div>
-
-        <div id="F3">
-            <div class="container text-center">
-            <br />
-            <h2> Event Review </h2>
-            </div>
-
-            <br > <br > <br >
-
-            <form id="ReviewForm">
-                <h4 id="r_date">Test Date:</h4>  <br />
-                <h4 id="r_name">Test Name:</h4>  <br />
-                <h4 id="r_rooms">Test Rooms:</h4>  <br />
-                <h4 id="r_stime">Test Start Time:</h4>  <br />
-                <input type="button" onclick="prevStep()" value="Prev" />
-                <input type="submit" value="Next" />
-            </form>
         </div>
 
         <script>
