@@ -94,33 +94,33 @@ if (!isset($_COOKIE['loggedin'])) {
                                 <ul id="ActionsList"></ul>
 
                                 <div class="form-group">
-                                Cluster: <br />
-                                <input list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster"> <!--name="test_room">-->
-                                <datalist id="clusters_list" required>
-                                </datalist>
+                                    Cluster: <br />
+                                    <input list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required> <!--name="test_room">-->
+                                    <datalist id="clusters_list" required>
+                                    </datalist>
                                 </div>
 
                                 <div class="form-group">
-                                Action time: <br />
-                                <input id="OffsetInput" type="time">
+                                    Action time: <br />
+                                    <input id="OffsetInput" type="time" required>
                                 </div>
 
                                 <div class="form-class">
-                                Activation: <br />
-                                <select id="Activate">
-                                    <option value="1">Turn on</option>
-                                    <option value="0">Turn off</option>
-                                </select>
+                                    Activation: <br />
+                                    <select id="Activate" required>
+                                        <option value="1">Turn on</option>
+                                        <option value="0">Turn off</option>
+                                    </select>
                                 </div>
 
-                                <br />
+                                <br/>
 
-                                <button id="AddAction" onclick="addAction()" class="btn btn-secondary">+ Add Action</button>
+                                <input type="submit" id="AddAction" value="+ Add Action" class="btn btn-secondary"/>
 
                                 <br /><br />
 
                                 <input type="button" onclick="prevStep()" value="< Event Details" class="btn btn-primary" />
-                                <input type="submit" value="Review Event >" class="btn btn-primary"/>
+                                <input type="button" onclick="reviewForm()" value="Review Event >" class="btn btn-primary"/>
                             </form>
                         </div>
                     </div>
@@ -196,9 +196,7 @@ if (!isset($_COOKIE['loggedin'])) {
              * Next step function for the 3rd page (Actions)
              */
             $('#ActionsForm').submit(function () {
-                //STUFF
-                currentForm++;
-                setForms();
+                addAction()
                 return false;
             });
 
@@ -223,6 +221,13 @@ if (!isset($_COOKIE['loggedin'])) {
                 setForms();
             }
 
+            function reviewForm() {
+                let actions = document.getElementById("ActionsList");
+                if (actions.getElementsByTagName("li").length > 0) {
+                    currentForm ++;
+                    setForms();
+                }
+            }
 
             /**
              * Toggle between the forms.
