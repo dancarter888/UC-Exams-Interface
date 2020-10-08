@@ -1,5 +1,9 @@
 <?php
-// Deletes cookie if it is set
+/*
+Deletes cookie if it is set.
+Used for logout, when logout is clicked on another page it
+redirects to this page and then deletes the cookie.
+*/
 if (isset($_COOKIE['loggedin'])) {
     setcookie('loggedin', 'yes', time() - 3600); // Deletes cookie
 }
@@ -40,26 +44,28 @@ if (isset($_COOKIE['loggedin'])) {
     </body>
     <script>
         function requestLogin() {
+            /**
+             * Called when the login button is pressed.
+             * Gets the username and password inputted by user, gives it to Login_Helper.php
+             * and checks the response, if incorrect, displays an error message otherwise
+             * redirects the user to the Events.php page
+             */
             let username = $('#username').val()
             let password = $('#password').val()
 
             $.ajax({
-                url: "login_Helper.php",
+                url: "Login_Helper.php",
                 type: "post",
                 data: {username: username,
                        password: password},
-                success: checkLogin
+                success: function(responseText) {
+                    if (responseText === "Success") {
+                        document.location.href = "Events.php";
+                    } else {
+                        $('#formMessage').text("Invalid Login");
+                    }
+                }
             });
-        }
-
-        function checkLogin(responseText) {
-            if (responseText === "Success") {
-                console.log(responseText);
-                document.location.href = "Events.php";
-            } else {
-                console.log(responseText);
-                $('#formMessage').text("Invalid Login");
-            }
         }
 
         $('#login-form').submit(function () {
