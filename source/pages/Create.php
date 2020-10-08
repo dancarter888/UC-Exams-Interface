@@ -179,14 +179,17 @@ if (!isset($_COOKIE['loggedin'])) {
              * Next step function for the 1st page (Details)
              */
             $('#DetailsForm').submit(function () {
-                eventObj["Date"] = $("#test_date").val();
-                console.log($("#test_name").val());
-                eventObj["Name"] = $("#test_name").val();
-                eventObj["Rooms"] = roomsSelected;
-                eventObj["StartTime"] = $("#test_stime").val();
-                //eventObj["EndTime"] = $("#test_etime").val();
-                currentForm++;
-                setForms();
+                let rooms = document.getElementById("room_select");
+                if (rooms.getElementsByTagName("li").length > 0) {
+                    eventObj["Date"] = $("#test_date").val();
+                    console.log($("#test_name").val());
+                    eventObj["Name"] = $("#test_name").val();
+                    eventObj["Rooms"] = roomsSelected;
+                    eventObj["StartTime"] = $("#test_stime").val();
+                    //eventObj["EndTime"] = $("#test_etime").val();
+                    currentForm++;
+                    setForms();
+                }
                 return false;
             });
 
@@ -282,6 +285,7 @@ if (!isset($_COOKIE['loggedin'])) {
                     action["EventID"] = eventID;
                     action["StartTime"] = eventObj["StartTime"]
                     let jsonStr = JSON.stringify(action);
+                    console.log(jsonStr);
                     $.ajax({
                         url: "Create_Helper.php",
                         type: "post",
@@ -374,8 +378,5 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
             }
         </script>
-
-
-
     </body>
 </html>
