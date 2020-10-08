@@ -73,7 +73,8 @@ if (!isset($_COOKIE['loggedin'])) {
                             <div class="row align-items-end">
                                 <div class="col-8">
                                     <label for="test_room">Room</label>
-                                    <ul id="room_select"></ul>
+                                    <ul id="room_select">
+                                    </ul>
                                     <input class="form-control" list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
                                     <datalist id="rooms" required>
                                         <option value="" disabled selected> -- Select A Room -- </option>
@@ -194,10 +195,33 @@ if (!isset($_COOKIE['loggedin'])) {
                     currentForm++;
                     setForms();
                 } else {
-                    alert("You must select at least one room.");
+                    alert("You must add at least one room.");
                 }
                 return false;
             });
+
+            /**
+             * To remove a room
+             * */
+            $('body').on("click", ".close", function() {
+                let roomName = $(this).attr('id');
+                removeRoom(roomName);
+            });
+
+            function removeRoom(roomName) {
+                let roomIndex = roomsSelected.indexOf(roomName);
+                if (roomIndex > -1) {
+                    roomsSelected.splice(roomIndex, 1);
+                }
+                document.getElementById(roomName).remove();
+                console.log(roomsSelected);
+
+                ROOMS.push(roomName);
+                roomCallback(ROOMS.sort());
+            }
+
+
+
 
             /**
              * Next step function for the 2nd page (Type)
@@ -320,10 +344,19 @@ if (!isset($_COOKIE['loggedin'])) {
              **/
             function roomCallback(responseText) {
                 let selectElement = document.getElementById('rooms');
+                $('#rooms').empty();
+
+
                 console.log(selectElement.style.display);
                 console.log(responseText);
-                let rooms = JSON.parse(responseText);
-                ROOMS = rooms;
+                if (Array.isArray(responseText)){
+                    console.log(responseText);
+                    var rooms = responseText;
+                } else {
+                    var rooms = JSON.parse(responseText);
+                    console.log(123);
+                    ROOMS = rooms;
+                }
                 for (let i=0; i<rooms.length; i++) {
                     let option = document.createElement('option');
                     option.value = rooms[i];
@@ -337,24 +370,37 @@ if (!isset($_COOKIE['loggedin'])) {
              */
             function addRoom()
             {
-                let roomDiv = document.getElementById("room_select");
                 let input = document.getElementById("test_room");
                 if (ROOMS.includes(input.value)) {
-                    $("#room_select").append("<li>" + input.value + "</li>");
                     roomsSelected.push(input.value);
+                    let closeBtn = document.createElement('button');
+                    closeBtn.className = 'close';
+                    closeBtn.id = input.value;
+                    closeBtn.type = 'button';
+                    closeBtn.innerHTML = '×'
+                    let room = document.createElement('li');
+                    room.innerHTML = input.value;
+                    room.id = input.value;
+                    room.appendChild(closeBtn);
+                    $("#room_select").append(room);
 
-                    // Remove option for this room so it can't be selected more than once
+/*                    // Remove option for this room so it can't be selected more than once
                     let dList = document.getElementById("rooms");
                     for (let i=0; i<dList.children.length; i++) {
                         if (dList.children[i].value === input.value) {
                             dList.children[i].remove();
                             break;
                         }
-                    }
+                    }*/
+
                     ROOMS.splice(ROOMS.indexOf(input.value), 1);
                     input.value = "";
+
+                    roomCallback(ROOMS);
                 }
             }
+
+
 
             function addAction() {
                 let clusterName = $("#action_cluster").val();
