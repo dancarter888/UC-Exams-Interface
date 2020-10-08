@@ -57,19 +57,19 @@ if (!isset($_COOKIE['loggedin'])) {
 
                         <form id="DetailsForm">
                             <div class="form-group">
-                                Test Date: <br />
-                                <input type="date" name="test_date" id="test_date" required /> <br />
+                                <label for="test_date">Test Date</label>
+                                <input class="form-control" type="date" name="test_date" id="test_date" required /> <br />
                             </div>
 
                             <div class="form-group">
-                                Test Name: <br />
-                                <input type="text" placeholder="Enter Name" name="test_name" id="test_name" required /> <br />
+                                <label for="test_name">Test Name</label>
+                                <input class="form-control" type="text" placeholder="Enter Name" name="test_name" id="test_name" required /> <br />
                             </div>
 
                             <div class="form-group">
-                                Room
+                                <label for="test_room">Room</label>
                                 <ul id="room_select"></ul>
-                                <input list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
+                                <input class="form-control" list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
                                 <datalist id="rooms" required>
                                     <option value="" disabled selected> -- Select A Room -- </option>
                                 </datalist>
@@ -78,8 +78,8 @@ if (!isset($_COOKIE['loggedin'])) {
                             </div>
 
                             <div class="form-group">
-                                Start Time <br />
-                                <input type="time" name="test_stime" id="test_stime" required /> <br />
+                                <label for="test_time">Start Time</label>
+                                <input class="form-control" type="time" name="test_time" id="test_time" required /> <br />
                             </div>
 
                             <input type="submit" value="Add Actions >" class="btn btn-primary" />
@@ -175,7 +175,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 console.log($("#test_name").val());
                 eventObj["Name"] = $("#test_name").val();
                 eventObj["Rooms"] = roomsSelected;
-                eventObj["StartTime"] = $("#test_stime").val();
+                eventObj["StartTime"] = $("#test_time").val();
                 //eventObj["EndTime"] = $("#test_etime").val();
                 currentForm++;
                 setForms();
