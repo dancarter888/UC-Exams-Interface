@@ -91,34 +91,31 @@ if (!isset($_COOKIE['loggedin'])) {
                             <h2> Event Actions </h2>
 
                             <form id="ActionsForm">
-                                <ul id="ActionsList"></ul>
 
                                 <div class="form-group">
-                                    Cluster: <br />
-                                    <input list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required> <!--name="test_room">-->
+                                    <ul id="ActionsList"></ul>
+
+                                    <label for="clusters_list">Cluster</label>
+                                    <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required> <!--name="test_room">-->
                                     <datalist id="clusters_list" required>
                                     </datalist>
                                 </div>
 
                                 <div class="form-group">
-                                    Action time: <br />
-                                    <input id="OffsetInput" type="time" required>
+                                    <label for="OffsetInput">Action time</label>
+                                    <input class="form-control" id="OffsetInput" type="time" required>
                                 </div>
 
-                                <div class="form-class">
-                                    Activation: <br />
-                                    <select id="Activate" required>
+                                <div class="form-group">
+                                    <label for="Activate">Activation</label>
+                                    <select class="form-control" id="Activate" required>
                                         <option value="1">Turn on</option>
                                         <option value="0">Turn off</option>
                                     </select>
                                 </div>
 
-                                <br/>
-
                                 <input type="submit" id="AddAction" value="+ Add Action" class="btn btn-secondary"/>
-
-                                <br /><br />
-
+                                 </br></br>
                                 <input type="button" onclick="prevStep()" value="< Event Details" class="btn btn-primary" />
                                 <input type="button" onclick="reviewForm()" value="Review Event >" class="btn btn-primary"/>
                             </form>
