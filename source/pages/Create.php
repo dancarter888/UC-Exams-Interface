@@ -141,10 +141,15 @@ if (!isset($_COOKIE['loggedin'])) {
                             <br > <br >
 
                             <form id="ReviewForm">
-                                <h4 id="r_date">Test Date:</h4>  <br />
-                                <h4 id="r_name">Test Name:</h4>  <br />
-                                <h4 id="r_rooms">Test Rooms:</h4>  <br />
-                                <h4 id="r_stime">Test Start Time:</h4>  <br />
+                                <h4>Test Name: </h4> <div id="r_name"></div>  <br />
+                                <h4>Test Rooms: </h4> <div id="r_rooms"></div>  <br />
+                                <h4>Test Date: </h4> <div id="r_date"></div>  <br />
+                                <h4>Test Start Time: </h4> <div id="r_stime"></div>  <br /><br />
+
+                                <h3 class="text-center">Actions</h3>
+                                <ul id="ActionsReviewList">
+                                </ul> <br /> <br />
+
                                 <input type="button" onclick="prevStep()" value="< Add Actions" class="btn btn-primary" />
                                 <input type="submit" value="Create Event" class="btn btn-success"/>
                             </form>
@@ -186,9 +191,10 @@ if (!isset($_COOKIE['loggedin'])) {
                     eventObj["Name"] = $("#test_name").val();
                     eventObj["Rooms"] = roomsSelected;
                     eventObj["StartTime"] = $("#test_stime").val();
-                    //eventObj["EndTime"] = $("#test_etime").val();
                     currentForm++;
                     setForms();
+                } else {
+                    alert("You must select at least one room.");
                 }
                 return false;
             });
@@ -234,9 +240,12 @@ if (!isset($_COOKIE['loggedin'])) {
 
             function reviewForm() {
                 let actions = document.getElementById("ActionsList");
-                if (actions.getElementsByTagName("li").length > 0) {
+                let actionsValid = checkActions();
+                if (actions.getElementsByTagName("li").length > 0 && actionsValid) {
                     currentForm ++;
                     setForms();
+                } else {
+                    alert("The actions entered are invalid.");
                 }
             }
 
@@ -259,10 +268,15 @@ if (!isset($_COOKIE['loggedin'])) {
              * Updates the final form with the data the user has inputted.
              */
             function updateFinalForm() {
-                $("#r_name").html("<b>Event Name:</b>" +" \t" + eventObj["Name"]);
-                $("#r_date").html("<b>Event Date:</b>" + "\t" + eventObj["Date"]);
-                $("#r_rooms").html("<b>Event Rooms:</b>" + "\t" + eventObj["Rooms"]);
-                $("#r_stime").html("<b>Event Start Time:</b>" + "\t" + eventObj["StartTime"]);
+                $("#r_name").html(eventObj["Name"]);
+                $("#r_date").html(eventObj["Date"]);
+                $("#r_rooms").html(eventObj["Rooms"]);
+                $("#r_stime").html(eventObj["StartTime"]);
+
+                $("#ActionsReviewList").empty();
+                for (let action of ACTIONS) {
+                    $("#ActionsReviewList").append("<li> Cluster: " + action["ClusterName"] + " Time: " + action["Time"] + " Activation: " + action["Activation"]);
+                }
             }
 
             function createEvent() {
@@ -357,7 +371,29 @@ if (!isset($_COOKIE['loggedin'])) {
                     "Activation": activation
                 }
                 ACTIONS.push(actionsObj);
-                console.log(actionsObj);
+            }
+
+            /**
+             * Function for checking that for every activation of a cluster there is a corresponding deactivation.
+             **/
+            function checkActions() {
+                let valid = true;
+
+                for (let action of ACTIONS) {
+                    let clusterActivations = ACTIONS.filter((act) => {
+                        return act["ClusterName"] === action["ClusterName"] && act["Activation"] === 1;
+                    }).length;
+
+                    let clusterDeactivations = ACTIONS.filter((act) => {
+                        return act["ClusterName"] === action["ClusterName"] && act["Activation"] !== 1;
+                    }).length;
+
+                    if (clusterActivations !== clusterDeactivations) {
+                        valid = false;
+                    }
+                }
+
+                return valid;
             }
 
             /**
