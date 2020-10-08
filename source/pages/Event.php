@@ -146,8 +146,10 @@ if (!isset($_COOKIE['loggedin'])) {
                     if (j === data[i].length - 1) { //The activation field
                         if (data[i][j] === 0){
                             tableData.innerHTML = "OFF";
+                            tableData.className = "btn btn-danger btn-sm";
                         } else {
                             tableData.innerHTML = "ON";
+                            tableData.className = "btn btn-success btn-sm";
                         }
                     } else {
                         tableData.innerHTML = data[i][j];
