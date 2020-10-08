@@ -8,9 +8,11 @@ if (isset($_COOKIE['loggedin'])) {
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- CSS -->
         <link rel="stylesheet" href="../css/login.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
+        <!-- JavaScript -->
         <script src="../js/AJAX.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -19,23 +21,22 @@ if (isset($_COOKIE['loggedin'])) {
         <title>Login</title>
     </head>
     <body>
+        <div class="wrapper fadeInDown">
+            <div id="formContent">
+                <br/> <br/>
+                <form id="login-form">
+                    <input type="text" id="username" name="username" class="fadeIn second" placeholder="username" value="username" required>
+                    <input type="password" id="password" name="password" class="fadeIn third" placeholder="password" value="password" required>
+                    <input type="submit" class="fadeIn fourth" value="Log In">
+                </form>
 
-            <div class="wrapper fadeInDown">
-                <div id="formContent">
-                    <br/> <br/>
-                    <form id="login-form">
-                        <input type="text" id="username" name="username" class="fadeIn second" placeholder="username" value="username" required>
-                        <input type="password" id="password" name="password" class="fadeIn third" placeholder="password" value="password" required>
-                        <input type="submit" class="fadeIn fourth" value="Log In">
-                    </form>
-
-                    <!-- Footer -->
-                    <div id="formFooter">
-                        <div id="formMessage">
-                        </div>
+                <!-- Footer -->
+                <div id="formFooter">
+                    <div id="formMessage">
                     </div>
                 </div>
             </div>
+        </div>
     </body>
     <script>
         function requestLogin() {
