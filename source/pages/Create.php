@@ -58,29 +58,41 @@ if (!isset($_COOKIE['loggedin'])) {
                         <form id="DetailsForm">
                             <div class="form-group">
                                 <label for="test_date">Test Date</label>
-                                <input class="form-control" type="date" name="test_date" id="test_date" required /> <br />
+                                <input class="form-control" type="date" name="test_date" id="test_date" required />
                             </div>
+
+                            <br/>
 
                             <div class="form-group">
                                 <label for="test_name">Test Name</label>
-                                <input class="form-control" type="text" placeholder="Enter Name" name="test_name" id="test_name" required /> <br />
+                                <input class="form-control" type="text" placeholder="Enter Name" name="test_name" id="test_name" required />
                             </div>
 
-                            <div class="form-group">
-                                <label for="test_room">Room</label>
-                                <ul id="room_select"></ul>
-                                <input class="form-control" list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
-                                <datalist id="rooms" required>
-                                    <option value="" disabled selected> -- Select A Room -- </option>
-                                </datalist>
-                                <input type="button" onclick="addRoom()" value="+ Add" class="btn btn-secondary"/>
-                                <br />
+                            <br/>
+
+                            <div class="row align-items-end">
+                                <div class="col-8">
+                                    <label for="test_room">Room</label>
+                                    <ul id="room_select"></ul>
+                                    <input class="form-control" list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
+                                    <datalist id="rooms" required>
+                                        <option value="" disabled selected> -- Select A Room -- </option>
+                                    </datalist>
+                                </div>
+                                <div class="col-4">
+                                    <input type="button" onclick="addRoom()" value="+ Add" class="btn btn-secondary"/>
+                                </div>
                             </div>
+
+                            <br/>
+                            <br/>
 
                             <div class="form-group">
                                 <label for="test_stime">Start Time</label>
-                                <input class="form-control" type="time" name="test_stime" id="test_stime" required /> <br />
+                                <input class="form-control" type="time" name="test_stime" id="test_stime" required />
                             </div>
+
+                            <br/>
 
                             <input type="submit" value="Add Actions >" class="btn btn-primary" />
                         </form>
@@ -115,7 +127,7 @@ if (!isset($_COOKIE['loggedin'])) {
                                 </div>
 
                                 <input type="submit" id="AddAction" value="+ Add Action" class="btn btn-secondary"/>
-                                 </br></br>
+                                </br></br>
                                 <input type="button" onclick="prevStep()" value="< Event Details" class="btn btn-primary" />
                                 <input type="button" onclick="reviewForm()" value="Review Event >" class="btn btn-primary"/>
                             </form>
