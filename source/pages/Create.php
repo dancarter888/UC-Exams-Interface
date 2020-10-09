@@ -1,4 +1,9 @@
 <?php
+/*
+Deletes cookie if it is set.
+Used for logout, when logout is clicked on another page it
+redirects to this page and then deletes the cookie.
+*/
 if (!isset($_COOKIE['loggedin'])) {
     header("Location: Login.php");
 }
@@ -20,8 +25,10 @@ if (!isset($_COOKIE['loggedin'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     </head>
     <body>
+        <!-- Navigation bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -44,25 +51,26 @@ if (!isset($_COOKIE['loggedin'])) {
             <div class="row justify-content-md-center">
                 <div class="col-md-auto">
                     <h1> Create Event </h1>
-
+                    <!-- Details form -->
                     <div id="F1">
                         <div class="container">
                             <h2> Event Details </h2>
                         </div>
 
-                        <br >
+                        <br>
 
                         <form id="DetailsForm">
                             <div class="form-group">
                                 <label for="test_date">Test Date</label>
-                                <input class="form-control" type="date" name="test_date" id="test_date" required />
+                                <input class="form-control" type="date" name="test_date" id="test_date" required/>
                             </div>
 
                             <br/>
 
                             <div class="form-group">
                                 <label for="test_name">Test Name</label>
-                                <input class="form-control" type="text" placeholder="Enter Name" name="test_name" id="test_name" required />
+                                <input class="form-control" type="text" placeholder="Enter Name" name="test_name"
+                                       id="test_name" required/>
                             </div>
 
                             <br/>
@@ -72,9 +80,10 @@ if (!isset($_COOKIE['loggedin'])) {
                                     <label for="test_room">Room</label>
                                     <ul id="room_select">
                                     </ul>
-                                    <input class="form-control" list="rooms" placeholder="-- Select Rooms --" id="test_room" name="test_room">
+                                    <input class="form-control" list="rooms" placeholder="-- Select Rooms --"
+                                           id="test_room" name="test_room">
                                     <datalist id="rooms" required>
-                                        <option value="" disabled selected> -- Select A Room -- </option>
+                                        <option value="" disabled selected> -- Select A Room --</option>
                                     </datalist>
                                 </div>
                                 <div class="col-4">
@@ -87,15 +96,16 @@ if (!isset($_COOKIE['loggedin'])) {
 
                             <div class="form-group">
                                 <label for="test_stime">Start Time</label>
-                                <input class="form-control" type="time" name="test_stime" id="test_stime" required />
+                                <input class="form-control" type="time" name="test_stime" id="test_stime" required/>
                             </div>
 
                             <br/>
 
-                            <input type="submit" value="Add Actions >" class="btn btn-primary" />
+                            <input type="submit" value="Add Actions >" class="btn btn-primary"/>
                         </form>
                     </div>
 
+                    <!-- Actions form -->
                     <div id="F2">
                         <div class="container">
                             <h2> Event Actions </h2>
@@ -106,7 +116,9 @@ if (!isset($_COOKIE['loggedin'])) {
                                     <ul id="ActionsList"></ul>
 
                                     <label for="clusters_list">Cluster</label>
-                                    <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required> <!--name="test_room">-->
+                                    <input class="form-control" list="clusters_list"
+                                           placeholder="-- Select a Cluster --" id="action_cluster" required>
+                                    <!--name="test_room">-->
                                     <datalist id="clusters_list" required>
                                     </datalist>
                                 </div>
@@ -126,29 +138,42 @@ if (!isset($_COOKIE['loggedin'])) {
 
                                 <input type="submit" id="AddAction" value="+ Add Action" class="btn btn-secondary"/>
                                 </br></br>
-                                <input type="button" onclick="prevStep()" value="< Event Details" class="btn btn-primary" />
-                                <input type="button" onclick="reviewForm()" value="Review Event >" class="btn btn-primary"/>
+                                <input type="button" onclick="prevStep()" value="< Event Details"
+                                       class="btn btn-primary"/>
+                                <input type="button" onclick="reviewForm()" value="Review Event >"
+                                       class="btn btn-primary"/>
                             </form>
                         </div>
                     </div>
 
+                    <!-- Event review form -->
                     <div id="F3">
                         <div class="container">
                             <h2> Event Review </h2>
 
-                            <br > <br >
+                            <br> <br>
 
                             <form id="ReviewForm">
-                                <h4>Test Name: </h4> <div id="r_name"></div>  <br />
-                                <h4>Test Rooms: </h4> <div id="r_rooms"></div>  <br />
-                                <h4>Test Date: </h4> <div id="r_date"></div>  <br />
-                                <h4>Test Start Time: </h4> <div id="r_stime"></div>  <br /><br />
+                                <h4>Test Name: </h4>
+                                <div id="r_name"></div>
+                                <br/>
+                                <h4>Test Rooms: </h4>
+                                <div id="r_rooms"></div>
+                                <br/>
+                                <h4>Test Date: </h4>
+                                <div id="r_date"></div>
+                                <br/>
+                                <h4>Test Start Time: </h4>
+                                <div id="r_stime"></div>
+                                <br/><br/>
 
                                 <h3 class="text-center">Actions</h3>
                                 <ul id="ActionsReviewList">
-                                </ul> <br /> <br />
+                                </ul>
+                                <br/> <br/>
 
-                                <input type="button" onclick="prevStep()" value="< Add Actions" class="btn btn-primary" />
+                                <input type="button" onclick="prevStep()" value="< Add Actions"
+                                       class="btn btn-primary"/>
                                 <input type="submit" value="Create Event" class="btn btn-success"/>
                             </form>
                         </div>
@@ -167,8 +192,9 @@ if (!isset($_COOKIE['loggedin'])) {
 
             let ACTIONS = [];
 
+            // Variables to change the state of the page
             let currentForm = 0;
-            let formIds = ["F1", "F2", "F3"]; //, "F4"];
+            let formIds = ["F1", "F2", "F3"];
 
             // JSON object for storing the event
             let eventObj = {Date: "", Name:"", Rooms:[], StartTime: ""};
@@ -177,25 +203,6 @@ if (!isset($_COOKIE['loggedin'])) {
             makeRequest("GET", "Create_Helper.php?item=Rooms", roomCallback);
             makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
             setForms();
-
-            /**
-             * Next step function for the 1st page (Details)
-             */
-            $('#DetailsForm').submit(function () {
-                let rooms = document.getElementById("room_select");
-                if (rooms.getElementsByTagName("li").length > 0) {
-                    eventObj["Date"] = $("#test_date").val();
-                    console.log($("#test_name").val());
-                    eventObj["Name"] = $("#test_name").val();
-                    eventObj["Rooms"] = roomsSelected;
-                    eventObj["StartTime"] = $("#test_stime").val();
-                    currentForm++;
-                    setForms();
-                } else {
-                    alert("You must add at least one room.");
-                }
-                return false;
-            });
 
             /**
              * To remove a room
@@ -217,14 +224,29 @@ if (!isset($_COOKIE['loggedin'])) {
                 roomCallback(ROOMS.sort());
             }
 
-
-
+            /**
+             * Next step function for the 1st page (Details)
+             */
+            $('#DetailsForm').submit(function () {
+                let rooms = document.getElementById("room_select");
+                if (rooms.getElementsByTagName("li").length > 0) {
+                    eventObj["Date"] = $("#test_date").val();
+                    console.log($("#test_name").val());
+                    eventObj["Name"] = $("#test_name").val();
+                    eventObj["Rooms"] = roomsSelected;
+                    eventObj["StartTime"] = $("#test_stime").val();
+                    currentForm++;
+                    setForms();
+                } else {
+                    alert("You must add at least one room.");
+                }
+                return false;
+            });
 
             /**
              * Next step function for the 2nd page (Type)
             */
             $('#TypeForm').submit(function () {
-                //eventObj["TestType"] = $("#test_type").val();
                 currentForm++;
                 setForms();
                 return false;
@@ -259,6 +281,9 @@ if (!isset($_COOKIE['loggedin'])) {
                 setForms();
             }
 
+            /**
+             * gets the actions given in the action list and checks if valid
+             */
             function reviewForm() {
                 let actions = document.getElementById("ActionsList");
                 let actionsValid = checkActions();
