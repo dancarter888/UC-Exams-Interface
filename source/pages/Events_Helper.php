@@ -80,4 +80,7 @@ function sanitizeString($var) {
     $var = htmlentities($var);
     return $var;
 }
+
+// Closes database connection
+$conn->close();
 ?>

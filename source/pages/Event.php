@@ -1,4 +1,9 @@
 <?php
+/*
+Deletes cookie if it is set.
+Used for logout, when logout is clicked on another page it
+redirects to this page and then deletes the cookie.
+*/
 if (!isset($_COOKIE['loggedin'])) {
     header("Location: Login.php");
 }
@@ -6,20 +11,21 @@ if (!isset($_COOKIE['loggedin'])) {
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- CSS -->
-    <link rel="stylesheet" href="../css/Pagination.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <head>
+        <!-- CSS -->
+        <link rel="stylesheet" href="../css/Pagination.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <!-- JavaScript -->
-    <script src="../js/AJAX.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../js/Pagination.js"></script>
+        <!-- JavaScript -->
+        <script src="../js/AJAX.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="../js/Pagination.js"></script>
 
-    <title id="title">Event</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-</head>
+        <title id="title">Event</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    </head>
 <body>
+    <!-- Navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -40,6 +46,7 @@ if (!isset($_COOKIE['loggedin'])) {
         </div>
     </nav>
 
+    <!-- Event title -->
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
@@ -54,6 +61,7 @@ if (!isset($_COOKIE['loggedin'])) {
 
     <br> <br> <br>
 
+    <!-- Actions table -->
     <div class="container">
         <table id="actions-table" class="table table-hover">
             <thead id="action-headings" class="thead-dark"></thead>
@@ -61,6 +69,7 @@ if (!isset($_COOKIE['loggedin'])) {
         </table>
     </div>
 
+    <!-- Pagination -->
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
@@ -70,6 +79,7 @@ if (!isset($_COOKIE['loggedin'])) {
     </div>
 
     <script>
+        // Gets event details from the URL
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         let event_id = urlParams.get('event_id');
@@ -83,6 +93,11 @@ if (!isset($_COOKIE['loggedin'])) {
 
 
         function pagination(responseText) {
+            /**
+             * Creates the actions table header and then uses jquery pagination to
+             * call structureDataTable() which then adds the action data to the table
+             * @param responseText is the response from the query to get all actions for the event
+             */
             let actionsTable = document.getElementById('action-headings');
             let parsedResponse = JSON.parse(responseText);
             let actions = parsedResponse[1];
@@ -92,7 +107,6 @@ if (!isset($_COOKIE['loggedin'])) {
             document.getElementById('event-name').innerHTML = eventName;
             document.getElementById('event-date').innerHTML = eventDate;
             document.getElementById('title').innerHTML = eventName + " " + eventDate;
-
 
             if (HEADER === false) {
                 let headerRow = document.createElement('tr');
@@ -130,6 +144,10 @@ if (!isset($_COOKIE['loggedin'])) {
         }
 
         function structureDataTable(data) {
+            /**
+             * Adds all the actions data to the actions table
+             * @param data
+             */
             let actionsTable = document.getElementById('action-body');
             let actions = document.getElementsByClassName('action');
             for (let i = actions.length - 1; i >= 0; i--) {
