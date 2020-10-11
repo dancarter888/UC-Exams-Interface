@@ -335,7 +335,7 @@ if (!isset($_COOKIE['loggedin'])) {
                     currentForm ++;
                     setForms();
                 } else {
-                    alert("The actions entered are invalid.");
+                    alert("Every activation of a Cluster must have a corresponding deactivation.");
                 }
             }
 
@@ -491,31 +491,52 @@ if (!isset($_COOKIE['loggedin'])) {
                     $("#ActionsForm").prepend("<h3> Actions: </h3>");
                 }
 
-                let closeBtn = document.createElement('button');
-                closeBtn.className = 'close remove-action';
-                closeBtn.id = clusterName + ',' + time + ',' + activation;
-                closeBtn.type = 'button';
-                closeBtn.innerHTML = '×'
-
-                let action = document.createElement('li');
-                action.innerHTML = clusterName + " - " + time + " - " + displayActivation;
-                action.id = clusterName + ',' + time + ',' + activation;
-                action.appendChild(closeBtn);
-                $("#ActionsList").append(action);
-
                 let actionsObj = {
                     "ClusterName": clusterName,
                     "Time": time,
                     "Activation": activation
                 }
-                ACTIONS.push(actionsObj);
+
+                if (checkAction(actionsObj)) {
+                    let closeBtn = document.createElement('button');
+                    closeBtn.className = 'close remove-action';
+                    closeBtn.id = clusterName + ',' + time + ',' + activation;
+                    closeBtn.type = 'button';
+                    closeBtn.innerHTML = '×'
+
+                    let action = document.createElement('li');
+                    action.innerHTML = clusterName + " - " + time + " - " + displayActivation;
+                    action.id = clusterName + ',' + time + ',' + activation;
+                    action.appendChild(closeBtn);
+                    $("#ActionsList").append(action);
+                    ACTIONS.push(actionsObj);
+                } else {
+                    alert("Actions of the same Cluster must have different times.");
+                }
             }
 
             /**
              * Function for checking that for every activation of a cluster there is a corresponding deactivation.
+             * @return whether the actions are valid or not
+             **/
+            function checkAction(addedAction) {
+                let validity = true;
+
+                for (let action of ACTIONS) {
+                    if (addedAction['ClusterName'] === action['ClusterName'] && addedAction['Time'] === action['Time']) {
+                        validity = false;
+                    }
+                }
+
+                return validity;
+            }
+
+            /**
+             * Function for checking that for every activation of a cluster there is a corresponding deactivation.
+             * @return whether the actions are valid or not
              **/
             function checkActions() {
-                let valid = true;
+                let validity = true;
 
                 for (let action of ACTIONS) {
                     let clusterActivations = ACTIONS.filter((act) => {
@@ -527,16 +548,16 @@ if (!isset($_COOKIE['loggedin'])) {
                     }).length;
 
                     if (clusterActivations !== clusterDeactivations) {
-                        valid = false;
+                        validity = false;
                     }
                 }
 
-                return valid;
+                return validity;
             }
 
             /**
-             * Function to add the clusters to the cluster dropdown in actions form
-             * @param responseText response from the server
+             * Function to add the clusters to the cluster dropdown in actions form.
+             * @param responseText response from the server.
              */
             function clusterCallback(responseText) {
                 console.log(responseText);
