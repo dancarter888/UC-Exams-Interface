@@ -110,11 +110,11 @@ if (!isset($_COOKIE['loggedin'])) {
             // Make a get request to the URL to get events and add them to the html table
             makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
 
+            /**
+             * Formats events so they can be added to the table and used for pagination
+             * @return list of events
+             */
             function reformatEvents(events) {
-                /**
-                 * Formats events so they can be added to the table and used for pagination
-                 * @return {list} of events
-                 */
                 let prevEventName = null;
                 let prevEventStartTime = null;
                 let prevEventEndTime = null;

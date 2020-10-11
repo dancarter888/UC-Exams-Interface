@@ -349,7 +349,7 @@ if (!isset($_COOKIE['loggedin'])) {
                         x.style.display = (i == currentForm) ? ON : OFF;
                     }
                 }
-                $("#progressanimate").css('width', `${(currentForm * 33) + 33}%`);
+                $("#progressanimate").css('width', `${((currentForm + 1) * 25)}%`);
 
                 if (currentForm == 0) {
                     $('#details-progress').css("font-weight", "bold");
@@ -378,7 +378,8 @@ if (!isset($_COOKIE['loggedin'])) {
 
                 $("#ActionsReviewList").empty();
                 for (let action of ACTIONS) {
-                    $("#ActionsReviewList").append("<li> Cluster: " + action["ClusterName"] + " Time: " + action["Time"] + " Activation: " + action["Activation"]);
+                    let displayActivation = (action["Activation"] === 0) ? "OFF" : "ON";
+                    $("#ActionsReviewList").append("<li>" + action["ClusterName"] + " - " + action["Time"] + " - " + displayActivation);
                 }
             }
 
