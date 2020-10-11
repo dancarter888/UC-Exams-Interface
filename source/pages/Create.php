@@ -14,7 +14,6 @@ if (!isset($_COOKIE['loggedin'])) {
     <head>
         <!-- CSS -->
         <link rel="stylesheet" href="../css/Create.css">
-        <link rel="stylesheet" href="../css/Pagination.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
         <!-- JavaScript -->
@@ -26,7 +25,7 @@ if (!isset($_COOKIE['loggedin'])) {
     </head>
     <body>
         <!-- Navigation bar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand navbar-light bg-light">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -53,11 +52,11 @@ if (!isset($_COOKIE['loggedin'])) {
                     <h1> Create Event </h1>
 
                     <!-- progressbar -->
-                    <ol id="progressbar">
-                        <li>Details</li>
-                        <li>Actions</li>
-                        <li>Review</li>
-                    </ol>
+                    <ul id="progressbar">
+                        <li id="details-progress">Details</li>
+                        <li id="actions-progress">Actions</li>
+                        <li id="review-progress">Review</li>
+                    </ul>
                     <div class="progress">
                         <div id="progressanimate" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 33%"></div>
                     </div>
@@ -319,7 +318,19 @@ if (!isset($_COOKIE['loggedin'])) {
                     }
                 }
                 $("#progressanimate").css('width', `${(currentForm * 33) + 33}%`);
-                if (currentForm == 2) {
+
+                if (currentForm == 0) {
+                    $('#details-progress').css("font-weight", "bold");
+                    $('#actions-progress').css("font-weight", "normal");
+                    $('#review-progress').css("font-weight", "normal");
+                } else if (currentForm == 1) {
+                    $('#details-progress').css("font-weight", "normal");
+                    $('#actions-progress').css("font-weight", "bold");
+                    $('#review-progress').css("font-weight", "normal");
+                } else if (currentForm == 2) {
+                    $('#details-progress').css("font-weight", "normal");
+                    $('#actions-progress').css("font-weight", "normal");
+                    $('#review-progress').css("font-weight", "bold");
                     updateFinalForm();
                 }
             }

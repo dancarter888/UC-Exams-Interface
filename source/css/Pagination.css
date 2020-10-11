@@ -1,4 +1,10 @@
-ul, li {
+/*ul, li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 16px;
+}*/
+
+.paginationjs-prev, .paginationjs-page, .paginationjs-next, .paginationjs-ellipsis {
     list-style: none;
     display: inline-block;
     padding: 8px 16px;

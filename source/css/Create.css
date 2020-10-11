@@ -19,10 +19,20 @@ li {
     font-weight: lighter;
 }
 
+.nav-item {
+    font-weight: normal;
+}
+
 input::placeholder {
     text-align: center;
 }
 
 #test_name::placeholder {
     text-align: left;
+}
+
+#progressbar, #details-progress, #actions-progress, #review-progress{
+    list-style: none;
+    display: inline-block;
+    padding: 8px 16px;
 }
