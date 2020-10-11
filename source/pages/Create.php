@@ -51,6 +51,19 @@ if (!isset($_COOKIE['loggedin'])) {
             <div class="row justify-content-md-center">
                 <div class="col-md-auto">
                     <h1> Create Event </h1>
+
+                    <!-- progressbar -->
+                    <ol id="progressbar">
+                        <li>Details</li>
+                        <li>Actions</li>
+                        <li>Review</li>
+                    </ol>
+                    <div class="progress">
+                        <div id="progressanimate" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 33%"></div>
+                    </div>
+
+                    <br /><br />
+
                     <!-- Details form -->
                     <div id="F1">
                         <div class="container">
@@ -305,6 +318,7 @@ if (!isset($_COOKIE['loggedin'])) {
                         x.style.display = (i == currentForm) ? ON : OFF;
                     }
                 }
+                $("#progressanimate").css('width', `${(currentForm * 33) + 33}%`);
                 if (currentForm == 2) {
                     updateFinalForm();
                 }
