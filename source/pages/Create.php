@@ -143,8 +143,8 @@ if (!isset($_COOKIE['loggedin'])) {
                                 <div class="form-group">
                                     <label for="Activate">Activation</label>
                                     <select class="form-control" id="Activate" required>
-                                        <option value="1">Turn on</option>
-                                        <option value="0">Turn off</option>
+                                        <option value="1">Turn ON</option>
+                                        <option value="0">Turn OFF</option>
                                     </select>
                                 </div>
 
@@ -219,9 +219,17 @@ if (!isset($_COOKIE['loggedin'])) {
             /**
              * To remove a room
              * */
-            $('body').on("click", ".close", function() {
+            $('body').on("click", ".remove-room", function() {
                 let roomName = $(this).attr('id');
                 removeRoom(roomName);
+            });
+
+            /**
+             * To remove an action
+             * */
+            $('body').on("click", ".remove-action", function() {
+                let action = $(this).attr('id');
+                removeAction(action);
             });
 
             function removeRoom(roomName) {
@@ -234,6 +242,30 @@ if (!isset($_COOKIE['loggedin'])) {
 
                 ROOMS.push(roomName);
                 roomCallback(ROOMS.sort());
+            }
+
+            function removeAction(action) {
+                var actionArray = action.split(",");
+                let clusterName = actionArray[0];
+                let actionTime = actionArray[1];
+                let actionActivation = parseInt(actionArray[2]);
+                let i = 0;
+                let found = false;
+                let actionIndex = null;
+                while (i < ACTIONS.length && !found) {
+                    if (clusterName === ACTIONS[i]['ClusterName'] && actionTime === ACTIONS[i]['Time'] && actionActivation === ACTIONS[i]['Activation']) {
+                        found = true;
+                        actionIndex = i;
+                    }
+                    i++;
+                }
+
+                if (actionIndex > -1) {
+                    ACTIONS.splice(actionIndex, 1);
+                }
+
+                document.getElementById(action).remove();
+                console.log(ACTIONS);
             }
 
             /**
@@ -421,7 +453,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 if (ROOMS.includes(input.value)) {
                     roomsSelected.push(input.value);
                     let closeBtn = document.createElement('button');
-                    closeBtn.className = 'close';
+                    closeBtn.className = 'close remove-room';
                     closeBtn.id = input.value;
                     closeBtn.type = 'button';
                     closeBtn.innerHTML = '×'
@@ -452,12 +484,24 @@ if (!isset($_COOKIE['loggedin'])) {
             function addAction() {
                 let clusterName = $("#action_cluster").val();
                 let time = $("#OffsetInput").val();
-                let activation = ($("#Activate").val() == "0") ? 0 : 1;
-                if (ACTIONS.length == 0) {
+                let activation = ($("#Activate").val() === "0") ? 0 : 1;
+                let displayActivation = activation === 0 ? "OFF" : "ON";
+                if (ACTIONS.length === 0) {
                     $("#ActionsForm").prepend("<h3> Actions: </h3>");
                 }
 
-                $("#ActionsList").append("<li> Cluster: " + clusterName + " Time: " + time + " Activation: " + activation);
+                let closeBtn = document.createElement('button');
+                closeBtn.className = 'close remove-action';
+                closeBtn.id = clusterName + ',' + time + ',' + activation;
+                closeBtn.type = 'button';
+                closeBtn.innerHTML = '×'
+
+                let action = document.createElement('li');
+                action.innerHTML = clusterName + " - " + time + " - " + displayActivation;
+                action.id = clusterName + ',' + time + ',' + activation;
+                action.appendChild(closeBtn);
+                $("#ActionsList").append(action);
+
                 let actionsObj = {
                     "ClusterName": clusterName,
                     "Time": time,
