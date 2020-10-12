@@ -20,6 +20,8 @@ if (!isset($_COOKIE['loggedin'])) {
         <script src="../js/AJAX.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="../js/Pagination.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
         <title id="title">Event</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
@@ -67,6 +69,10 @@ if (!isset($_COOKIE['loggedin'])) {
             <thead id="action-headings" class="thead-dark"></thead>
             <tbody id="action-body"></tbody>
         </table>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" onclick="fillEditModal()" data-toggle="modal" data-target="#editActionsModalCenter">
+            Edit Actions
+        </button>
     </div>
 
     <!-- Pagination -->
@@ -74,6 +80,31 @@ if (!isset($_COOKIE['loggedin'])) {
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
     <nav id="pagination-container" class="pagination"></nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editActionsModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Actions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="edit-table" class="table table-hover">
+                        <tbody id="edit-body">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
@@ -88,8 +119,12 @@ if (!isset($_COOKIE['loggedin'])) {
         let HEADER = false;
         var actionsPerPage = 20;
 
+        let actions = [];
+
         // Make a get request to the URL
         makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date, pagination);
+
+        makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date + "&distinct=" + true, saveActions);
 
 
         function pagination(responseText) {
@@ -173,6 +208,36 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
                 actionsTable.appendChild(tableRow);
             }
+        }
+
+        function saveActions(data) {
+            actions = JSON.parse(data)[1];
+        }
+
+        function fillEditModal() {
+            let editTable = document.getElementById('edit-body');
+            for (let i = 0; i < actions.length; i++) {
+                let tableRow = document.createElement('tr');
+                tableRow.className = 'action';
+                for (let j = 0; j < actions[i].length; j++) {
+                    let tableData = document.createElement('td');
+                    tableData.innerHTML = actions[i][j];
+
+                    tableRow.appendChild(tableData);
+                }
+                let deleteButton = document.createElement('button');
+                deleteButton.innerText = "Delete";
+                deleteButton.className = "btn btn-primary";
+                deleteButton.onclick = function() { deleteAction(actions[i][0]); };
+                tableRow.appendChild(deleteButton);
+
+                editTable.appendChild(tableRow);
+            }
+        }
+
+        function deleteAction(actionId) {
+            console.log(actionId);
+            makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); location.reload(); });
         }
 
     </script>
