@@ -35,18 +35,47 @@ function checkUsernameAndPassword($conn, $username, $password) {
     $stmt->bind_param('s', $username);
     $stmt->execute();
     $result = $stmt->get_result();
+    $stmt->close();
     if ($result->num_rows == 0) {
-        echo "Incorrect username";
-        return False;
+        echo "Incorrect";
     } else {
-        $hashed_password = $result->fetch_array(MYSQLI_ASSOC)['hashed_password'];
+        $result = $result->fetch_array(MYSQLI_ASSOC);
+        $hashed_password = $result['hashed_password'];
+        $user_id = $result['user_id'];
         if (password_verify($password, $hashed_password)) {
-            echo "Success";
+            $token = addToken($conn, $user_id);
             setcookie('loggedin', 'yes', time() + 60 * 20); // Sets cookie timeout to 20 minutes
+            echo $token;
         } else {
-            echo "Incorrect password";
+            echo "Incorrect";
         }
     }
+}
+
+/**
+ * Adds a token to the database for a current session and returns the token
+ * @param $conn
+ * @param $user_id
+ * @return string
+ */
+function addToken($conn, $user_id) {
+    $token = generateRandomString();
+    $query = "CALL add_token(?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('is', $user_id, $token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $token;
+}
+
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
 }
 
 /**

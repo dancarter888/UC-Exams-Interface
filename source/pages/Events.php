@@ -111,6 +111,11 @@ if (!isset($_COOKIE['loggedin'])) {
 
             var eventsPerPage = 20;
 
+            makeRequest("GET", "Authenticate.php?token=" + window.localStorage.getItem('token'), function(response) {
+                if (response !== "True") {
+                    window.location.href = window.location.href.replace("Events.php", "Login.php");
+                }
+            });
             // Make a get request to the URL to get events and add them to the html table
             makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
 

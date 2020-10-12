@@ -52,14 +52,14 @@ if (isset($_COOKIE['loggedin'])) {
              */
             let username = $('#username').val()
             let password = $('#password').val()
-
             $.ajax({
                 url: "Login_Helper.php",
                 type: "post",
                 data: {username: username,
                        password: password},
                 success: function(responseText) {
-                    if (responseText === "Success") {
+                    if (responseText !== "Incorrect") {
+                        window.localStorage.setItem('token', responseText);
                         document.location.href = "Events.php";
                     } else {
                         $('#formMessage').text("Invalid Login");
