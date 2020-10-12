@@ -43,6 +43,11 @@ if (isset($_COOKIE['loggedin'])) {
         </div>
     </body>
     <script>
+        // Removes any tokens if they exist
+        if (localStorage.getItem('token') !== null) {
+            localStorage.removeItem('token');
+        }
+
         function requestLogin() {
             /**
              * Called when the login button is pressed.

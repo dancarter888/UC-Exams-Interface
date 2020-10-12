@@ -200,6 +200,13 @@ if (!isset($_COOKIE['loggedin'])) {
         </div>
 
         <script>
+            // Checks the user has the has the correct token
+            makeRequest("GET", "Authenticate.php?token=" + window.localStorage.getItem('token'), function(response) {
+                if (response !== "True") {
+                    window.location.href = window.location.href.replace("Create.php", "Login.php");
+                }
+            });
+
             const ON = "block";
             const OFF = "none";
 

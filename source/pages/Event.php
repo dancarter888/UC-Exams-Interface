@@ -110,6 +110,13 @@ if (!isset($_COOKIE['loggedin'])) {
     </div>
 
     <script>
+        // Checks the user has the has the correct token
+        makeRequest("GET", "Authenticate.php?token=" + window.localStorage.getItem('token'), function(response) {
+            if (response !== "True") {
+                window.location.href = window.location.href.replace("Event.php", "Login.php");
+            }
+        });
+
         // Gets event details from the URL
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);

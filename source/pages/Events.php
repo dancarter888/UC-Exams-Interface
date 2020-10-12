@@ -103,6 +103,13 @@ if (!isset($_COOKIE['loggedin'])) {
         </div>
 
         <script>
+            // Checks the user has the has the correct token
+            makeRequest("GET", "Authenticate.php?token=" + window.localStorage.getItem('token'), function(response) {
+                if (response !== "True") {
+                    window.location.href = window.location.href.replace("Events.php", "Login.php");
+                }
+            });
+
             // Initialised to include all events
             let STARTDATE = "1995-01-01";
             let ENDDATE = "9999-12-31";
@@ -111,11 +118,6 @@ if (!isset($_COOKIE['loggedin'])) {
 
             var eventsPerPage = 20;
 
-            makeRequest("GET", "Authenticate.php?token=" + window.localStorage.getItem('token'), function(response) {
-                if (response !== "True") {
-                    window.location.href = window.location.href.replace("Events.php", "Login.php");
-                }
-            });
             // Make a get request to the URL to get events and add them to the html table
             makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
 
