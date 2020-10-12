@@ -113,7 +113,12 @@ if (!isset($_COOKIE['loggedin'])) {
 
                             <br/>
 
-                            <input type="submit" value="Add Actions >" class="btn btn-primary"/>
+                            <div class="row align-items-end row justify-content-end">
+                                <div class="col"></div>
+                                <div class="col">
+                                    <input type="submit" value="Add Actions >" class="btn btn-primary"/>
+                                </div>
+                            </div>
                         </form>
                     </div>
 
