@@ -58,7 +58,7 @@ if (!isset($_COOKIE['loggedin'])) {
                         <li id="review-progress">Review</li>
                     </ul>
                     <div class="progress">
-                        <div id="progressanimate" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 33%"></div>
+                        <div id="progressanimate" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
                     </div>
 
                     <br /><br />
