@@ -126,6 +126,7 @@ if (!isset($_COOKIE['loggedin'])) {
              * @return list of events
              */
             function reformatEvents(events) {
+                console.log(events);
                 let prevEventName = null;
                 let prevEventStartTime = null;
                 let prevEventEndTime = null;
@@ -143,9 +144,9 @@ if (!isset($_COOKIE['loggedin'])) {
                         prevEventStartTime = events[i][1];
                         prevEventDate = events[i][2];
                         prevEventID = events[i][3];
-                    } else if (currentEventName === prevEventName) {
+                    } else if (currentEventName === prevEventName && currentEventDate === prevEventDate) {
                         prevEventEndTime = currentEventTime;
-                    } else if (currentEventName !== prevEventName || i === events.length - 1) {
+                    } else if ((currentEventName !== prevEventName || currentEventDate !== prevEventDate) || i === events.length - 1) {
                         newEvents.push([prevEventName, prevEventStartTime + " - " + prevEventEndTime, prevEventDate, prevEventID]);
                         prevEventName = currentEventName;
                         prevEventStartTime = currentEventTime;
