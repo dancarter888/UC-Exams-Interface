@@ -219,11 +219,18 @@ if (!isset($_COOKIE['loggedin'])) {
 
         function saveActions(data) {
             actions = JSON.parse(data)[1];
+            for (let i=0; i<actions.length; i++) {
+                let temp = actions[i][1];
+                actions[i][1] = actions[i][2]
+                actions[i][2] = temp;
+            }
         }
 
         function fillEditModal() {
+            $("#edit-body tr").remove();
+            $("#edit-body").append('<tr> <th> Cluster Name </th> <th> Time </th> <th> Activiation </th> <th> Delete </th> </tr>');
             let editTable = document.getElementById('edit-body');
-            for (let i = 0; i < actions.length; i++) {
+            for (let i = 1; i < actions.length; i++) {
                 let tableRow = document.createElement('tr');
                 tableRow.className = 'action';
                 for (let j = 0; j < actions[i].length; j++) {
@@ -232,11 +239,13 @@ if (!isset($_COOKIE['loggedin'])) {
 
                     tableRow.appendChild(tableData);
                 }
+                let button = document.createElement('td');
                 let deleteButton = document.createElement('button');
                 deleteButton.innerText = "Delete";
                 deleteButton.className = "btn btn-primary";
                 deleteButton.onclick = function() { deleteAction(actions[i][0]); };
-                tableRow.appendChild(deleteButton);
+                button.appendChild(deleteButton);
+                tableRow.appendChild(button);
 
                 editTable.appendChild(tableRow);
             }
