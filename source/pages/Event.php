@@ -102,8 +102,6 @@ if (!isset($_COOKIE['loggedin'])) {
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
@@ -228,6 +226,12 @@ if (!isset($_COOKIE['loggedin'])) {
 
         function fillEditModal() {
             $("#edit-body tr").remove();
+            $("#edit-body div").remove();
+            $(".modal-footer button").remove();
+            $(".modal-footer").append(`
+                <button type="button" class="btn btn-primary" onclick="fillEditAddModal()">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>`);
             $("#edit-body").append('<tr> <th> Action id </th> <th> Cluster Name </th> <th> Time </th> <th> Activation </th> </tr>');
             let editTable = document.getElementById('edit-body');
             for (let i = 1; i < actions.length; i++) {
@@ -249,6 +253,25 @@ if (!isset($_COOKIE['loggedin'])) {
 
                 editTable.appendChild(tableRow);
             }
+        }
+
+        function fillEditAddModal() {
+            $("#edit-body tr").remove();
+            $(".modal-footer button").remove();
+            $("#edit-body").append(`
+                <div>
+                    <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required>
+                    <datalist id="clusters_list" required></datalist>
+                    <label for="OffsetInput">Action time</label>
+                    <input class="form-control" id="OffsetInput" type="time" required>
+                    <label for="Activate">Activation</label>
+                    <select class="form-control" id="Activate" required>
+                        <option value="1">Turn ON</option>
+                        <option value="0">Turn OFF</option>
+                    </select>
+                    <input type="submit" id="AddAction" value="Add Action" class="btn btn-primary" onclick="fillEditModal()"/>
+                </div>`);
+
         }
 
         function deleteAction(actionId) {
