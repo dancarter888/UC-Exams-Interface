@@ -228,7 +228,7 @@ if (!isset($_COOKIE['loggedin'])) {
 
         function fillEditModal() {
             $("#edit-body tr").remove();
-            $("#edit-body").append('<tr> <th> Cluster Name </th> <th> Time </th> <th> Activiation </th> <th> Delete </th> </tr>');
+            $("#edit-body").append('<tr> <th> Action id </th> <th> Cluster Name </th> <th> Time </th> <th> Activation </th> </tr>');
             let editTable = document.getElementById('edit-body');
             for (let i = 1; i < actions.length; i++) {
                 let tableRow = document.createElement('tr');
