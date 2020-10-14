@@ -37,6 +37,15 @@ if (isset($_GET['action_id'])) {
     echo json_encode($result);
 }
 
+if (isset($_GET['event_id']) && isset($_GET['clustername']) && isset($_GET['timeoffset']) && isset($_GET['activation']))  {
+    $event_id = $_GET['event_id'];
+    $cluster_name = $_GET['clustername'];
+    $time_offset = $_GET['timeoffset'];
+    $activation = $_GET['activation'];
+    $result = addAction($conn, $event_id, $cluster_name, $time_offset, $actions);
+    echo json_encode($result);
+}
+
 /**
  * @param $conn connection to the database
  * @param $event_id
@@ -93,6 +102,14 @@ function deleteAction($conn, $action_id) {
     return [$field_names, $rows];
 }
 
+function addAction($conn, $event_id, $cluster_name, $time_offset, $activation) {
+    $query = "CALL add_action(?, ?, ?, ?);";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('issi', $event_id, $time_offset, $cluster_name, $activation);
+    $stmt->execute();
+    $stmt->close();
+}
+
 /**
  * Calls the stored procedure show_event with the given parameters using a prepared statement
  * @param $conn connection to the database
@@ -105,7 +122,9 @@ function queryDB($conn, $event_id, $date, $query) {
     $stmt = $conn->prepare($query);
     $stmt->bind_param('is', $event_id, $date);
     $stmt->execute();
-    return $stmt->get_result();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result;
 }
 
 function queryDBDistinct($conn, $query) {

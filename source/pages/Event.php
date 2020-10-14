@@ -269,9 +269,16 @@ if (!isset($_COOKIE['loggedin'])) {
                         <option value="1">Turn ON</option>
                         <option value="0">Turn OFF</option>
                     </select>
-                    <input type="submit" id="AddAction" value="Add Action" class="btn btn-primary" onclick="fillEditModal()"/>
+                    <input type="button" id="AddAction" value="Add Action" class="btn btn-primary" onclick="addAction()"/>
                 </div>`);
 
+        }
+
+        function addAction() {
+            let clusterName = $("#action_cluster").val();
+            let time = $("#OffsetInput").val();
+            let activation = ($("#Activate").val() === "0") ? 0 : 1;
+            makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
         }
 
         function deleteAction(actionId) {
