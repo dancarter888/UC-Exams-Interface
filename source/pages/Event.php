@@ -228,7 +228,9 @@ if (!isset($_COOKIE['loggedin'])) {
     }
 
     function saveStartTime(data) {
-        startTime = data;
+        console.log(data);
+        startTime = data.slice(1, -4);
+        console.log(startTime);
     }
 
     function fillEditModal() {
@@ -295,7 +297,7 @@ if (!isset($_COOKIE['loggedin'])) {
             "Time": time,
             "Activation": activation,
             "EventID": event_id,
-            "StartTime": (startTime.length > 0) ? startTime : time
+            "StartTime": startTime
         }
 
         let jsonStr = JSON.stringify(actionObj);
