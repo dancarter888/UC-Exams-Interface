@@ -227,11 +227,11 @@ if (!isset($_COOKIE['loggedin'])) {
         function fillEditModal() {
             $("#edit-body tr").remove();
             $("#edit-body div").remove();
-            $(".modal-footer div").remove();
+            $(".modal-footer button").remove();
             $(".modal-footer").append(`
                 <div class="container">
                     <div class="row justify-content-center">
-                        <button type="button" class="btn btn-success" onclick="fillEditAddModal()">+ Add</button>
+                        <button type="button" class="btn btn-primary" onclick="fillEditAddModal()">+ Add</button>
                     </div>
                 </div>`);
             $("#edit-body").append('<tr> <th> Action id </th> <th> Cluster Name </th> <th> Time </th> <th> Activation </th> </tr>');
@@ -259,19 +259,7 @@ if (!isset($_COOKIE['loggedin'])) {
 
         function fillEditAddModal() {
             $("#edit-body tr").remove();
-            $("#edit-body div").remove();
-            $(".modal-footer div").remove();
-            $(".modal-footer").append(`
-                <div class="container">
-                    <div class="row">
-                        <div class="col-4">
-                            <button type="button" class="btn btn-primary" onclick="fillEditModal()">< Back</button>
-                        </div>
-                        <div class="col-3">
-                            <input type="button" id="AddAction" value="Add Action" class="btn btn-success" onclick="addAction()"/>
-                        </div>
-                    </div>
-                </div>`);
+            $(".modal-footer button").remove();
             $("#edit-body").append(`
                 <div>
                     <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required>
@@ -283,7 +271,9 @@ if (!isset($_COOKIE['loggedin'])) {
                         <option value="1">Turn ON</option>
                         <option value="0">Turn OFF</option>
                     </select>
+                    <input type="button" id="AddAction" value="Add Action" class="btn btn-primary" onclick="addAction()"/>
                 </div>`);
+            makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
 
         }
 
@@ -291,13 +281,47 @@ if (!isset($_COOKIE['loggedin'])) {
             let clusterName = $("#action_cluster").val();
             let time = $("#OffsetInput").val();
             let activation = ($("#Activate").val() === "0") ? 0 : 1;
-            console.log(clusterName, time, activation);
-            makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
+            console.log(activation);
+            console.log(time);
+            let actionObj = {
+                "ClusterName": clusterName,
+                "Time": time,
+                "Activation": activation,
+                "EventID": event_id,
+                "StartTime": time
+            }
+
+            let jsonStr = JSON.stringify(actionObj);
+            $.ajax({
+                url: "Create_Helper.php",
+                type: "post",
+                data: {"action": jsonStr},
+                success: function(result) { alert("Added action dfsdfsfd"); location.reload();}
+            });
+            // makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
         }
 
         function deleteAction(actionId) {
             console.log(actionId);
             makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); location.reload(); });
+        }
+
+        /**
+         * Function to add the clusters to the cluster dropdown in actions form.
+         * @param responseText response from the server.
+         */
+        function clusterCallback(responseText) {
+            console.log(responseText);
+            let selectElement = document.getElementById('clusters_list');
+            // NEED TO CATCH ERROR IF PARSE FAILS
+            let clusters = JSON.parse(responseText);
+            for (let i = 0; i < clusters.length; i++) {
+                let option = document.createElement('option');
+                console.log(clusters[i][1]);
+                option.value = clusters[i][1];
+                option.innerHTML = clusters[i][1];
+                selectElement.append(option);
+            }
         }
 
     </script>
