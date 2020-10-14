@@ -273,6 +273,7 @@ if (!isset($_COOKIE['loggedin'])) {
                     </select>
                     <input type="button" id="AddAction" value="Add Action" class="btn btn-primary" onclick="addAction()"/>
                 </div>`);
+            makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
 
         }
 
@@ -280,7 +281,8 @@ if (!isset($_COOKIE['loggedin'])) {
             let clusterName = $("#action_cluster").val();
             let time = $("#OffsetInput").val();
             let activation = ($("#Activate").val() === "0") ? 0 : 1;
-
+            console.log(activation);
+            console.log(time);
             let actionObj = {
                 "ClusterName": clusterName,
                 "Time": time,
@@ -302,6 +304,24 @@ if (!isset($_COOKIE['loggedin'])) {
         function deleteAction(actionId) {
             console.log(actionId);
             makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); location.reload(); });
+        }
+
+        /**
+         * Function to add the clusters to the cluster dropdown in actions form.
+         * @param responseText response from the server.
+         */
+        function clusterCallback(responseText) {
+            console.log(responseText);
+            let selectElement = document.getElementById('clusters_list');
+            // NEED TO CATCH ERROR IF PARSE FAILS
+            let clusters = JSON.parse(responseText);
+            for (let i = 0; i < clusters.length; i++) {
+                let option = document.createElement('option');
+                console.log(clusters[i][1]);
+                option.value = clusters[i][1];
+                option.innerHTML = clusters[i][1];
+                selectElement.append(option);
+            }
         }
 
     </script>
