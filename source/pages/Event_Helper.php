@@ -24,7 +24,8 @@ if (isset($_GET['event_id']) && isset($_GET['date']))
         $actions = getDistinctActions($conn, $event_id);
         echo json_encode([$actions[0], $actions[1]]);
     } else if (isset($_GET['start'])) {
-        $startDate = getStartDate($conn, $event_id, $date);
+        $startTime = getStartTime($conn, $event_id);
+        echo json_encode($startTime[0][0]);
     } else {
         $get_actions = getActions($conn, $event_id, $date);
         $field_names = $get_actions[0];
@@ -47,6 +48,18 @@ if (isset($_GET['event_id']) && isset($_GET['clustername']) && isset($_GET['time
     $result = addAction($conn, $event_id, $cluster_name, $time_offset, $actions);
     echo json_encode($result);
 }
+
+function getStartTime($conn, $event_id) {
+    $query = "CALL get_event_start_time(?)";
+    $result = queryDBStartTime($conn, $event_id, $query);
+
+    $rows = [];
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
+    }
+    return $rows;
+}
+
 
 /**
  * @param $conn connection to the database
@@ -123,6 +136,15 @@ function addAction($conn, $event_id, $cluster_name, $time_offset, $activation) {
 function queryDB($conn, $event_id, $date, $query) {
     $stmt = $conn->prepare($query);
     $stmt->bind_param('is', $event_id, $date);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result;
+}
+
+function queryDBStartTime($conn, $event_id, $query) {
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $event_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
