@@ -229,9 +229,11 @@ if (!isset($_COOKIE['loggedin'])) {
             $("#edit-body div").remove();
             $(".modal-footer button").remove();
             $(".modal-footer").append(`
-                <button type="button" class="btn btn-primary" onclick="fillEditAddModal()">Add</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>`);
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <button type="button" class="btn btn-primary" onclick="fillEditAddModal()">+ Add</button>
+                    </div>
+                </div>`);
             $("#edit-body").append('<tr> <th> Action id </th> <th> Cluster Name </th> <th> Time </th> <th> Activation </th> </tr>');
             let editTable = document.getElementById('edit-body');
             for (let i = 1; i < actions.length; i++) {
@@ -246,7 +248,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 let button = document.createElement('td');
                 let deleteButton = document.createElement('button');
                 deleteButton.innerText = "Delete";
-                deleteButton.className = "btn btn-primary";
+                deleteButton.className = "btn btn-danger";
                 deleteButton.onclick = function() { deleteAction(actions[i][0]); };
                 button.appendChild(deleteButton);
                 tableRow.appendChild(button);
