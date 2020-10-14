@@ -413,7 +413,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 let eventID = responseText;
                 for (let action of ACTIONS) {
                     action["EventID"] = eventID;
-                    action["StartTime"] = eventObj["StartTime"]
+                    action["StartTime"] = eventObj["StartTime"];
                     let jsonStr = JSON.stringify(action);
                     console.log(jsonStr);
                     $.ajax({
