@@ -280,7 +280,23 @@ if (!isset($_COOKIE['loggedin'])) {
             let clusterName = $("#action_cluster").val();
             let time = $("#OffsetInput").val();
             let activation = ($("#Activate").val() === "0") ? 0 : 1;
-            makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
+
+            let actionObj = {
+                "ClusterName": clusterName,
+                "Time": time,
+                "Activation": activation,
+                "EventID": event_id,
+                "StartTime": time
+            }
+
+            let jsonStr = JSON.stringify(actionObj);
+            $.ajax({
+                url: "Create_Helper.php",
+                type: "post",
+                data: {"action": jsonStr},
+                success: function(result) { alert("Added action dfsdfsfd"); location.reload();}
+            });
+            // makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
         }
 
         function deleteAction(actionId) {
