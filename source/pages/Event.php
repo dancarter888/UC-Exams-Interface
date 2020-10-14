@@ -236,11 +236,11 @@ if (!isset($_COOKIE['loggedin'])) {
     function fillEditModal() {
         $("#edit-body tr").remove();
         $("#edit-body div").remove();
-        $(".modal-footer button").remove();
+        $(".modal-footer div").remove();
         $(".modal-footer").append(`
                 <div class="container">
                     <div class="row justify-content-center">
-                        <button type="button" class="btn btn-primary" onclick="fillEditAddModal()">+ Add</button>
+                        <button type="button" class="btn btn-success" onclick="fillEditAddModal()">+ Add</button>
                     </div>
                 </div>`);
         $("#edit-body").append('<tr> <th> Action id </th> <th> Cluster Name </th> <th> Time </th> <th> Activation </th> </tr>');
@@ -268,7 +268,19 @@ if (!isset($_COOKIE['loggedin'])) {
 
     function fillEditAddModal() {
         $("#edit-body tr").remove();
-        $(".modal-footer button").remove();
+        $("#edit-body div").remove();
+        $(".modal-footer div").remove();
+        $(".modal-footer").append(`
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                            <button type="button" class="btn btn-primary" onclick="fillEditModal()">< Back</button>
+                        </div>
+                        <div class="col-3">
+                            <input type="button" id="AddAction" value="Add Action" class="btn btn-success" onclick="addAction()"/>
+                        </div>
+                    </div>
+                </div>`);
         $("#edit-body").append(`
                 <div>
                     <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required>
@@ -280,7 +292,6 @@ if (!isset($_COOKIE['loggedin'])) {
                         <option value="1">Turn ON</option>
                         <option value="0">Turn OFF</option>
                     </select>
-                    <input type="button" id="AddAction" value="Add Action" class="btn btn-primary" onclick="addAction()"/>
                 </div>`);
         makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
 
