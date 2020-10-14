@@ -23,6 +23,8 @@ if (isset($_GET['event_id']) && isset($_GET['date']))
     if (isset($_GET['distinct'])) {
         $actions = getDistinctActions($conn, $event_id);
         echo json_encode([$actions[0], $actions[1]]);
+    } else if (isset($_GET['start'])) {
+        $startDate = getStartDate($conn, $event_id, $date);
     } else {
         $get_actions = getActions($conn, $event_id, $date);
         $field_names = $get_actions[0];
