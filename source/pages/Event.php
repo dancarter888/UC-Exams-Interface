@@ -125,11 +125,14 @@ if (!isset($_COOKIE['loggedin'])) {
         var actionsPerPage = 20;
 
         let actions = [];
+        let startTime = "";
 
         // Make a get request to the URL
         makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date, pagination);
 
         makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date + "&distinct=" + true, saveActions);
+
+        makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date + "&start=" + true, saveStartTime);
 
 
         function pagination(responseText) {
@@ -224,6 +227,10 @@ if (!isset($_COOKIE['loggedin'])) {
             }
         }
 
+        function saveStartTime(data) {
+            startTime = data;
+        }
+
         function fillEditModal() {
             $("#edit-body tr").remove();
             $("#edit-body div").remove();
@@ -288,7 +295,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 "Time": time,
                 "Activation": activation,
                 "EventID": event_id,
-                "StartTime": time
+                "StartTime": (startTime.length > 0) ? startTime : time
             }
 
             let jsonStr = JSON.stringify(actionObj);
