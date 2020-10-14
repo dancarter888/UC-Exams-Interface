@@ -227,7 +227,7 @@ if (!isset($_COOKIE['loggedin'])) {
         function fillEditModal() {
             $("#edit-body tr").remove();
             $("#edit-body div").remove();
-            $(".modal-footer button").remove();
+            $(".modal-footer div").remove();
             $(".modal-footer").append(`
                 <div class="container">
                     <div class="row justify-content-center">
@@ -264,7 +264,12 @@ if (!isset($_COOKIE['loggedin'])) {
             $(".modal-footer").append(`
                 <div class="container">
                     <div class="row">
-                        <button type="button" class="btn btn-primary" onclick="fillEditModal()">< Back</button>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-primary" onclick="fillEditModal()">< Back</button>
+                        </div>
+                        <div class="col-3">
+                            <input type="button" id="AddAction" value="Add Action" class="btn btn-success" onclick="addAction()"/>
+                        </div>
                     </div>
                 </div>`);
             $("#edit-body").append(`
@@ -278,7 +283,6 @@ if (!isset($_COOKIE['loggedin'])) {
                         <option value="1">Turn ON</option>
                         <option value="0">Turn OFF</option>
                     </select>
-                    <input type="button" id="AddAction" value="Add Action" class="btn btn-primary" onclick="addAction()"/>
                 </div>`);
 
         }
@@ -287,6 +291,7 @@ if (!isset($_COOKIE['loggedin'])) {
             let clusterName = $("#action_cluster").val();
             let time = $("#OffsetInput").val();
             let activation = ($("#Activate").val() === "0") ? 0 : 1;
+            console.log(clusterName, time, activation);
             makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
         }
 
