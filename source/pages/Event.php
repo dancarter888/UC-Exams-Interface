@@ -251,8 +251,11 @@ if (!isset($_COOKIE['loggedin'])) {
             tableRow.className = 'action';
             for (let j = 0; j < actions[i].length; j++) {
                 let tableData = document.createElement('td');
-                tableData.innerHTML = actions[i][j];
-
+                if (j === 3) { //Activation field
+                    tableData.innerHTML = actions[i][j] === "1" ? "ON" : "OFF";
+                } else {
+                    tableData.innerHTML = actions[i][j];
+                }
                 tableRow.appendChild(tableData);
             }
             let button = document.createElement('td');
