@@ -1,11 +1,17 @@
 <?php
+/**
+ * A file for handling POST and GET requests associated with creating events.
+ */
+
 require_once("../config/config.php");
 $conn = new mysqli($hostname, $username, $password, $database);
 
 $ITEMS = array("Rooms", "Clusters");
 
+// Check if it is a GET or POST request
 if (isset($_GET['item']))
 {
+    // Check if the request is for rooms or clusters
     if ($_GET['item'] === $ITEMS[0]) {
         $rooms = getRooms($conn);
         echo json_encode($rooms);
@@ -16,6 +22,7 @@ if (isset($_GET['item']))
 }
 else
 {
+    // Check if the post request is for creating events or actions
     if (isset($_POST["event"])) {
         createEvent($conn);
     } else {
@@ -24,6 +31,12 @@ else
 
 }
 
+/**
+ * Creates a query from the decoded post request for an event and queries the database with it. The rooms array needs to
+ * be formatted into a string and the date split up into day, week and year number.
+ *
+ * @param $conn connection the database connection
+ */
 function createEvent($conn) {
     $event = $_POST["event"];
     // Associative array of the JSON
@@ -44,13 +57,10 @@ function createEvent($conn) {
     $qDay = idate('w', strtotime($qDate));
     $qWeek = idate('W', strtotime($qDate));
     $qYear = idate('Y', strtotime($qDate));
-    //echo "{$qDay} - {$qWeek} - {$qYear}";
 
     // Call stored procedure
     $query = "CALL add_event('{$qName}','{$qRooms}',{$qDay},{$qWeek},{$qYear},'{$startTime}')";
     $result = queryDB($conn, $query);
-    //$result = queryDB('call add_event("EMTH119-20S2 Tuesday", "Erskine-033,Erskine-035,Erskine-036,Erskine-038", "MapleTA", 2, 34, 2020, "18:00:00", "01:00:00");');
-    //echo count($result);
 
     if ($result->num_rows > 0) {
         // output data of each row
@@ -62,6 +72,11 @@ function createEvent($conn) {
     }
 }
 
+/**
+ * Creates a query from the decoded post request for an action and queries the database with it.
+ *
+ * @param $conn connection the database connection
+ */
 function add_action($conn) {
     $encoded_action = $_POST["action"];
     $action = json_decode($encoded_action, true);
@@ -73,25 +88,13 @@ function add_action($conn) {
     }
 
     $query = "CALL add_action({$action["EventID"]}, '{$time_diff}', '{$action["ClusterName"]}', {$action["Activation"]});";
-//    echo $query;
     $result = queryDB($conn, $query);
-//    echo $result;
-
-//    // Not sure about this
-//    $action_ids = array();
-//    foreach ($result as $row) {
-//        array_push($action_ids, $row["action_id"]);
-//    }
-//
-//    if ($action_ids[0] == null) {
-//        echo "Success";
-//    } else {
-//        echo "Fail";
-//    }
 }
 
 /**
  * Queries the database for a list of the rooms that test can happen in.
+ *
+ * @param $conn connection the database connection
  * @return array and array of the names of the rooms
  */
 function getRooms($conn) {
@@ -107,6 +110,7 @@ function getRooms($conn) {
 /**
  * Queries the database for a list of the different clusters, their id and a
  * description of them
+ *
  * @return array an array where the elements of form [cluster_id, cluster_name, cluster_description].
  */
 function getClusters($conn) {
