@@ -207,13 +207,16 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
             });
 
+            // Constants disable/enable elements
             const ON = "block";
             const OFF = "none";
 
+            // Variables to keep track of the rooms
             let ROOMS = [];
             let roomsAdded = 0;
             let roomsSelected = [];
 
+            // A list to keep track of the actions
             let ACTIONS = [];
 
             // Variables to change the state of the page
@@ -244,6 +247,9 @@ if (!isset($_COOKIE['loggedin'])) {
                 removeAction(action);
             });
 
+            /**
+             * Remove the given room from the selected rooms
+             * */
             function removeRoom(roomName) {
                 let roomIndex = roomsSelected.indexOf(roomName);
                 if (roomIndex > -1) {
@@ -256,6 +262,9 @@ if (!isset($_COOKIE['loggedin'])) {
                 roomCallback(ROOMS.sort());
             }
 
+            /**
+             * Remove the given action from the added actions
+             * */
             function removeAction(action) {
                 var actionArray = action.split(",");
                 let clusterName = actionArray[0];
@@ -395,6 +404,9 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
             }
 
+            /**
+             * Convert the created event into a JSON string and asynchronously send a post request to create it.
+             * */
             function createEvent() {
                 let jsonStr = JSON.stringify(eventObj);
                 console.log(jsonStr);
@@ -406,10 +418,15 @@ if (!isset($_COOKIE['loggedin'])) {
                 });
             }
 
+            /**
+             * Called after the event has successfully been created, it asynchronously sends a post request for
+             * each action to create it.
+             *
+             * @param responseText The id of the created event
+             * */
             function created(responseText) {
                 console.log(responseText);
 
-                // Get these from responseText
                 let eventID = responseText;
                 for (let action of ACTIONS) {
                     action["EventID"] = eventID;
@@ -426,6 +443,9 @@ if (!isset($_COOKIE['loggedin'])) {
 
             }
 
+            /**
+             * Called when the actions have been added, goes to the events page.
+             * */
             function final(responseText) {
                 console.log(responseText);
                 document.location.href = "Events.php";
@@ -433,6 +453,8 @@ if (!isset($_COOKIE['loggedin'])) {
 
             /**
              * Function to add the rooms in response text to the datalist in the webpage.
+             *
+             * @param responseText the rooms.
              **/
             function roomCallback(responseText) {
                 let selectElement = document.getElementById('rooms');
@@ -476,15 +498,6 @@ if (!isset($_COOKIE['loggedin'])) {
                     room.appendChild(closeBtn);
                     $("#room_select").append(room);
 
-/*                    // Remove option for this room so it can't be selected more than once
-                    let dList = document.getElementById("rooms");
-                    for (let i=0; i<dList.children.length; i++) {
-                        if (dList.children[i].value === input.value) {
-                            dList.children[i].remove();
-                            break;
-                        }
-                    }*/
-
                     ROOMS.splice(ROOMS.indexOf(input.value), 1);
                     input.value = "";
 
@@ -492,8 +505,9 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
             }
 
-
-
+            /**
+             * Gets the input from the inputs associated with actions and creates an actions object which is saved.
+             * */
             function addAction() {
                 let clusterName = $("#action_cluster").val();
                 let time = $("#OffsetInput").val();
