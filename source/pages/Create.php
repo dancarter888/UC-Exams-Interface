@@ -588,7 +588,6 @@ if (!isset($_COOKIE['loggedin'])) {
             function clusterCallback(responseText) {
                 console.log(responseText);
                 let selectElement = document.getElementById('clusters_list');
-                // NEED TO CATCH ERROR IF PARSE FAILS
                 let clusters = JSON.parse(responseText);
                 for (let i = 0; i < clusters.length; i++) {
                     let option = document.createElement('option');
