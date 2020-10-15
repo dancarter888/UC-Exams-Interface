@@ -73,14 +73,14 @@ if (!isset($_COOKIE['loggedin'])) {
 
                         <form id="DetailsForm">
                             <div class="form-group">
-                                <label for="test_date">Test Date</label>
+                                <label for="test_date">Event Date</label>
                                 <input class="form-control" type="date" name="test_date" id="test_date" required/>
                             </div>
 
                             <br/>
 
                             <div class="form-group">
-                                <label for="test_name">Test Name</label>
+                                <label for="test_name">Event Name</label>
                                 <input class="form-control" type="text" placeholder="Enter Name" name="test_name"
                                        id="test_name" required/>
                             </div>
