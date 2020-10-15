@@ -321,7 +321,7 @@ if (!isset($_COOKIE['loggedin'])) {
              * Next step function for the 3rd page (Actions)
              */
             $('#ActionsForm').submit(function () {
-                addAction()
+                addAction();
                 return false;
             });
 

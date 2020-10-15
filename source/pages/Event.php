@@ -277,26 +277,38 @@ if (!isset($_COOKIE['loggedin'])) {
                         <div class="col-4">
                             <button type="button" class="btn btn-primary" onclick="fillEditModal()">< Back</button>
                         </div>
-                        <div class="col-3">
-                            <input type="button" id="AddAction" value="Add Action" class="btn btn-success" onclick="addAction()"/>
-                        </div>
                     </div>
                 </div>`);
         $("#edit-body").append(`
                 <div>
-                    <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required>
-                    <datalist id="clusters_list" required></datalist>
-                    <label for="OffsetInput">Action time</label>
-                    <input class="form-control" id="OffsetInput" type="time" required>
-                    <label for="Activate">Activation</label>
-                    <select class="form-control" id="Activate" required>
-                        <option value="1">Turn ON</option>
-                        <option value="0">Turn OFF</option>
-                    </select>
+                    <form id="ActionsForm">
+                        <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required>
+                        <datalist id="clusters_list" required></datalist>
+                        <label for="OffsetInput">Action time</label>
+                        <input class="form-control" id="OffsetInput" type="time" required>
+                        <label for="Activate">Activation</label>
+                        <select class="form-control" id="Activate" required>
+                            <option value="1">Turn ON</option>
+                            <option value="0">Turn OFF</option>
+                        </select>
+                        <br/>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4"></div>
+                                <div class="col-3">
+                                    <input type="submit" id="AddAction" value="Add Action" class="btn btn-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>`);
         makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
 
     }
+
+    $('body').on("submit", "#ActionsForm", function() {
+        addAction();
+    });
 
     function addAction() {
         let clusterName = $("#action_cluster").val();
@@ -317,7 +329,7 @@ if (!isset($_COOKIE['loggedin'])) {
             url: "Create_Helper.php",
             type: "post",
             data: {"action": jsonStr},
-            success: function(result) { alert("Added action dfsdfsfd"); location.reload();}
+            success: function(result) { alert("Action added"); location.reload();}
         });
         // makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
     }
