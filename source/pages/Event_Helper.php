@@ -1,4 +1,8 @@
 <?php
+/**
+ * A file for handling POST and GET requests associated with the event page.
+ */
+
 require_once("../config/config.php");
 
 // Creates a connection to the database using variables form the config file
@@ -62,61 +66,59 @@ function getStartTime($conn, $event_id) {
 
 
 /**
- * @param $conn connection to the database
- * @param $event_id
- * @param $date
+ * Queries the database for all of the actions associated with an event, the result includes the same action
+ * but for different rooms/groups.
+ *
+ * @param $conn connection The database connection
+ * @param $event_id int the id of the associated event
+ * @param $date string the data of the associated event
  * @return array[] list where the first element is the field name and the second element is all the actions
  */
 function getActions($conn, $event_id, $date) {
     $query = "CALL show_event(?, ?)";
     $result = queryDB($conn, $event_id, $date, $query);
-    $field_names = [];
-    $rows = [];
-    while ($field = $result->fetch_field()) {
-        $field_names[] = $field->name;
-    }
-    while ($row = $result->fetch_row()) {
-        $rows[] = $row;
-    }
-    return [$field_names, $rows];
+
+    return processResult($result);
 }
 
 /**
- * @param $conn connection to the database
- * @param $event_id
- * @param $date
+ * Queries the database for all of the distinct actions associated with an event, the result the actions and not the
+ * associated rooms/groups. Each action will only appear once.
+ *
+ * @param $conn connection The database connection
+ * @param $event_id int the id of the associated event
  * @return array[] list where the first element is the field name and the second element is all the actions
  */
 function getDistinctActions($conn, $event_id) {
     $query = "CALL get_actions({$event_id});";
     $result = queryDBDistinct($conn, $query);
-    $field_names = [];
-    $rows = [];
-    while ($field = $result->fetch_field()) {
-        $field_names[] = $field->name;
-    }
-    while ($row = $result->fetch_row()) {
-        $rows[] = $row;
-    }
 
-    return [$field_names, $rows];
+    return processResult($result);
 }
 
+/**
+ * Queries the database to delete the action with the given id.
+ *
+ * @param $conn connection The database connection
+ * @param $action_id int the id of the action to delete
+ * @return array[] list with the result of the query
+ */
 function deleteAction($conn, $action_id) {
     $query = "CALL delete_actions({$action_id});";
     $result = queryDBDistinct($conn, $query);
-    $field_names = [];
-    $rows = [];
-    while ($field = $result->fetch_field()) {
-        $field_names[] = $field->name;
-    }
-    while ($row = $result->fetch_row()) {
-        $rows[] = $row;
-    }
 
-    return [$field_names, $rows];
+    return processResult($result);
 }
 
+/**
+ * Query the database to add an action.
+ *
+ * @param $conn connection The database connection
+ * @param $event_id int The id of the event the action is associated with
+ * @param $cluster_name string The name of the action cluster
+ * @param $time_offset string The time offset of the action
+ * @param $activation int whether to activate or deactivate the action
+ */
 function addAction($conn, $event_id, $cluster_name, $time_offset, $activation) {
     $query = "CALL add_action(?, ?, ?, ?);";
     $stmt = $conn->prepare($query);
@@ -127,6 +129,7 @@ function addAction($conn, $event_id, $cluster_name, $time_offset, $activation) {
 
 /**
  * Calls the stored procedure show_event with the given parameters using a prepared statement
+ *
  * @param $conn connection to the database
  * @param $event_id string event id of the event selected by the user
  * @param $date string date of the above event
@@ -152,9 +155,7 @@ function queryDBStartTime($conn, $event_id, $query) {
 }
 
 function queryDBDistinct($conn, $query) {
-//    $stmt = $conn->prepare($query);
-//    //$stmt->bind_param('is', $event_id);
-//    $stmt->execute();
+
     return $conn->query($query);
 }
 
@@ -170,6 +171,24 @@ function sanitizeString($var) {
     $var = strip_tags($var);
     $var = htmlentities($var);
     return $var;
+}
+
+/**
+ * Processes the result of a database query into a format to be sent back.
+ *
+ * @param $result result The result of the database query
+ * @return array[] An array with the field names and the rows.
+ */
+function processResult($result) {
+    $field_names = [];
+    $rows = [];
+    while ($field = $result->fetch_field()) {
+        $field_names[] = $field->name;
+    }
+    while ($row = $result->fetch_row()) {
+        $rows[] = $row;
+    }
+    return [$field_names, $rows];
 }
 
 // Closes database connection
