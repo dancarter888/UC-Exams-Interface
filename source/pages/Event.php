@@ -124,10 +124,11 @@ if (!isset($_COOKIE['loggedin'])) {
     let HEADER = false;
     var actionsPerPage = 20;
 
+    // Variables for the edit/delete actions functionality
     let actions = [];
     let startTime = "";
 
-    // Make a get request to the URL
+    // Make get requests to event_helper
     makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date, pagination);
 
     makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date + "&distinct=" + true, saveActions);
