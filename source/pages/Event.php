@@ -359,7 +359,17 @@ if (!isset($_COOKIE['loggedin'])) {
      * @param actionId is the action_id of the action within the database to be removed
      */
     function deleteAction(actionId) {
-        makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); location.reload(); });
+
+        if (actions.length === 1) {
+            let deleteConfirmation = confirm("Deleting this action will delete the entire Event. \nDo you want to continue?");
+            if (deleteConfirmation) {
+                makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); window.location.href = "Events.php";});
+            } else {
+                return;
+            }
+        } else {
+            makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); location.reload(); });
+        }
     }
 
     /**
