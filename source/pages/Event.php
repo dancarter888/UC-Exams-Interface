@@ -121,6 +121,7 @@ if (!isset($_COOKIE['loggedin'])) {
     let event_id = urlParams.get('event_id');
     let date = urlParams.get('date');
 
+    //Variables for creating the header only once and pagination
     let HEADER = false;
     var actionsPerPage = 20;
 
@@ -128,20 +129,43 @@ if (!isset($_COOKIE['loggedin'])) {
     let actions = [];
     let startTime = "";
 
-    // Make get requests to event_helper
+    // Make get requests to Event_Helper
     makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date, pagination);
 
     makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date + "&distinct=" + true, saveActions);
 
     makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&date=" + date + "&start=" + true, saveStartTime);
 
+    /**
+     * Formats the actions arrays correctly to shows the values in the order
+     * [action_id, cluster_name, time, activation]
+     * @param data is the response from the query to get all distinct actions
+     */
+    function saveActions(data) {
+        actions = JSON.parse(data)[1];
+        for (let i=0; i<actions.length; i++) {
+            let time = actions[i][1];
+            actions[i][1] = actions[i][2]
+            actions[i][2] = time;
+        }
+    }
 
+    /**
+     * Formats and saves the start time for the event to be used when calculating the time offset for actions
+     * @param data is the response from the query to the start time of the event
+     */
+    function saveStartTime(data) {
+        console.log(data);
+        startTime = data.slice(1, -4);
+        console.log(startTime);
+    }
+
+    /**
+     * Creates the actions table header and then uses jquery pagination to
+     * call structureDataTable() which then adds the action data to the table
+     * @param responseText is the response from the query to get all actions for the event
+     */
     function pagination(responseText) {
-        /**
-         * Creates the actions table header and then uses jquery pagination to
-         * call structureDataTable() which then adds the action data to the table
-         * @param responseText is the response from the query to get all actions for the event
-         */
         let actionsTable = document.getElementById('action-headings');
         let parsedResponse = JSON.parse(responseText);
         let actions = parsedResponse[1];
@@ -187,11 +211,11 @@ if (!isset($_COOKIE['loggedin'])) {
         })
     }
 
+    /**
+     * Adds all the actions data to the actions table
+     * @param data
+     */
     function structureDataTable(data) {
-        /**
-         * Adds all the actions data to the actions table
-         * @param data
-         */
         let actionsTable = document.getElementById('action-body');
         let actions = document.getElementsByClassName('action');
         for (let i = actions.length - 1; i >= 0; i--) {
@@ -219,21 +243,9 @@ if (!isset($_COOKIE['loggedin'])) {
         }
     }
 
-    function saveActions(data) {
-        actions = JSON.parse(data)[1];
-        for (let i=0; i<actions.length; i++) {
-            let temp = actions[i][1];
-            actions[i][1] = actions[i][2]
-            actions[i][2] = temp;
-        }
-    }
-
-    function saveStartTime(data) {
-        console.log(data);
-        startTime = data.slice(1, -4);
-        console.log(startTime);
-    }
-
+    /**
+    * Modifies the DOM to create a modal where one can edit the actions of an event.
+    */
     function fillEditModal() {
         $("#edit-body tr").remove();
         $("#edit-body div").remove();
@@ -270,6 +282,10 @@ if (!isset($_COOKIE['loggedin'])) {
         }
     }
 
+    /**
+     * When the add button on the EditModal is clicked, this modifies the DOM by removing the contents of the first modal and display another modal.
+     * This second modal provides a form inputs to specify the values of the action to be added and adds it when submitted.
+     */
     function fillEditAddModal() {
         $("#edit-body tr").remove();
         $("#edit-body div").remove();
@@ -309,10 +325,16 @@ if (!isset($_COOKIE['loggedin'])) {
 
     }
 
+    // The submit method for the actions form in the modal
+    //This ensures that the fields in the form are required
     $('body').on("submit", "#ActionsForm", function() {
         addAction();
     });
 
+    /**
+     * Retrieves values from the action form within the add action modal.
+     * Makes an AJAX request to add the action to the database.
+     */
     function addAction() {
         let clusterName = $("#action_cluster").val();
         let time = $("#OffsetInput").val();
@@ -337,6 +359,10 @@ if (!isset($_COOKIE['loggedin'])) {
         // makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
     }
 
+    /**
+     * Makes a request to remove an action from an event.
+     * @param actionId is the action_id of the action within the database to be removed
+     */
     function deleteAction(actionId) {
         console.log(actionId);
         makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); location.reload(); });
