@@ -256,7 +256,6 @@ if (!isset($_COOKIE['loggedin'])) {
                     roomsSelected.splice(roomIndex, 1);
                 }
                 document.getElementById(roomName).remove();
-                console.log(roomsSelected);
 
                 ROOMS.push(roomName);
                 roomCallback(ROOMS.sort());
@@ -286,7 +285,6 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
 
                 document.getElementById(action).remove();
-                console.log(ACTIONS);
             }
 
             /**
@@ -296,7 +294,6 @@ if (!isset($_COOKIE['loggedin'])) {
                 let rooms = document.getElementById("room_select");
                 if (rooms.getElementsByTagName("li").length > 0) {
                     eventObj["Date"] = $("#test_date").val();
-                    console.log($("#test_name").val());
                     eventObj["Name"] = $("#test_name").val();
                     eventObj["Rooms"] = roomsSelected;
                     eventObj["StartTime"] = $("#test_stime").val();
@@ -340,7 +337,6 @@ if (!isset($_COOKIE['loggedin'])) {
                 if (currentForm == 1) {
                     eventObj["TestType"] = $("#test_type").val();
                 }
-                console.log(eventObj);
 
                 currentForm--;
                 setForms();
@@ -414,7 +410,6 @@ if (!isset($_COOKIE['loggedin'])) {
              * */
             function createEvent() {
                 let jsonStr = JSON.stringify(eventObj);
-                console.log(jsonStr);
                 $.ajax({
                     url: "Create_Helper.php",
                     type: "post",
@@ -430,14 +425,11 @@ if (!isset($_COOKIE['loggedin'])) {
              * @param responseText The id of the created event
              * */
             function created(responseText) {
-                console.log(responseText);
-
                 let eventID = responseText;
                 for (let action of ACTIONS) {
                     action["EventID"] = eventID;
                     action["StartTime"] = eventObj["StartTime"];
                     let jsonStr = JSON.stringify(action);
-                    console.log(jsonStr);
                     $.ajax({
                         url: "Create_Helper.php",
                         type: "post",
@@ -452,7 +444,6 @@ if (!isset($_COOKIE['loggedin'])) {
              * Called when the actions have been added, goes to the events page.
              * */
             function final(responseText) {
-                console.log(responseText);
                 document.location.href = "Events.php";
             }
 
@@ -465,15 +456,10 @@ if (!isset($_COOKIE['loggedin'])) {
                 let selectElement = document.getElementById('rooms');
                 $('#rooms').empty();
 
-
-                console.log(selectElement.style.display);
-                console.log(responseText);
                 if (Array.isArray(responseText)){
-                    console.log(responseText);
                     var rooms = responseText;
                 } else {
                     var rooms = JSON.parse(responseText);
-                    console.log(123);
                     ROOMS = rooms;
                 }
                 for (let i=0; i<rooms.length; i++) {
@@ -591,12 +577,10 @@ if (!isset($_COOKIE['loggedin'])) {
              * @param responseText response from the server.
              */
             function clusterCallback(responseText) {
-                console.log(responseText);
                 let selectElement = document.getElementById('clusters_list');
                 let clusters = JSON.parse(responseText);
                 for (let i = 0; i < clusters.length; i++) {
                     let option = document.createElement('option');
-                    console.log(clusters[i][1]);
                     option.value = clusters[i][1];
                     option.innerHTML = clusters[i][1];
                     selectElement.appendChild(option);

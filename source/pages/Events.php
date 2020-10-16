@@ -126,7 +126,6 @@ if (!isset($_COOKIE['loggedin'])) {
              * @return list of events
              */
             function reformatEvents(events) {
-                console.log(events);
                 let prevEventName = null;
                 let prevEventStartTime = null;
                 let prevEventEndTime = null;
@@ -234,7 +233,6 @@ if (!isset($_COOKIE['loggedin'])) {
                  */
                 QUERYSTRING = str;
                 let url = "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING;
-                console.log(url);
 
                 makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
             }

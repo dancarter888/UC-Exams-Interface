@@ -1,7 +1,10 @@
 <?php
+/**
+ * A file for handling POST and GET requests associated with the login page.
+ */
 require_once("../config/config.php");
 
-// Creates a connection to the database using variables form the config file
+// Creates a connection to the database using variables from the config file
 $conn = new mysqli($hostname, $username, $password, $database);
 
 // Catches any error connecting to the database
@@ -89,6 +92,20 @@ function sanitizeString($var) {
     $var = strip_tags($var);
     $var = htmlentities($var);
     return $var;
+}
+
+/**
+ * Echos an mysql error.
+ *
+ * @param string $error The error passed.
+ */
+function fatalError($error)
+{
+    $message = mysql_error();
+    echo <<< _END
+Something went wrong :/
+<p>$error: $message</p>
+_END;
 }
 
 // Closes database connection

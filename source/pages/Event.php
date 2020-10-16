@@ -155,9 +155,7 @@ if (!isset($_COOKIE['loggedin'])) {
      * @param data is the response from the query to the start time of the event
      */
     function saveStartTime(data) {
-        console.log(data);
         startTime = data.slice(1, -4);
-        console.log(startTime);
     }
 
     /**
@@ -339,8 +337,6 @@ if (!isset($_COOKIE['loggedin'])) {
         let clusterName = $("#action_cluster").val();
         let time = $("#OffsetInput").val();
         let activation = ($("#Activate").val() === "0") ? 0 : 1;
-        console.log(activation);
-        console.log(time);
         let actionObj = {
             "ClusterName": clusterName,
             "Time": time,
@@ -364,7 +360,6 @@ if (!isset($_COOKIE['loggedin'])) {
      * @param actionId is the action_id of the action within the database to be removed
      */
     function deleteAction(actionId) {
-        console.log(actionId);
         makeRequest("GET", "Event_Helper.php?action_id=" + actionId, function(result) { alert("Deleted action " + actionId); location.reload(); });
     }
 
@@ -373,13 +368,11 @@ if (!isset($_COOKIE['loggedin'])) {
      * @param responseText response from the server.
      */
     function clusterCallback(responseText) {
-        console.log(responseText);
         let selectElement = document.getElementById('clusters_list');
         // NEED TO CATCH ERROR IF PARSE FAILS
         let clusters = JSON.parse(responseText);
         for (let i = 0; i < clusters.length; i++) {
             let option = document.createElement('option');
-            console.log(clusters[i][1]);
             option.value = clusters[i][1];
             option.innerHTML = clusters[i][1];
             selectElement.append(option);

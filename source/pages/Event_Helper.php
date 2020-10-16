@@ -5,7 +5,7 @@
 
 require_once("../config/config.php");
 
-// Creates a connection to the database using variables form the config file
+// Creates a connection to the database using variables from the config file
 $conn = new mysqli($hostname, $username, $password, $database);
 
 // Catches any error connecting to the database
@@ -159,20 +159,6 @@ function queryDBDistinct($conn, $query) {
     return $conn->query($query);
 }
 
-
-/**
- * Sanitizes a given string and returns it.
- * @param $var
- * @return string
- */
-function sanitizeString($var) {
-    if (get_magic_quotes_gpc())
-        $var = stripslashes($var);
-    $var = strip_tags($var);
-    $var = htmlentities($var);
-    return $var;
-}
-
 /**
  * Processes the result of a database query into a format to be sent back.
  *
@@ -189,6 +175,20 @@ function processResult($result) {
         $rows[] = $row;
     }
     return [$field_names, $rows];
+}
+
+/**
+ * Echos an mysql error.
+ *
+ * @param string $error The error passed.
+ */
+function fatalError($error)
+{
+    $message = mysql_error();
+    echo <<< _END
+Something went wrong :/
+<p>$error: $message</p>
+_END;
 }
 
 // Closes database connection

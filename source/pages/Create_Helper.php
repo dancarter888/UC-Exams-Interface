@@ -4,8 +4,18 @@
  */
 
 require_once("../config/config.php");
+
+// Creates a connection to the database using variables from the config file
 $conn = new mysqli($hostname, $username, $password, $database);
 
+// Catches any error connecting to the database
+if ($conn->connect_error)
+{
+    fatalError($conn->connect_error);
+    return;
+}
+
+// The type of requests that can be handled
 $ITEMS = array("Rooms", "Clusters");
 
 // Check if it is a GET or POST request
@@ -126,13 +136,6 @@ function getClusters($conn) {
 
 function queryDB($conn, $query) {
     return $conn->query($query);
-}
-
-function sanitizeString($var)
-{
-    $var = strip_tags($var);
-    $var = htmlentities($var);
-    return stripslashes($var);
 }
 
 $conn->close();
