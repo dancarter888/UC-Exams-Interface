@@ -542,7 +542,10 @@ DELIMITER ;
 DELIMITER ;;
 CREATE PROCEDURE `show_rooms`()
 BEGIN
-	SELECT room_name FROM front_room ORDER BY room_name;
+	/* Select all the rooms that have an associated group */
+	SELECT distinct room_name 
+    FROM front_room join front_client on front_room.room_id = front_client.room_id 
+    ORDER BY room_name;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
