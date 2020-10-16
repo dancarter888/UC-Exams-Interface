@@ -25,7 +25,8 @@ You will need to have installed:
  
  The database has now been created and populated.   
  To open the webpage open your web browser and 
- type into the search bar '<i>localhost/info263-project/source/pages/Events.php</i>'.  
+ type into the search bar:
+  #####'<i>localhost/info263-project/source/pages/Events.php</i>'.  
  Login to the webpage with the following details:
  * Username: username
  * Password: password
