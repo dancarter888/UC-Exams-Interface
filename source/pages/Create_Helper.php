@@ -8,13 +8,6 @@ require_once("../config/config.php");
 // Creates a connection to the database using variables from the config file
 $conn = new mysqli($hostname, $username, $password, $database);
 
-// Catches any error connecting to the database
-if ($conn->connect_error)
-{
-    fatalError($conn->connect_error);
-    return;
-}
-
 // The type of requests that can be handled
 $ITEMS = array("Rooms", "Clusters");
 

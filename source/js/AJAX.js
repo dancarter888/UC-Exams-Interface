@@ -17,3 +17,18 @@ function makeRequest(reqType, url, callback) {
     },
   });
 }
+
+/**
+ * Function for making async POST requests, calls the given callback with the response from the server.
+ * @param url string The url to make the request to.
+ * @param body json The json for the body of the request.
+ * @param callback function The function to call if request is successful.
+ */
+function makePostRequest(url, body, callback) {
+  $.ajax({
+    url: url,
+    type: "post",
+    data: {"event": body},
+    success: callback
+  });
+}

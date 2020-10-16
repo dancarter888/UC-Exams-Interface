@@ -256,7 +256,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 </div>`);
         $("#edit-body").append('<tr> <th> Action id </th> <th> Cluster Name </th> <th> Time </th> <th> Activation </th> </tr>');
         let editTable = document.getElementById('edit-body');
-        for (let i = 1; i < actions.length; i++) {
+        for (let i = 0; i < actions.length; i++) {
             let tableRow = document.createElement('tr');
             tableRow.className = 'action';
             for (let j = 0; j < actions[i].length; j++) {
@@ -297,26 +297,24 @@ if (!isset($_COOKIE['loggedin'])) {
                 </div>`);
         $("#edit-body").append(`
                 <div>
-                    <form id="ActionsForm">
-                        <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required>
-                        <datalist id="clusters_list" required></datalist>
-                        <label for="OffsetInput">Action time</label>
-                        <input class="form-control" id="OffsetInput" type="time" required>
-                        <label for="Activate">Activation</label>
-                        <select class="form-control" id="Activate" required>
-                            <option value="1">Turn ON</option>
-                            <option value="0">Turn OFF</option>
-                        </select>
-                        <br/>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-4"></div>
-                                <div class="col-3">
-                                    <input type="submit" id="AddAction" value="Add Action" class="btn btn-success"/>
-                                </div>
+                    <input class="form-control" list="clusters_list" placeholder="-- Select a Cluster --" id="action_cluster" required>
+                    <datalist id="clusters_list" required></datalist>
+                    <label for="OffsetInput">Action time</label>
+                    <input class="form-control" id="OffsetInput" type="time" required>
+                    <label for="Activate">Activation</label>
+                    <select class="form-control" id="Activate" required>
+                        <option value="1">Turn ON</option>
+                        <option value="0">Turn OFF</option>
+                    </select>
+                    <br/>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4"></div>
+                            <div class="col-3">
+                                <button onclick="addAction()" id="AddAction" value="Add Action" class="btn btn-success"/> Add Action </button>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>`);
         makeRequest("GET", "Create_Helper.php?item=Clusters", clusterCallback);
 
@@ -326,7 +324,9 @@ if (!isset($_COOKIE['loggedin'])) {
     //This ensures that the fields in the form are required
     $('body').on("submit", "#ActionsForm", function() {
         addAction();
+        document.location.href = `Event.php?event_id=${event_id}&date=${date}`;
     });
+
 
     /**
      * Retrieves values from the action form within the add action modal.
@@ -349,7 +349,7 @@ if (!isset($_COOKIE['loggedin'])) {
             url: "Create_Helper.php",
             type: "post",
             data: {"action": jsonStr},
-            success: function(result) { alert("Action added"); location.reload();}
+            success: function(result) { alert("Action added"); document.location.href = `Event.php?event_id=${event_id}&date=${date}`; }
         });
     }
 
