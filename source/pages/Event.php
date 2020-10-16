@@ -256,7 +256,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 </div>`);
         $("#edit-body").append('<tr> <th> Action id </th> <th> Cluster Name </th> <th> Time </th> <th> Activation </th> </tr>');
         let editTable = document.getElementById('edit-body');
-        for (let i = 1; i < actions.length; i++) {
+        for (let i = 0; i < actions.length; i++) {
             let tableRow = document.createElement('tr');
             tableRow.className = 'action';
             for (let j = 0; j < actions[i].length; j++) {
@@ -326,6 +326,7 @@ if (!isset($_COOKIE['loggedin'])) {
     //This ensures that the fields in the form are required
     $('body').on("submit", "#ActionsForm", function() {
         addAction();
+        return false;
     });
 
     /**

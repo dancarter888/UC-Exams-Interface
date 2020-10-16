@@ -132,11 +132,14 @@ if (!isset($_COOKIE['loggedin'])) {
                 let prevEventDate = null;
                 let prevEventID = null;
                 let newEvents = [];
+                console.log(events);
                 for (let i = 0; i < events.length; i++) {
                     let currentEventName = events[i][0];
                     let currentEventTime = events[i][1];
                     let currentEventDate = events[i][2];
                     let currentEventID = events[i][3];
+
+                    console.log(currentEventName);
 
                     if (prevEventName === null) {
                         prevEventName = events[i][0];
@@ -145,6 +148,9 @@ if (!isset($_COOKIE['loggedin'])) {
                         prevEventID = events[i][3];
                     } else if (currentEventName === prevEventName && currentEventDate === prevEventDate) {
                         prevEventEndTime = currentEventTime;
+                        if (i === events.length - 1) { //The last event to be added
+                            newEvents.push([prevEventName, prevEventStartTime + " - " + prevEventEndTime, prevEventDate, prevEventID]);
+                        }
                     } else if ((currentEventName !== prevEventName || currentEventDate !== prevEventDate) || i === events.length - 1) {
                         newEvents.push([prevEventName, prevEventStartTime + " - " + prevEventEndTime, prevEventDate, prevEventID]);
                         prevEventName = currentEventName;
@@ -165,6 +171,7 @@ if (!isset($_COOKIE['loggedin'])) {
                 let eventsTable = document.getElementById('events-headings');
                 let parsedResponse = JSON.parse(responseText);
                 let events = reformatEvents(parsedResponse[1]);
+                console.log(events);
 
                 if (HEADER === false) {
                     let headerRow = document.createElement('tr');
@@ -233,6 +240,7 @@ if (!isset($_COOKIE['loggedin'])) {
              */
             function showResult(str) {
                 QUERYSTRING = str;
+                console.log("Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING);
                 makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
             }
 
