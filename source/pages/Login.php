@@ -29,8 +29,8 @@ if (isset($_COOKIE['loggedin'])) {
             <div id="formContent">
                 <br/> <br/>
                 <form id="login-form">
-                    <input type="text" id="username" name="username" class="fadeIn second" placeholder="username" value="username" required>
-                    <input type="password" id="password" name="password" class="fadeIn third" placeholder="password" value="password" required>
+                    <input type="text" id="username" name="username" class="fadeIn second" placeholder="username" required>
+                    <input type="password" id="password" name="password" class="fadeIn third" placeholder="password" required>
                     <input type="submit" class="fadeIn fourth" value="Log In">
                 </form>
 
