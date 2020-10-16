@@ -34,10 +34,10 @@ if (isset($_GET['start']) && isset($_GET['end']) || isset($_GET['q']))
 
 /**
  * Queries the database to retrieve events and returns the events
- * @param $conn connection to the database
- * @param $start_date string start date inputted by the user
- * @param $end_date string end date inputted by the user
- * @param $query_string string search string inputted by the user
+ * @param mysqli $conn to the database
+ * @param string $start_date start date inputted by the user
+ * @param string $end_date end date inputted by the user
+ * @param string $query_string search string inputted by the user
  * @return array[] array of the field names and rows of event data
  */
 function getEvents($conn, $start_date, $end_date, $query_string) {
@@ -55,10 +55,10 @@ function getEvents($conn, $start_date, $end_date, $query_string) {
 
 /**
  * Calls the stored procedure show_event with the given parameters using a prepared statement
- * @param $conn connection to the database
- * @param $start_date string start date inputted by the user
- * @param $end_date string end date inputted by the user
- * @param $query_string string search string inputted by the user
+ * @param mysqli $conn to the database
+ * @param string $start_date start date inputted by the user
+ * @param string $end_date end date inputted by the user
+ * @param string $query_string search string inputted by the user
  * @return mixed results from the query
  */
 function queryDB($conn, $start_date, $end_date, $query_string)
@@ -74,8 +74,8 @@ function queryDB($conn, $start_date, $end_date, $query_string)
 
 /**
  * Sanitizes a given string and returns it.
- * @param $var
- * @return string
+ * @param string $var string to be sanitized
+ * @return string sanitized string
  */
 function sanitizeString($var) {
     if (get_magic_quotes_gpc())

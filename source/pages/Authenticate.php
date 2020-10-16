@@ -11,6 +11,7 @@ if ($conn->connect_error)
     return;
 }
 
+//Checks if there is a get request for the users token
 if (isset($_GET['token']))
 {
     $token = $_GET['token'];
@@ -19,6 +20,8 @@ if (isset($_GET['token']))
     $stmt->bind_param('s', $token);
     $stmt->execute();
     $result = $stmt->get_result();
+
+    //Echos True if the user token exists in the DB, False otherwise
     if ($result->num_rows == 0) {
         echo 'False';
     } else {
@@ -28,5 +31,5 @@ if (isset($_GET['token']))
     echo 'False';
 }
 
-
+// Closes database connection
 $conn->close();

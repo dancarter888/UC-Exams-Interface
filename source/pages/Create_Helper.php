@@ -45,7 +45,7 @@ else
  * Creates a query from the decoded post request for an event and queries the database with it. The rooms array needs to
  * be formatted into a string and the date split up into day, week and year number.
  *
- * @param $conn connection the database connection
+ * @param mysqli $conn the database connection
  */
 function createEvent($conn) {
     $event = $_POST["event"];
@@ -85,7 +85,7 @@ function createEvent($conn) {
 /**
  * Creates a query from the decoded post request for an action and queries the database with it.
  *
- * @param $conn connection the database connection
+ * @param mysqli $conn the database connection
  */
 function add_action($conn) {
     $encoded_action = $_POST["action"];
@@ -102,9 +102,9 @@ function add_action($conn) {
 }
 
 /**
- * Queries the database for a list of the rooms that test can happen in.
+ * Queries the database for a list of the rooms that a test can happen in.
  *
- * @param $conn connection the database connection
+ * @param mysqli $conn the database connection
  * @return array and array of the names of the rooms
  */
 function getRooms($conn) {
@@ -134,9 +134,16 @@ function getClusters($conn) {
     return $clusters;
 }
 
+/**
+ * Executes a given query in the database
+ * @param mysqli conn Connection to the dataBASE
+ * @param string $query There query to be executed
+ * @return array an array where the elements of form [cluster_id, cluster_name, cluster_description].
+ */
 function queryDB($conn, $query) {
     return $conn->query($query);
 }
 
+// Closes database connection
 $conn->close();
 ?>

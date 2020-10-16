@@ -53,6 +53,12 @@ if (isset($_GET['event_id']) && isset($_GET['clustername']) && isset($_GET['time
     echo json_encode($result);
 }
 
+/**
+ * Echoes the start time of the event with given event ID
+ * @param mysqli $conn
+ * @param int $event_id
+ * @return array The row fetched from the query containing the start time
+ */
 function getStartTime($conn, $event_id) {
     $query = "CALL get_event_start_time(?)";
     $result = queryDBStartTime($conn, $event_id, $query);
@@ -69,9 +75,9 @@ function getStartTime($conn, $event_id) {
  * Queries the database for all of the actions associated with an event, the result includes the same action
  * but for different rooms/groups.
  *
- * @param $conn connection The database connection
- * @param $event_id int the id of the associated event
- * @param $date string the data of the associated event
+ * @param mysqli $conn The database connection
+ * @param int $event_id the id of the associated event
+ * @param string $date the data of the associated event
  * @return array[] list where the first element is the field name and the second element is all the actions
  */
 function getActions($conn, $event_id, $date) {
@@ -85,8 +91,8 @@ function getActions($conn, $event_id, $date) {
  * Queries the database for all of the distinct actions associated with an event, the result the actions and not the
  * associated rooms/groups. Each action will only appear once.
  *
- * @param $conn connection The database connection
- * @param $event_id int the id of the associated event
+ * @param mysqli $conn The database connection
+ * @param int $event_id the id of the associated event
  * @return array[] list where the first element is the field name and the second element is all the actions
  */
 function getDistinctActions($conn, $event_id) {
@@ -99,8 +105,8 @@ function getDistinctActions($conn, $event_id) {
 /**
  * Queries the database to delete the action with the given id.
  *
- * @param $conn connection The database connection
- * @param $action_id int the id of the action to delete
+ * @param mysqli $conn The database connection
+ * @param int $action_id the id of the action to delete
  * @return array[] list with the result of the query
  */
 function deleteAction($conn, $action_id) {
@@ -113,11 +119,11 @@ function deleteAction($conn, $action_id) {
 /**
  * Query the database to add an action.
  *
- * @param $conn connection The database connection
- * @param $event_id int The id of the event the action is associated with
- * @param $cluster_name string The name of the action cluster
- * @param $time_offset string The time offset of the action
- * @param $activation int whether to activate or deactivate the action
+ * @param mysqli $conn The database connection
+ * @param int $event_id The id of the event the action is associated with
+ * @param string $cluster_name The name of the action cluster
+ * @param string $time_offset The time offset of the action
+ * @param int $activation whether to activate or deactivate the action
  */
 function addAction($conn, $event_id, $cluster_name, $time_offset, $activation) {
     $query = "CALL add_action(?, ?, ?, ?);";
@@ -130,10 +136,10 @@ function addAction($conn, $event_id, $cluster_name, $time_offset, $activation) {
 /**
  * Calls the stored procedure show_event with the given parameters using a prepared statement
  *
- * @param $conn connection to the database
- * @param $event_id string event id of the event selected by the user
- * @param $date string date of the above event
- * @param $query string to query db with
+ * @param mysqli $conn to the database
+ * @param string $event_id event id of the event selected by the user
+ * @param string $date date of the above event
+ * @param string $query to query db with
  * @return mixed results from the query
  */
 function queryDB($conn, $event_id, $date, $query) {
@@ -145,6 +151,13 @@ function queryDB($conn, $event_id, $date, $query) {
     return $result;
 }
 
+/**
+ * Calls the stored procedure get_event_start_time with the given parameters using a prepared statement
+ * @param mysqli $conn to the database
+ * @param string $event_id event id of the event selected by the user
+ * @param string $query to query db with
+ * @return mixed results from the query
+ */
 function queryDBStartTime($conn, $event_id, $query) {
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $event_id);
@@ -154,15 +167,20 @@ function queryDBStartTime($conn, $event_id, $query) {
     return $result;
 }
 
+/**
+ * Calls the stored procedures which manipulate actions by their action IDs
+ * @param mysqli $conn to the database
+ * @param string $query to query db with
+ * @return mixed results from the query
+ */
 function queryDBDistinct($conn, $query) {
-
     return $conn->query($query);
 }
 
 /**
  * Processes the result of a database query into a format to be sent back.
  *
- * @param $result result The result of the database query
+ * @param result $result The result of the database query
  * @return array[] An array with the field names and the rows.
  */
 function processResult($result) {

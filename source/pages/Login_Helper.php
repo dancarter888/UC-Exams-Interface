@@ -30,7 +30,6 @@ checkUsernameAndPassword($conn, $username, $password);
  * @param mysqli $conn A connection to a mysql database
  * @param string $username Username to check
  * @param string $password Inputted password
- * @return bool
  */
 function checkUsernameAndPassword($conn, $username, $password) {
     $query = "CALL user_password(?)";
@@ -57,9 +56,9 @@ function checkUsernameAndPassword($conn, $username, $password) {
 
 /**
  * Adds a token to the database for a current session and returns the token
- * @param $conn
- * @param $user_id
- * @return string
+ * @param  mysqli $conn connection to database
+ * @param int $user_id user's ID
+ * @return string the token for the user
  */
 function addToken($conn, $user_id) {
     $token = generateRandomString();
@@ -71,6 +70,11 @@ function addToken($conn, $user_id) {
     return $token;
 }
 
+/**
+ * Generates random string of specified length to be used as the token
+ * @param int $length length of string to be generated
+ * @return string token
+ */
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -83,8 +87,8 @@ function generateRandomString($length = 10) {
 
 /**
  * Sanitizes a given string and returns it.
- * @param $var
- * @return string
+ * @param string $var string to sanitize
+ * @return string sanitized string
  */
 function sanitizeString($var) {
     if (get_magic_quotes_gpc())
