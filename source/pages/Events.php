@@ -75,7 +75,7 @@ if (!isset($_COOKIE['loggedin'])) {
                     <div class="col">
                         <form>
                             <h5>Search</h5>
-                            <input class="form-control" type="text" size="30" onkeyup="showResult(this.value)">
+                            <input class="form-control" type="text" size="30" placeholder="Search..." onkeyup="showResult(this.value)">
                             <div id="livesearch"></div>
                         </form>
                     </div>
