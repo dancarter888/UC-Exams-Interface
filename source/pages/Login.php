@@ -48,13 +48,13 @@ if (isset($_COOKIE['loggedin'])) {
             localStorage.removeItem('token');
         }
 
+        /**
+         * Called when the login button is pressed.
+         * Gets the username and password inputted by user, gives it to Login_Helper.php
+         * and checks the response, if incorrect, displays an error message otherwise
+         * redirects the user to the Events.php page
+         */
         function requestLogin() {
-            /**
-             * Called when the login button is pressed.
-             * Gets the username and password inputted by user, gives it to Login_Helper.php
-             * and checks the response, if incorrect, displays an error message otherwise
-             * redirects the user to the Events.php page
-             */
             let username = $('#username').val()
             let password = $('#password').val()
             $.ajax({

@@ -249,7 +249,8 @@ if (!isset($_COOKIE['loggedin'])) {
 
             /**
              * Remove the given room from the selected rooms
-             * */
+             * @param roomName the name of the room to be removed
+             */
             function removeRoom(roomName) {
                 let roomIndex = roomsSelected.indexOf(roomName);
                 if (roomIndex > -1) {
@@ -263,7 +264,8 @@ if (!isset($_COOKIE['loggedin'])) {
 
             /**
              * Remove the given action from the added actions
-             * */
+             * @param action the action to be removed
+             */
             function removeAction(action) {
                 var actionArray = action.split(",");
                 let clusterName = actionArray[0];
@@ -288,7 +290,7 @@ if (!isset($_COOKIE['loggedin'])) {
             }
 
             /**
-             * Next step function for the 1st page (Details)
+             * Submit method for the 1st page (Details)
              */
             $('#DetailsForm').submit(function () {
                 let rooms = document.getElementById("room_select");
@@ -306,8 +308,8 @@ if (!isset($_COOKIE['loggedin'])) {
             });
 
             /**
-             * Next step function for the 2nd page (Type)
-            */
+             * Submit method for the 2nd page (Type)
+             */
             $('#TypeForm').submit(function () {
                 currentForm++;
                 setForms();
@@ -315,7 +317,7 @@ if (!isset($_COOKIE['loggedin'])) {
             });
 
             /**
-             * Next step function for the 3rd page (Actions)
+             * Submit method for the 3rd page (Actions)
              */
             $('#ActionsForm').submit(function () {
                 addAction();
@@ -323,7 +325,7 @@ if (!isset($_COOKIE['loggedin'])) {
             });
 
             /**
-             * Next step function for the 4th page (Review)
+             * Submit method for the 4th page (Review)
              */
             $('#ReviewForm').submit(function () {
                 createEvent();
@@ -343,7 +345,7 @@ if (!isset($_COOKIE['loggedin'])) {
             }
 
             /**
-             * gets the actions given in the action list and checks if valid
+             * Gets the actions given in the action list and checks if valid
              */
             function reviewForm() {
                 let actions = document.getElementById("ActionsList");
@@ -357,7 +359,7 @@ if (!isset($_COOKIE['loggedin'])) {
             }
 
             /**
-             * Toggle between the forms.
+             * Toggle between the different forms based on the value of currentForm.
              */
             function setForms() {
                 for (let i=0; i<formIds.length; i++) {

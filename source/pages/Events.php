@@ -156,12 +156,12 @@ if (!isset($_COOKIE['loggedin'])) {
                 return newEvents;
             }
 
+            /**
+             * Creates the events table header and then uses jquery pagination to
+             * call structureDataTable() which then adds the event data to the table
+             * @param responseText is the response from the query to get all events
+             */
             function pagination(responseText) {
-                /**
-                 * Creates the events table header and then uses jquery pagination to
-                 * call structureDataTable() which then adds the event data to the table
-                 * @param responseText is the response from the query to get all events
-                 */
                 let eventsTable = document.getElementById('events-headings');
                 let parsedResponse = JSON.parse(responseText);
                 let events = reformatEvents(parsedResponse[1]);
@@ -199,11 +199,11 @@ if (!isset($_COOKIE['loggedin'])) {
                 })
             }
 
+            /**
+             * Adds all the events data to the events table
+             * @param data the events to be added to the events table
+             */
             function structureDataTable(data) {
-                /**
-                 * Adds all the events data to the events table
-                 * @param data
-                 */
                 let eventsTable = document.getElementById('events-body');
                 let events = document.getElementsByClassName('event');
                 for (let i = events.length - 1; i >= 0; i--) {
@@ -226,18 +226,17 @@ if (!isset($_COOKIE['loggedin'])) {
                 }
             }
 
+            /**
+             * Called when the user types into the search box and updates the events in the
+             * events table based on the searched string
+             * @param str the string typed by the user to use as the search term
+             */
             function showResult(str) {
-                /**
-                 * Called when the user types into the search box and updates the events in the
-                 * events table based on the searched string
-                 */
                 QUERYSTRING = str;
-                let url = "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING;
-
                 makeRequest("GET", "Events_Helper.php?start=" + STARTDATE + "&end=" + ENDDATE + "&q=" + QUERYSTRING, pagination);
             }
 
-            // Updates the event data when the filter button pressed to filter events based on datas
+            // Updates the event data when the filter button pressed to filter events based on dates
             $('#date-filter').submit(function () {
                 let startDate = document.getElementById("start-dates").value;
                 STARTDATE = startDate;

@@ -275,7 +275,6 @@ if (!isset($_COOKIE['loggedin'])) {
             deleteButton.onclick = function() { deleteAction(actions[i][0]); };
             button.appendChild(deleteButton);
             tableRow.appendChild(button);
-
             editTable.appendChild(tableRow);
         }
     }
@@ -323,7 +322,7 @@ if (!isset($_COOKIE['loggedin'])) {
 
     }
 
-    // The submit method for the actions form in the modal
+    //The submit method for the actions form in the modal
     //This ensures that the fields in the form are required
     $('body').on("submit", "#ActionsForm", function() {
         addAction();
@@ -352,7 +351,6 @@ if (!isset($_COOKIE['loggedin'])) {
             data: {"action": jsonStr},
             success: function(result) { alert("Action added"); location.reload();}
         });
-        // makeRequest("GET", "Event_Helper.php?event_id=" + event_id + "&clustername=" + clusterName + "&timeoffset=" + time + "&activation=" + activation, function(result) { alert("Added action"); location.reload();});
     }
 
     /**
@@ -369,7 +367,6 @@ if (!isset($_COOKIE['loggedin'])) {
      */
     function clusterCallback(responseText) {
         let selectElement = document.getElementById('clusters_list');
-        // NEED TO CATCH ERROR IF PARSE FAILS
         let clusters = JSON.parse(responseText);
         for (let i = 0; i < clusters.length; i++) {
             let option = document.createElement('option');
