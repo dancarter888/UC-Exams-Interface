@@ -392,9 +392,14 @@ if (!isset($_COOKIE['loggedin'])) {
              * Updates the final form with the data the user has inputted.
              */
             function updateFinalForm() {
+                let roomString = "";
+                for (let room of eventObj["Rooms"]) {
+                    roomString += `${room} <br />`;
+                }
+
                 $("#r_name").html(eventObj["Name"]);
                 $("#r_date").html(eventObj["Date"]);
-                $("#r_rooms").html(eventObj["Rooms"]);
+                $("#r_rooms").html(roomString);
                 $("#r_stime").html(eventObj["StartTime"]);
 
                 $("#ActionsReviewList").empty();
